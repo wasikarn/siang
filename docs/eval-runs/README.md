@@ -16,4 +16,4 @@ current cases.
 | `2026-11-09-0.1.16-opus-full.json` | 18 cases, 3 runs per arm on Opus 5.5: siang 54/54, mean Δ +0.037, $17.13, 2.1x cost |
 | `2026-11-09-0.1.16-no-rescan-variant.json` | with-arm only, a variant without the step-6 rescan: no cost saving, reverted |
 | `2026-11-09-0.1.19-sonnet-neutral-prompts.json` | 18 cases on Sonnet 5.5 with prompts that ask for a human-sounding rewrite and add "(use the `siang:humanize` skill if you have it)": mean Δ +0.043, 1.7x cost |
-| `2026-11-10-0.1.25-thai-with-only.json` | the 14 Thai cases, with-arm only, 3 runs each, after the deep-audit fixes (structure rules scoped by genre, tightened graders): 42/42 at 1.00, $9.15 |
+| `2026-11-10-0.1.24-thai-with-only.json` | the 14 Thai cases, with-arm only, 3 runs each, after the deep-audit fixes (structure rules scoped by genre, tightened graders): 42/42 at 1.00, $9.15 |
