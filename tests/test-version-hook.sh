@@ -24,7 +24,10 @@ check 0 "skills change with a bump passes"
 setver 0.1.0; echo a > skills/x/SKILL.md; git add .claude-plugin skills  # back to HEAD's content
 echo r2 > README.md; git add README.md
 check 0 "non-skills change passes without a bump"
-nogit=$(mktemp -d); trap 'python3 -c "import shutil,sys; [shutil.rmtree(p) for p in sys.argv[1:]]" "$work" "$nogit"' EXIT
+python3 -c 'import os; [open(f"skills/x/a-long-generated-file-name-{i:05d}.md","w").write("x") for i in range(3000)]'
+git add skills  # ~150 KB of names, past the 64 KB pipe buffer: a piped grep -q would SIGPIPE git diff
+check 1 "a large skills change without a bump is refused"
+git reset -q skills; nogit=$(mktemp -d); trap 'python3 -c "import shutil,sys; [shutil.rmtree(p) for p in sys.argv[1:]]" "$work" "$nogit"' EXIT
 cd "$nogit"; export GIT_CEILING_DIRECTORIES="$nogit"  # last case: no repo above, so git diff fails
 check 1 "a git failure refuses the commit instead of passing"
 exit "$fail"
