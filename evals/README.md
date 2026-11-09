@@ -9,7 +9,9 @@ that must survive lightly edited, and a file-input case that proves the prose-on
 
 Each case is `prompt.md` (invokes the skill by `skill: "siang:humanize"`), `case.yaml` (a
 `scaffold_script` that writes the fixture), and `graders/`. `skill-fired.md` is
-`tool_used: Skill`; the regex graders assert a planted tell is absent (`not_contains`) or a source
+`tool_used: Skill`. Each prompt also says what to do if the Skill tool reports the skill as unknown:
+without that line the without arm got "Unknown skill" and, in humanize-clean, rewrote nothing, so
+that case's Δ of 1.0 was an artifact. The regex graders assert a planted tell is absent (`not_contains`) or a source
 specific is kept (`contains`). A `contains` grader marked `# fixture: absent` checks a corrected
 form instead (`3 กุมภาพันธ์ 2570`, `ลิงก์`), so the self-test requires it to miss the fixture:
 returning the source unchanged must fail it. The four newest cases use regex graders only, so

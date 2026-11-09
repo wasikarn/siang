@@ -44,10 +44,11 @@ siang started as the `tech-humanize` skill in
 [wasikarn/method-harness](https://github.com/wasikarn/method-harness). Its knowledge base draws on:
 
 - [blader/humanizer](https://github.com/blader/humanizer) (MIT, Copyright (c) 2025 Siqi Chen): the
-  30 universal patterns: their titles, order and structure. Its examples and wording, copied until
-  2026-11-09, were replaced with siang's own that day.
+  30 universal patterns: their titles, order and structure. The wording and examples, copied until
+  2026-11-09, are now siang's own, paraphrased from the sources: as of that date no run of six or
+  more words matches them, apart from the pattern titles, section labels, the tell phrases and word lists a rule quotes, and source names.
 - [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing),
-  maintained by WikiProject AI Cleanup: the catalog both humanizer and siang build on.
+  run by WikiProject AI Cleanup: the catalog that both humanizer and siang start from.
 - [chakrit/kien-thai](https://github.com/chakrit/kien-thai) (MIT, Copyright (c) 2026 Chakrit
   Wichian): Thai discourse frames, AI tells, register and style rules.
 - [Boom-Vitt/claude-thai-skills](https://github.com/Boom-Vitt/claude-thai-skills) (MIT, Copyright

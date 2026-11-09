@@ -22,7 +22,7 @@ for f in files:
         if 'next free number' in line: continue  # CLAUDE.md names the next unused § on purpose
         for n in re.findall(r'§(\d+(?:\.\d+)*)', line):
             if n not in defs: bad.append(f"{f}:{i}: §{n} is not a section")
-        for n in re.findall(r'cue #(\d+)', line):
+        for n in re.findall(r'cue #(\d+)', line, re.I):
             if n not in cues: bad.append(f"{f}:{i}: cue #{n} is not in cue-sheet.md")
 for b in bad: print('FAIL', b)
 if bad: sys.exit(1)

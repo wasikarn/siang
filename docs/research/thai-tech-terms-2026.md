@@ -100,6 +100,8 @@ Cell numbers are occurrence counts. "—" means no data. "no entry" means the OR
 | email | อีเมล (FF 87; MS-T) | อีเมล (BOT 2, DGA 4) | อีเมล (GH 19,040 vs อีเมล์ 926) | T: no entry; coined จดหมายอิเล็กทรอนิกส์ (per secondary source BKB*) | FF, BOT, GH |
 | digital | ดิจิทัล (FF 54 vs ดิจิตอล 3) | ดิจิทัล (BOT 13, DGA 37) | ดิจิทัล (GH 8,800 vs ดิจิตอล 587) | T: ดิจิทัล | FF, BOT, DGA, GH, ORST-T |
 | code | โค้ด (VCT 33) | C: รหัส, รหัสคำสั่ง | โค้ด (GH 74,624) | **T: โคด**; C: source code → รหัสต้นฉบับ | VCT, GH, ORST |
+| check (verb) | — (no verb use in FF, AP-*, G-*, SCB, LINE, MS-SG; MS-T has 20 เช็ค hits, all check-in/out, checkmate or cheque) | เช็ก (BOT, BOT-F, BOT-FAQ: 14 raw hits, about 3 distinct phrases) | เช็ค (GH 38,912 vs เช็ก 26,080; verb probes `...ว่า` 4,240 vs 1,720, `...ดู` 133 vs 44) | **T: เช็ก** (also เช็กอิน, เช็กเอาต์, เช็กลิสต์); เช็ค is the T form for "cheque" | BOT, BOT-F, BOT-FAQ, MS-T, GH, ORST-T |
+| project | — (none in FF, AP-*, G-2SV, G-CHR, SCB, BOT, LINE; G-GEM โปรเจ็กต์ 2) | — (MS-T: one compound, แมโครโปรเจ็กต์) | โปรเจกต์ (GH 33,856) vs โปรเจค 9,408 vs โปรเจ็กต์ 7,248 vs โปรเจ็ค 956 | T: พรอเจกต์ (noun), โพรเจกต์ (verb); no entry for any โปรเจ- form | G-GEM, MS-T, GH, ORST-T |
 
 \*FF's รุ่น count also includes other senses of the word. BKB = https://www.bangkokbiznews.com/news/detail/888035 (secondary, undated, likely 2020).
 
@@ -113,6 +115,7 @@ Cell numbers are occurrence counts. "—" means no data. "no entry" means the OR
 6. **Government AI text keeps English.** ETDA's 2024 guideline writes AI, Generative AI, Prompt, Chatbot and LLM in Latin script and uses ปัญญาประดิษฐ์ only twice. No 2025-26 Royal Society AI coinage list was found.
 7. **Feature splits by vendor:** คุณลักษณะ (Microsoft, Firefox) vs ฟีเจอร์ (Google Gemini).
 8. **Microsoft file vs แฟ้ม:** Microsoft's own style guide uses แฟ้ม in Windows strings and ไฟล์ in Office strings (MS-SG §2.2.2). Firefox uses only ไฟล์.
+9. **Check and project have no product majority** (counted 2026-11-09). `เช็ก` splits the other way from item 1: GitHub leans `เช็ค` (about 1.5x overall, 2.5x in the `...ว่า` probe), but ORST-T gives `เช็ก` for the verb and BOT, the only product-side source that uses it, writes `เช็ก`; no product writes `เช็ค` for the verb. For project, no product uses any form often; on GitHub `โปรเจกต์` is about 3.6x `โปรเจค` and 4.7x `โปรเจ็กต์`, and ORST's own `พรอเจกต์` has effectively no usage. GH เช็ก also counts the Czech sense and เช็กลิสต์. siang uses `เช็ก` and `โปรเจกต์` (§31).
 
 ## 4. Implications for siang §31 (proposed)
 

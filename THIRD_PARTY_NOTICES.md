@@ -75,8 +75,9 @@ SOFTWARE.
   2026-06-10; checked against HEAD 0ef9fe5bc3572734fd3ae6c448fe00a30cd5dcf0)
 - Used in: the 30 universal patterns (`skills/humanize/patterns-universal.md`, `cue-sheet.md`):
   pattern titles, order and structure. Its rule text, before/after examples and the worked example
-  in `examples.md` were copied until 2026-11-09, when they were replaced with siang's own; this
-  credit was missing until then.
+  in `examples.md` were copied until 2026-11-09, when they were rewritten in siang's own words: as
+  of that date no run of six or more words matches humanizer outside the §1-§30 titles, section
+  labels, the tell phrases and word lists a rule quotes, and source names. This credit was missing until then.
 
 ```
 MIT License

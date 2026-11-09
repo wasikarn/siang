@@ -18,21 +18,21 @@
 ## Full Example
 
 **Before (AI-sounding, Thai mixed; a team post about a trial of an AI review bot):**
-> คำถามดีมากครับ! นี่คือสรุปผลการทดลองของเรา หวังว่าจะเป็นประโยชน์ครับ!
+> ขอบคุณที่ถามครับ เป็นคำถามที่ดีมาก! ด้านล่างคือสรุปผล pilot ที่ขอมา หวังว่าจะช่วยได้นะครับ!
 >
-> The AI review bot serves as a testament to our team's commitment to code quality, marking a pivotal moment in how we approach peer review ใน today's rapidly evolving engineering landscape. Over a four-week trial on the `api` repo, this groundbreaking tool—seamlessly integrated into our workflow—left 140 comments, underscoring its vital role in modern development.
+> Our four-week pilot of the AI review bot on the `api` repo stands as a landmark chapter in our engineering journey, reflecting a broader shift ใน ecosystem ของ developer tooling ที่เปลี่ยนเร็วมาก. The bot—deeply woven into every pull request—posted 140 comments, cementing its place as a vital pillar of our review culture.
 >
-> At its core, the value is clear: catching bugs, saving time, and fostering a culture of learning. It's not just a linter; it's a teammate. The bot functions as a reviewer. The assistant acts as a mentor. The system stands as a safety net.
+> What the bot brings is simple: sharper reviews, faster merges, and a team that keeps learning. It isn't merely a linter; it's a second pair of eyes. The bot operates as a gatekeeper. The assistant serves as a coach. The tool represents a backstop for every release.
 >
-> Industry observers have noted that AI review is moving from early adopters to mainstream teams, from startups to enterprises. Additionally, of the 140 comments the team accepted 31, and two caught real bugs: a missing null check and an off-by-one in pagination, showcasing the intricate interplay between automation and human judgment.
+> Experts across the industry agree that automated review now covers everything from one-line typo fixes to full schema migrations. Additionally, the team accepted 31 of the 140 comments, and two of them caught real bugs, a missing null check and an off-by-one in pagination, a testament to the pivotal synergy between tooling and the people who use it.
 >
-> - 💡 **Accuracy:** Many comments repeated what lint already flags, highlighting room for growth
-> - 🚀 **Speed:** We did not measure review time, reflecting our focus on outcomes
-> - ✅ **Decision:** Keep the bot on `api` and turn it off on `web`, contributing to a balanced approach
+> - 🔍 **Signal:** Many comments echoed what lint already catches, pointing to room for growth
+> - ⏱️ **Speed:** Review time went unmeasured due to the fact that our focus was on outcomes over metrics
+> - 🧭 **Next step:** Keep the bot on `api` and switch it off on `web`, paving the way for a balanced approach
 >
-> Despite challenges typical of emerging technologies, the bot continues to thrive. In order to fully realize its potential, it could potentially be argued that teams should align with best practices.
+> While the rollout was not without its hurdles, the bot keeps going from strength to strength. Moving forward, it might arguably be worth considering whether teams could perhaps adopt a more aligned review process.
 >
-> ในที่สุด อนาคตของ code review สดใส ก้าวต่อไปคือการเดินทางสู่ความเป็นเลิศ แจ้งได้เลยหากต้องการให้ขยายความส่วนไหน!
+> โดยรวมแล้ว อนาคตของการ review โค้ดในทีมเราสดใสมาก และนี่เป็นเพียงจุดเริ่มต้นเท่านั้น ถ้าอยากให้เจาะลึกส่วนไหนเพิ่ม บอกได้เลยนะครับ!
 
 **Draft rewrite:**
 > ทดลองเปิด AI review bot บน repo `api` สี่สัปดาห์ bot comment ไป 140 ครั้ง ทีม accept 31 มีสองอันที่เจอ bug จริง: null check ที่หายไป กับ off-by-one ตรง pagination
@@ -43,17 +43,17 @@
 
 **What still reads as AI in the draft?**
 - Every paragraph is the same length and ends on a neat wrap-up.
-- The last line ("เครื่องมือดีแค่ไหนก็แทนคน review ไม่ได้") is a slogan (§60), and worse, an opinion the Before never states. Cut it; don't add claims while cleaning. **For Thai: a moral tacked onto the end of a Thai team post reads as AI even faster than in English**
+- The last line ("เครื่องมือดีแค่ไหนก็แทนคน review ไม่ได้") is a slogan (§60), and worse, an opinion the Before never states. Cut it; don't add claims while cleaning. **For Thai: a closing moral on a Thai team post gives the AI away even sooner than it does in English**
 - "สรุปคือ" opens the decision like a template.
 
 **Final rewrite:**
-> เปิด AI review bot บน `api` ไปสี่สัปดาห์ มัน comment 140 ครั้ง เรา accept 31 ในนั้นมีสองอันที่เป็น bug จริง คือ null check ที่หายไป กับ off-by-one ตรง pagination
+> เปิด AI review bot บน `api` ไปสี่สัปดาห์ bot comment 140 ครั้ง เรา accept 31 ในนั้นมีสองอันที่เป็น bug จริง คือ null check ที่หายไป กับ off-by-one ตรง pagination
 >
 > หลาย comment ซ้ำกับที่ lint จับอยู่แล้ว review time ไม่ได้วัด เลยบอกไม่ได้ว่าเร็วขึ้นไหม
 >
 > จะเปิดต่อบน `api` แต่ปิดบน `web`
 
-**Changes made:** Removed the chatbot opener and closer (§20, §22), the significance and trend claims (§1, §5), the promotional words and -ing tails (§3, §4, §7), the copula swaps and the reviewer/mentor/safety-net name cycling (§8, §11), the "not just a linter" contrast (§9), the forced triad (§10), the false range (§12), the em dashes, emojis and bold labels (§14–§18), the challenges formula and the hedge stack (§6, §24), the filler (§23) and the upbeat ending (§25). Every fact in the final (four weeks, 140, 31, the two bugs, lint overlap, no timing data, the `api`/`web` decision) is in the Before. Register: §0 dev register, internal team voice, Thai with English terms kept per §31.
+**Changes made:** Removed the chatbot opener and closer (§20, §22), the significance and trend claims (§1, §5), the promotional words and -ing tails (§3, §4, §7), the copula swaps and the gatekeeper/coach/backstop name cycling (§8, §11), the "isn't merely a linter" contrast (§9), the forced triad (§10), the em dashes, emojis and bold labels (§14–§18), the challenges formula and the hedge stack (§6, §24), the filler (§23) and the upbeat ending (§25). Every fact in the final (four weeks, 140, 31, the two bugs, lint overlap, no timing data, the `api`/`web` decision) is in the Before. Register: §0 dev register, internal team voice, Thai with English terms kept per §31.
 
 ---
 
@@ -110,7 +110,7 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 
 **After (standup register):**
 ```
-✅ ทำเสร็จ
+ทำเสร็จ
 - measurement redesign: ปรับ API endpoint แล้ว PR #64 merged เข้า develop
 - review code ของเพื่อนในทีม 2 คน
 - อัปเดต documentation
@@ -137,13 +137,14 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 
 **After (UI-actual):**
 > ชำระเงินไม่สำเร็จ
-> ธนาคารปฏิเสธรายการ ลองใหม่อีกครั้ง หรือเช็คยอดเงินค่ะ
+> ธนาคารปฏิเสธรายการค่ะ
+> <ขั้นต่อไป: ยืนยันกับทีม product>
 > ติดปัญหา: ติดต่อ <ช่องทางของทีม>
 
 **Changes applied:**
 - Status word first (`ชำระเงินไม่สำเร็จ`)
 - `ธนาคารปฏิเสธรายการ` (active verb; drops the nominalized `การทำรายการ`)
-- Actionable next step: `ลองใหม่อีกครั้ง` / `เช็คยอดเงิน` are the usual actions for a bank decline, but the source names none, so confirm them with the product team; the contact channel stays a placeholder for the same reason
+- Next step: the source names none, so the After leaves a placeholder instead of inventing one. `ลองใหม่อีกครั้ง` / `เช็กยอดเงิน` are the usual actions for a bank decline; suggest them to the product team next to the rewrite, not inside it. The contact channel stays a placeholder for the same reason
 - At most one `ค่ะ` (UI formal register)
 - No English parenthetical in the title (`## การชำระเงิน (Declined)` ❌)
 - ≤25 words
@@ -152,10 +153,10 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 ### Example D — Prose / Blog (Register D)
 
 The Full Example above is a Register D piece. The D-specific fixes in it:
-- ❌ `Industry observers have noted that AI review is moving...` → no source is named, so drop it (§32.1, T1). If the writer has the source, cite it as published: author, year, link (§32.3).
-- ❌ `คำถามดีมากครับ! ... หวังว่าจะเป็นประโยชน์ครับ!` and `แจ้งได้เลยหากต้องการให้ขยายความ` → drop (§40).
+- ❌ `Experts across the industry agree that automated review now covers...` → a trend claim with no named source (§5, vague attribution): ask the writer for the source, or cut it. If the writer has the source, cite it as published: author, year, link (§32.3).
+- ❌ `ขอบคุณที่ถามครับ เป็นคำถามที่ดีมาก! ... หวังว่าจะช่วยได้นะครับ!` and `ถ้าอยากให้เจาะลึกส่วนไหนเพิ่ม บอกได้เลยนะครับ!` → drop (§40).
 - ❌ a closing moral the source never states (`เครื่องมือดีแค่ไหนก็แทนคน review ไม่ได้`) → cut; cleaning text never adds a claim (§60, §51).
-- ❌ `ในที่สุด อนาคตของ...สดใส` → drop the recap and end on the decision (§51).
+- ❌ `โดยรวมแล้ว อนาคตของ...สดใสมาก` → drop the recap and end on the decision (§51).
 
 ### Side-by-Side: Same Content, 4 Registers
 
@@ -164,7 +165,7 @@ Given the draft `ผมได้ merge PR #64 เข้า develop แล้ว 
 | Register | Rewrite | Why |
 |----------|---------|-----|
 | **A** (chat) | `"PR #64 merge เข้า develop แล้วครับ measurement redesign เสร็จ 🎉"` | terse, emoji, topic first, every fact kept; the source writes as `ผม`, so `ครับ` |
-| **B** (standup) | `"✅ PR #64 measurement redesign merged เข้า develop"` | status + PR + scope |
+| **B** (standup) | `"PR #64 measurement redesign merged เข้า develop"` | status + PR + scope |
 | **C** (UI) | `"merge สำเร็จ: PR #64 (measurement redesign) → develop"` | status word first, same facts |
 | **D** (blog) | `"PR #64 merge เข้า develop แล้ว measurement redesign ก็เสร็จแล้ว"` | full sentence, `ก็` pacing, no added detail |
 
@@ -238,25 +239,25 @@ Same catalog (33 universal + 28 Thai-specific top-level), but applied to drafts 
 ### Example G — EN Prose / Blog (register D)
 
 **Before (AI-sounding — significance + rule of three + vague attribution):**
-> The rise of remote work stands as a testament to the evolving nature of the modern workforce. It's not just about flexibility; it's about unlocking human potential at scale. Industry observers have noted that companies embracing this shift are fostering a culture of innovation, collaboration, and accountability. The future of work is bright, and those who adapt will thrive in this new landscape.
+> Our switch to feature flags serves as a milestone in how the team ships. It isn't only a deployment trick; it's a new way of working that puts confidence first. Many engineers say flag-driven teams end up fostering trust, speed, and ownership across every release. A smoother road lies ahead, and teams willing to embrace change will flourish in the ever-evolving delivery landscape.
 
 **Red flags:**
-- `"stands as a testament to"` — §1 significance + §8 copula avoidance
-- `"the evolving nature of"` — vague-upbeat filler
-- `"It's not just about... it's about"` — §9 negative parallelism
-- `"unlocking human potential at scale"` — promotional + rule-of-three bait
-- `"Industry observers have noted"` — §5 vague attribution
-- `"fostering a culture of innovation, collaboration, and accountability"` — §10 rule of three + §3 -ing ending
-- `"The future of work is bright"` — §25 generic positive conclusion
-- `"those who adapt will thrive in this new landscape"` — landscape = §7 AI vocab
+- `"serves as a milestone in"` — §1 significance + §8 copula avoidance
+- `"a new way of working"` — vague-upbeat filler
+- `"It isn't only... it's"` — §9 negative parallelism
+- `"puts confidence first"` — promotional + rule-of-three bait
+- `"Many engineers say"` — §5 vague attribution
+- `"fostering trust, speed, and ownership"` — §10 rule of three + §3 -ing ending
+- `"A smoother road lies ahead"` — §25 generic positive conclusion
+- `"the ever-evolving delivery landscape"` — landscape = §7 AI vocab
 
 **After (EN prose — register D):**
-> Remote work changed <what, for which team> [source or first-hand detail?].
+> Feature flags changed <what, for which team> [source or first-hand detail?].
 
 **Changes applied:**
 - The Before has no checkable fact, so the rewrite has almost nothing left. That is the finding: ask the author what actually changed and how they know, then write that
 - Do not supply an anecdote, a date or a number for them; a made-up "three years after we switched" reads human and is still invented
-- No rule of three, no "industry observers", no "landscape", no slogan ending
+- No rule of three, no "many engineers say", no "landscape", no slogan ending
 
 ### Side-by-Side: Same content, monolingual EN
 

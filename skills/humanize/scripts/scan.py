@@ -5,8 +5,9 @@ Usage: python3 scan.py [FILE]   (reads stdin when FILE is omitted or "-")
 
 A first pass for step 3 and a recount for step 6 of SKILL.md, not the scan itself: a hit is a
 candidate to judge (a technical sense such as "robust estimator" is fine), and most tells
-(forced triads, structure, register) need a reader. Fenced code blocks and YAML frontmatter
-are skipped, since the skill rewrites prose only. Always exits 0 unless the input can't be read.
+(forced triads, structure, register) need a reader. Fenced and indented code blocks, blockquotes
+and YAML frontmatter are skipped, since the skill rewrites prose only; the em dash count covers
+editable prose only. Always exits 0 unless the input can't be read.
 """
 import re
 import sys
@@ -15,7 +16,7 @@ import sys
 RULES = [
     ("§14", "em dash", r"—"),
     ("§19", "curly quote", r"[“”‘’]"),
-    ("§7", "AI vocabulary", r"(?i)\b(delv(e|es|ing)|tapestry|testament|underscor(e|es|ed|ing)|pivotal|intricate|interplay|meticulous(ly)?|showcas(e|es|ing)|bolster(s|ed|ing)?|garner(s|ed)?|foster(s|ed|ing)?|vibrant|crucial|seamless(ly)?|deep dive)\b"),
+    ("§7", "AI vocabulary", r"(?i)\b(delv(e|es|ing)|tapestry|testament|underscor(e|es|ed|ing)|pivotal|intricate|interplay|meticulous(ly)?|showcas(e|es|ing)|bolster(s|ed|ing)?|garner(s|ed)?|foster(s|ed|ing)?|vibrant|crucial|seamless(ly)?|deep dive|leverag(e|es|ed|ing)|comprehensive|stakeholders)\b"),
     ("§7", "AI vocabulary (abstract sense?)", r"(?i)\b(landscape|robust)\b"),
     ("§8", "copula avoidance", r"(?i)\b(serves|stands|functions) as\b"),
     ("§9", "negative parallelism", r"(?i)\bnot (just|only)\b|\bit'?s not [^.]{1,40}[.,;] it'?s\b"),
@@ -31,18 +32,18 @@ RULES = [
     ("§31", "non-standard spelling", r"อัพเดท|อัพเดต|แอพ|ลิงค์|อีเมล์|ดิจิตอล|เวอร์ชั่น|ฟีเชอร์|เซสชั่น"),
     ("§33", "connector cluster", r"อย่างไรก็ตาม|นอกจากนี้|ในขณะเดียวกัน|ทั้งนี้"),
     ("§36", "marketing calque", r"มุ่งมั่น|ประสบการณ์[^\n]{0,20}ที่ดีที่สุด|ก้าวสำคัญ"),
-    ("§37", "nominalization", r"ทำการ|ได้ทำการ|การดำเนินการ"),
+    ("§37", "nominalization", r"ทำการ(?! ?[A-Za-z])|ได้ทำการ|การดำเนินการ"),  # ทำการ deploy is normal dev Thai
     ("§40", "leaked closer", r"หวังว่า[^\n]{0,30}เป็นประโยชน์|ยินดีให้ความช่วยเหลือ"),
     ("§32.8", "formal address (fine in legal/bank letters)", r"ท่านผู้อ่าน|ท่านลูกค้า|ของท่าน|ข้าพเจ้า|กระผม"),
     ("§51", "panorama opener", r"ในยุคปัจจุบัน|ในโลกยุคใหม่"),
-    ("§56", "western date/time in Thai", r"\b\d{1,2}:\d{2}\s?(AM|PM|am|pm)?\b|\b\d{1,2}/\d{1,2}/\d{4}\b"),
+    ("§56", "western date/time (user-facing Thai only; internal ISO and colon times are correct)", r"\b\d{1,2}:\d{2}\s?(AM|PM|am|pm)\b|\b\d{1,2}/\d{1,2}/\d{4}\b"),
     ("§57", "apology size", r"ขออภัยอย่างสูง"),
 ]
 COMPILED = [(s, label, re.compile(p)) for s, label, p in RULES]
 
 
 def prose_lines(text):
-    """Yield (line_no, line) for prose only: skip YAML frontmatter and fenced code blocks."""
+    """Yield (line_no, line) for prose only: skip YAML frontmatter, code blocks and blockquotes."""
     lines = text.splitlines()
     i = 0
     if lines and lines[0].strip() == "---":
@@ -50,15 +51,26 @@ def prose_lines(text):
             if lines[j].strip() == "---":
                 i = j + 1
                 break
-    fence = None
+    fence = None  # (char, length) of the open fence: only a bare run as long or longer closes it
+    quiet = True  # previous line blank or protected, so a 4-space/tab line starts indented code
     for n in range(i, len(lines)):
         line = lines[n]
-        m = re.match(r"\s*(```|~~~)", line)
-        if m:
-            fence = None if fence == m.group(1) else (fence or m.group(1))
+        m = re.match(r"\s*(`{3,}|~{3,})(.*)", line)
+        if fence:
+            if m and m.group(1)[0] == fence[0] and len(m.group(1)) >= fence[1] and not m.group(2).strip():
+                fence = None
+            quiet = True
             continue
-        if fence is None:
-            yield n + 1, re.sub(r"`[^`\n]*`", "", line)  # inline code is not prose either
+        if m:
+            fence, quiet = (m.group(1)[0], len(m.group(1))), True
+            continue
+        # shortcut: a 4-space list continuation paragraph after a blank line is skipped as code too;
+        # upgrade to a real Markdown parser if that hides tells in nested lists.
+        if re.match(r" {0,3}>", line) or (quiet and re.match(r"( {4}|\t)", line)):
+            quiet = True
+            continue
+        quiet = not line.strip()
+        yield n + 1, re.sub(r"`[^`\n]*`", "", line)  # inline code is not prose either
 
 
 def scan(text):

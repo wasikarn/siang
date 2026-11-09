@@ -22,9 +22,9 @@ Adapted from chakrit/kien-thai (MIT, Copyright (c) 2026 Chakrit Wichian): `skill
 ❌ `การที่ migration รันนานทำให้ deploy ช้า`
 ✅ `migration รันนาน deploy เลยช้าตาม`
 
-Heuristic: subject heavy, abstract, or really the object of the verb → make it the topic.
+Heuristic: when the subject is long, abstract, or is in fact what the verb acts on → move it up as the topic.
 
-### 44. Condition, time and frame go first
+### 44. Lead with the condition, time and scope
 
 **Rule:** put the condition, time or scope before the main clause. English hangs it at the end (`X when Y`, `X if Y`).
 
@@ -59,6 +59,8 @@ Additive frames (`ไม่ได้...อย่างเดียว`, `ไม�
 ❌ `PR นี้ไม่ได้แก้ bug อย่างเดียว เพิ่ม test ให้ retry logic`
 ✅ `PR นี้ไม่ได้แก้ bug อย่างเดียว เพิ่ม test ให้ retry logic ด้วย`
 
+This applies when both halves are real facts the reader needs. When the first half is empty (nobody thought the PR only did X), the contrast itself is the tell: handle it per §9.
+
 Correction frames (`ไม่ได้อยู่ที่ X อยู่ที่ Y`) take `ต่างหาก`:
 ❌ `ต้นเหตุไม่ได้อยู่ที่ DB อยู่ที่ connection pool`
 ✅ `ต้นเหตุไม่ได้อยู่ที่ DB อยู่ที่ connection pool ต่างหาก`
@@ -85,9 +87,9 @@ These particles are not budgeted by §33; if one reads odd, rebuild the sentence
 
 ### 48. Pace with ก็
 
-**Rule:** `ก็` marks expected sequence, mild concession and "as you'd expect". Common shapes: `พอ X ก็ Y`, `ถ้า X ก็ Y`, `X แล้วก็ Y`, `ก็เลย`. Bare `แล้ว` also links sequenced actions.
+**Rule:** `ก็` signals that the next part follows as expected, a soft concession, or "naturally". Typical shapes: `ก็เลย`, `X แล้วก็ Y`, `ถ้า X ก็ Y`, `พอ X ก็ Y`. Bare `แล้ว` also links sequenced actions.
 
-**Why AI breaks it:** English has no equivalent, so AI drops it and the prose turns choppy.
+**Why AI breaks it:** no English word does this job, so a model leaves `ก็` out and the Thai reads clipped.
 
 ❌ `พอเปิด debug log disk เต็ม`
 ✅ `พอเปิด debug log disk ก็เต็ม`
@@ -95,7 +97,7 @@ These particles are not budgeted by §33; if one reads odd, rebuild the sentence
 ❌ `push tag CI build image ให้อัตโนมัติ`
 ✅ `push tag แล้ว CI จะ build image ให้เอง`
 
-Use it for breath, not as a connector to sprinkle. Two limits from kien-thai: it is redundant inside a `ทีไร` frame (`เปิด VPN ทีไร Slack หลุดทุกที`), and wrong when the second clause is the first by definition (total cost is the sum of line items; no `ก็`).
+Use it for breath, not as a connector to sprinkle. One limit from kien-thai: it is wrong when the second clause is the first by definition (total cost is the sum of line items; no `ก็`).
 
 ### 49. Pivot with a question, a demonstrative, or plain แต่
 
@@ -118,7 +120,7 @@ Heuristic: for every "however" in the English draft, ask whether `แต่` or 
 
 ### 50. Sentence rhythm and seams
 
-A 6-word sentence next to a 30-word one is normal Thai. If every sentence is about the same length, break some. More than ~25 Thai words with no space break → look for a seam; one English sentence often becomes two or three Thai ones. Complements §39.4's 3–30 word range.
+Thai happily puts a six-word sentence beside a thirty-word one. When all sentences come out at one length, split a few. Past ~25 Thai words without a space break, find a seam; an English sentence often turns into two or three Thai ones. Works with §39.4's 3–30 word range.
 
 ### 51. Opener and closer shape
 
@@ -130,4 +132,4 @@ The next step has to be one the source already states (here, the p99 check in th
 
 ### 52. Prose before bullets
 
-Write 2–4 sentence paragraphs first; bullet only when items are parallel or there are four or more. A two-item bullet list in an ADR or README section reads as an outline, not a writer.
+Write 2–4 sentence paragraphs first; use bullets only for items of the same kind, or for four items and up. A two-item bullet list in an ADR or README section reads as an outline, not a writer.

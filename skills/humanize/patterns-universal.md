@@ -28,7 +28,7 @@ the gap visible (`<N>`, `[source?]`) instead of filling it.
 
 **Words to watch:** pivotal moment, a testament to, marks a shift, sets the stage for, plays a vital/key role, underscores the importance of, reflects a broader trend, an enduring legacy, the evolving landscape, a turning point, leaves a lasting mark
 
-**Thai cue:** "ถือเป็นก้าวสำคัญ", "สะท้อนถึงความสำคัญ", "เป็นหลักฐาน", "สร้างคุณค่า", "ส่งเสริม" tacked onto the end of a sentence without adding information → suspect
+**Thai cue:** "ถือเป็นก้าวสำคัญ", "สะท้อนถึงความสำคัญ", "เป็นหลักฐาน", "สร้างคุณค่า", "ส่งเสริม" added at the close of a sentence and carrying no new information → suspect
 
 **Problem:** The text claims that an ordinary change matters to something larger, without saying how. The reader learns nothing from the claim, and it hides the one fact that is there.
 
@@ -108,7 +108,7 @@ the gap visible (`<N>`, `[source?]`) instead of filling it.
 **Problem:** A stock "challenges, then hope" section closes the piece whatever the topic. Keep the specific problems; drop the reassurance unless there is a real plan with an owner or date.
 
 **Before:**
-> Despite its many strengths, the monorepo faces several challenges, including slow CI and frequent merge conflicts. Despite these challenges, with ongoing initiatives, the monorepo continues to thrive as a cornerstone of our engineering culture
+> The road for our monorepo has not always been smooth, with slow CI and frequent merge conflicts along the way. Still, thanks to ongoing initiatives, its future looks bright, and it will remain a cornerstone of how we ship for years to come
 
 **After:**
 > CI on the monorepo is slow and merge conflicts are frequent. [What is being done about it, by whom, by when?]
@@ -118,9 +118,9 @@ the gap visible (`<N>`, `[source?]`) instead of filling it.
 
 ### 7. Overused "AI Vocabulary" Words
 
-**High-frequency AI words** (Wikipedia's "Signs of AI writing" list, checked 2026-09, plus siang additions): additionally, align with, bolster, crucial, deep dive, delve, enduring, enhance, foster, garner, highlight (verb), interplay, intricate, key (adjective), landscape (abstract), meticulous, pivotal, robust (figurative), showcase, tapestry, testament, underscore (verb), vibrant, quietly ("quietly breaks", "quietly powers"), gate/gating (figurative: "gating our growth", "the gate to adoption")
+**High-frequency AI words** (Wikipedia's "Signs of AI writing" list, checked 2026-09, plus siang additions): additionally, align with, bolster, comprehensive, crucial, deep dive, delve, enduring, enhance, foster, garner, highlight (verb), interplay, intricate, key (adjective), landscape (abstract), leverage (verb), meticulous, pivotal, robust (figurative), showcase, stakeholders, tapestry, testament, underscore (verb), vibrant, quietly ("quietly breaks", "quietly powers"), gate/gating (figurative: "gating our growth", "the gate to adoption")
 
-**Thai cue:** "อันที่จริง", "นอกจากนี้", "สำคัญยิ่ง", "ส่งเสริม", "เน้นย้ำ", "ภูมิทัศน์", "จุดเปลี่ยน", "สัมผัสได้", "พยาน", "ขีดเส้นใต้" → suspect when used out of context
+**Thai cue:** "อันที่จริง", "นอกจากนี้", "สำคัญยิ่ง", "ส่งเสริม", "เน้นย้ำ", "ภูมิทัศน์", "จุดเปลี่ยน", "สัมผัสได้", "พยาน", "ขีดเส้นใต้", "อย่างมหาศาล", "อย่างน่าทึ่ง" → suspect when used out of context (a single `อย่างมาก` is fine; stacking is the tell)
 
 **Problem:** These words show up far more often in model output than in human writing, and they tend to come in clusters. One alone proves little; three in a sentence is a tell.
 
@@ -142,15 +142,15 @@ the gap visible (`<N>`, `[source?]`) instead of filling it.
 **Problem:** A longer verb phrase stands in for "is", "has" or a plain verb. The sentence gets heavier and says the same thing.
 
 **Before:**
-> The `config/` directory serves as the single source of truth for environment settings. The loader functions as a thin wrapper, and the schema serves to validate input. The CLI boasts three subcommands
+> The `config/` directory serves as the home of every environment setting. The loader functions as a thin wrapper, and the schema serves to validate input. The CLI boasts three subcommands
 
 **After:**
-> `config/` is the single source of truth for environment settings. The loader is a thin wrapper, and the schema validates input. The CLI has three subcommands.
+> `config/` holds every environment setting. The loader is a thin wrapper, and the schema validates input. The CLI has three subcommands.
 
 
 ### 9. Negative Parallelisms and Tailing Negations
 
-**Problem:** The text sets up a contrast nobody asked for: "not only X but Y", "it's not just X, it's Y", the same move split over two sentences ("It's not X. It's Y."), or the reversed form "Y rather than X" where X was never on the table. A short negative tag stuck on the end of a sentence ("no guesswork", "zero config") does the same job. Say the positive claim once.
+**Problem:** The text frames a contrast the reader never asked for, setting the point against something that was never in question: the "not only X but Y" frame, its cousin "it's not just X, it's Y", the same move split over two sentences ("It's not X. It's Y."), or the reversed form "Y rather than X" where X was never on the table. A short negative tag stuck on the end of a sentence ("no guesswork", "zero config") does the same job. Say the positive claim once.
 
 **Keep** a negation that corrects something the reader actually believes. "The timeout is not the cause; the pool is exhausted" is right when the thread has been blaming the timeout.
 
@@ -205,6 +205,8 @@ the gap visible (`<N>`, `[source?]`) instead of filling it.
 
 ### 12. False Ranges
 
+**Weak (Wikipedia, revision 2026-11-08):** the current "Signs of AI writing" page no longer lists false ranges. Treat one as weak evidence, never a tell on its own; that does not make it a sign of human writing either. The fix still applies as a writing rule.
+
 **Problem:** "From X to Y" where X and Y are not two ends of one scale. It sounds broad and lists two unrelated things.
 
 **Thai cue:** "ตั้งแต่...จนถึง...", "จาก...สู่..." where the two ends are not on one scale → suspect
@@ -231,7 +233,7 @@ the gap visible (`<N>`, `[source?]`) instead of filling it.
 
 ### 14. Em Dashes (and En Dashes): Cut Them
 
-**Rule:** In Thai prose, em dash has no native typography convention: strip unconditionally, no exceptions (see `references.md` typography rules). In English/mixed text the em dash is a commonly-cited but contested AI tell (see "Don't over-edit" below; many human editors and journalists use it deliberately): check first whether the user gave a writing sample that uses em dashes on purpose, and if so keep them there per the Voice section. A real author's habit outranks this rule. Otherwise, treat it as a hard constraint on the final rewrite, not a "use sparingly" preference. Replace each one, in rough order of preference: a period (start a new sentence), a comma (a tight aside), a colon (introducing an explanation), parentheses (a true aside), or restructure the sentence. Also catch spaced em dashes (` — `) and double hyphens (` -- `) used the same way.
+**Rule:** In Thai prose, em dash has no native typography convention: strip unconditionally, no exceptions (see `references.md` typography rules). In English/mixed text the zero-dash rule is house style, not detection: Wikipedia now files em-dash overuse under historical indicators (2022 to September 2026), and siang cuts dashes because periods and commas read cleaner and Thai prose does not use them. Check first whether the user gave a writing sample that uses em dashes on purpose, and if so keep them there per the Voice section. A real author's habit outranks this rule. Otherwise the final rewrite holds none: this is a hard limit, not a hint to go easy on them. Fix each one with the first option that fits: end the sentence and start another, a comma for a short aside, a colon when an explanation follows, parentheses for a real aside, or rebuild the sentence. The same goes for a spaced em dash (` — `) and a double hyphen (` -- `) doing that job.
 
 **En-dash exemption:** number ranges (`40–60%`, `§31–32`, `2–5 minutes`) are fine. That's an en dash (`–`) doing its actual job, not an AI tell. The rule is about *em dashes used for asides* and *en dashes used as em dashes*. The em dash (`—`) is what AI overuses.
 
@@ -247,7 +249,9 @@ the gap visible (`<N>`, `[source?]`) instead of filling it.
 **After:**
 > hotfix ที่ merge เมื่อคืนแก้ timeout ฝั่ง checkout แต่ยังไม่แก้ฝั่ง refund
 
-Before returning the final rewrite, scan it for em dashes (`—`). Any hit means the draft isn't done, except dashes kept from the user's own English writing sample. En-dash number ranges are exempt.
+In Thai the replacement is a space or parentheses (§45), not a period.
+
+Last check before you hand the rewrite over: search it for em dashes (`—`). One hit means it is not finished, unless that dash came from the user's own English writing sample. En-dash number ranges are exempt.
 
 
 ### 15. Overuse of Boldface
@@ -263,7 +267,7 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 
 ### 16. Inline-Header Vertical Lists
 
-**Problem:** Each bullet opens with a bold label and a colon, then a sentence that repeats the label. Three short facts become a padded list.
+**Problem:** Every bullet starts with a bolded word and a colon, then a sentence that says that word again. Three short facts become a padded list.
 
 **Before:**
 > - **Logging:** Logging has been improved with structured JSON output
@@ -300,7 +304,7 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 
 ### 19. Curly Quotation Marks
 
-**Problem:** Curly quotes (“...”) appear where the rest of the text, or the code it sits next to, uses straight quotes ("...").
+**Problem:** Typographic quotes (“...”) show up in text, or next to code, that otherwise uses plain straight quotes ("...").
 
 **Before:**
 > Set the `Cache-Control` header to “no-store” and redeploy
@@ -318,7 +322,7 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 **Problem:** Lines meant for the chat with the model get pasted into the document itself.
 
 **Before:**
-> Here's an updated install section for the README! I hope this helps. Let me know if you'd like me to add a troubleshooting section.
+> Sure! Below is the revised install section for the README. I hope this helps, and feel free to ask if you want a troubleshooting part as well.
 >
 > ## Install
 >
@@ -358,10 +362,10 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 **Thai cue:** "คำถามดีมากค่ะ", "ถูกต้องเลยครับ", "เป็นประเด็นที่ดีมาก" in real writing → suspect (AI assistant leak)
 
 **Before:**
-> Great catch! You're absolutely right that the retry loop has no upper bound. That's an excellent point about the backoff too
+> What a sharp observation, and you're completely right: the retry loop never stops. Brilliant thinking on the backoff as well
 
 **After:**
-> Agreed, the retry loop has no upper bound. Your point about the backoff stands too.
+> Agreed, the retry loop never stops. You're right about the backoff as well.
 
 
 ## FILLER AND HEDGING
@@ -387,7 +391,9 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 
 ### 24. Excessive Hedging
 
-**Problem:** One claim carries several hedges. Keep one, sized to how sure you really are.
+**Problem:** One claim carries several hedges. Keep one, sized to how sure you really are. This is the rule for stacked hedges in every language; §32.1 and §32.4 point here.
+
+**Not hedges:** a scope statement ("on Linux only", `เฉพาะบน staging`), a warning or safety notice, and a real correction. Leave them in.
 
 **Thai cue:** "อาจจะเป็นไปได้ว่าน่าจะอาจจะ..." → suspect (one hedge is enough)
 
@@ -403,7 +409,7 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 **Problem:** The piece ends on upbeat words about the future instead of the next real step. Keep the step if there is one; otherwise end on the last fact.
 
 **Before:**
-> With this release, the future looks bright for the project. Exciting times lie ahead as we continue our journey toward a world-class developer experience. Next up is Windows support
+> This release opens a bright new chapter for the project, and the best is yet to come as we keep building something developers will love. Next up is Windows support
 
 **After:**
 > Next up is Windows support.
@@ -431,10 +437,10 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 **Problem:** A framing phrase promises a deeper point and then states an ordinary one. Drop the framing and make the point.
 
 **Before:**
-> At its core, what really matters is connection pooling. Fundamentally, the heart of the matter is that we open a new connection per request
+> Make no mistake, the real story here is connection pooling. The deeper issue, in reality, is that every request opens its own connection
 
 **After:**
-> We open a new connection per request; the fix is connection pooling.
+> Every request opens its own connection; the fix is connection pooling.
 
 
 ### 28. Signposting and Announcements
@@ -446,10 +452,10 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 **Thai cue:** "เรามาเจาะลึกกัน", "สิ่งที่คุณต้องรู้คือ", stand-alone "พูดตรงๆ นะ", "เอาจริงๆ?" before the point → suspect
 
 **Before:**
-> Let's dive into how the rate limiter works. Here's what you need to know: it uses a token bucket per API key
+> Let's break down how the rate limiter works. Without further ado: each API key gets its own token bucket
 
 **After:**
-> The rate limiter uses a token bucket per API key.
+> Each API key gets its own token bucket in the rate limiter.
 
 **Before (candor opener):**
 > Here's the thing: the staging DB is a week behind prod
@@ -460,7 +466,7 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 
 ### 29. Fragmented Headers
 
-**Signs to watch:** A heading followed by a one-line paragraph that simply restates the heading before the real content begins; a horizontal rule (`---`) between every section; heading levels skipped or several level-1 headings in one document.
+**Signs to watch:** a one-line paragraph under a heading that says the heading again before any content starts; a `---` rule between every pair of sections; skipped heading levels, or more than one level-1 heading in a document.
 
 **Problem:** A warm-up line under the heading repeats the heading and delays the content.
 
@@ -479,13 +485,13 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 
 ### 30. Diff-Anchored Writing
 
-**Problem:** Docs and comments describe the last change instead of the current state, or describe the writer's own process and the page layout instead of the content. Unless the document is version-scoped by nature (changelog, release notes, migration guide), it should make sense to someone who never saw the previous version. Two related forms: narrating your method ("we collected these by...", "to be fair, we...") when only the result matters, and describing a layout the reader can already see ("the table below is sorted with...", "the left column shows..."). Keep a method fact the reader needs to trust the numbers, stated once and plainly.
+**Problem:** Docs and comments describe the last change instead of the current state, or describe the writer's own process and the page layout instead of the content. Unless the document is version-scoped by nature (changelog, release notes, migration guide), it should make sense to someone who never saw the previous version. Two related forms: narrating your method ("we collected these by...", "to be fair, we...") when only the result matters, and explaining a layout that is already in front of the reader ("the table below is sorted with...", "the left column shows..."). Keep a method fact the reader needs to trust the numbers, stated once and plainly.
 
 **Before (diff-anchored):**
-> This function was added to replace the old per-user loop; it now fetches all users in one batched call
+> Rewrote this helper: it used to loop over users one at a time and now loads them all in a single batched query
 
 **After:**
-> This function fetches all users in one batched call.
+> This helper loads all users in a single batched query.
 
 **Before (method and layout narration):**
 > To be fair to every library, we ran each benchmark five times and took the median. The table below is sorted with the fastest library at the top, and the columns go from cold start to warm start
@@ -504,7 +510,7 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 
 **Rule:** In a reply, lead with the decision or answer and the one fact the reader does not have yet. The full diagnosis goes in the ticket, the PR or the doc, and the reply links to it.
 
-**Why AI does it:** a model writes for a reader with no context, because that fits the most cases. A person replying in a thread already shares the background, so a recap pushes the answer to the end.
+**Why AI does it:** a model assumes a reader who knows nothing, since that guess is safe in most settings. Someone answering in a thread already has the background, so a recap pushes the answer to the end.
 
 **Before (reply to "can we ship Friday?"):**
 > As you know, the release depends on the payments migration, which moves card tokens from the old vault to the new one. The migration has three phases: export, re-encrypt and import. Export and re-encrypt finished Tuesday. Import failed last night on 212 tokens with an expired key. So we can't ship Friday; we need until Monday to rotate the key and re-run the import.
@@ -513,15 +519,15 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 > Not Friday, Monday. Import failed on 212 tokens with an expired key; we need to rotate the key and re-run it. <link to ticket>
 
 
-### 60. One-Line Closers and Dramatic Fragments
+### 60. Punchline Closers and Fragment Runs
 
-**Phrases to watch:** a one-line paragraph that restates what came just before ("That's the win.", "That changes everything.", "Big difference."); a row of punchy fragments ("Faster. Simpler. Cheaper."); the same closer after every section
+**Phrases to watch:** a paragraph of one line that only repeats the point before it ("That's the win.", "That changes everything.", "Big difference."); a row of punchy fragments ("Faster. Simpler. Cheaper."); a matching closer at the end of each section
 
 **Thai cue:** "นี่แหละคือจุดเปลี่ยน", "จบ.", "ง่ายๆ แค่นั้น" as a paragraph of its own → suspect
 
 **Rule:** Merge the closer into the claim it repeats, or cut it. A row of fragments becomes one sentence, keeping only the fragments the text supports. A short sentence is fine when it adds a new fact.
 
-**Why AI does it:** the model copies the rhythm of marketing copy and social posts, where a short line asks the reader to pause. In technical writing the pause adds nothing the reader can use.
+**Why AI does it:** the model copies the rhythm of marketing copy and social posts, where a lone short line makes the reader stop for effect. In technical writing the pause adds nothing the reader can use.
 
 **Before:**
 > We moved session storage from Postgres to Redis. p99 login latency dropped from 800 ms to 90 ms.
@@ -540,7 +546,7 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 
 **Thai cue:** "บางคนอาจแย้งว่า", "อาจมีคนสงสัยว่า", "ก่อนจะมีคนถาม" with no one named → suspect
 
-**Rule:** Cut defenses against objections nobody raised and rejections of options nobody proposed. Keep an objection only when it is attributed (a reviewer, a thread, an earlier ADR) and the text answers it.
+**Rule:** Cut defenses against objections nobody raised and rejections of options nobody proposed. Keep an objection only when it is attributed (a reviewer, a thread, an earlier ADR) and the text answers it. An ADR or design doc may list the real options it considered and rejected; cut only the rejection of an option no reader would weigh.
 
 **Why AI does it:** the model expects pushback that is not in the context, or keeps a rebuttal from an earlier draft after the thing it rebutted is gone.
 
@@ -553,7 +559,7 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 
 ## DETECTION GUIDANCE
 
-### What NOT to flag (false positives)
+### Not a tell: false positives to leave alone
 
 Someone writing carefully without any AI can still trip several patterns above. Check before you rewrite that you are not flattening good prose. None of these is a reliable sign by itself:
 
@@ -571,7 +577,7 @@ Someone writing carefully without any AI can still trip several patterns above. 
 When unsure, look for several tells together, not one. A lone em dash says nothing. Em dashes, triads, "seamless", "pivotal" and a closing "Conclusion" heading together say a lot.
 
 
-### Signs of human writing (preserve these)
+### Signs a person wrote it (keep these)
 
 These point to a real writer. When you see them, edit less, because heavy rewriting removes exactly what makes the text sound like a person:
 
@@ -581,4 +587,4 @@ These point to a real writer. When you see them, edit less, because heavy rewrit
 - **Choices the writer can explain.** A cut or a word the author can justify is a strong sign of a person.
 - **Uneven sentence length.** People mix short and long. Model text drifts to a steady middle length. **For Thai: alternate "ผ่าน" (short) with "ทดสอบบน staging แล้ว เคส burst ผ่าน ส่วน moto drop ยังไม่ผ่าน" (long)**
 - **Real asides and self-corrections.** "(I first wrote 'always' here, but it was twice.)" Models rarely break their own flow like that.
-- **Text written before November 30, 2022.** That is when ChatGPT launched; older text is almost never AI-written.
+- **Anything dated before ChatGPT's launch (30 November 2022).** Text that old is almost never AI-written.
