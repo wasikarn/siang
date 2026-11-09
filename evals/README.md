@@ -56,6 +56,13 @@ with, 0.67 without (Δ +0.22): a plain model copies the one-off emoji. The first
 sentence-length median on samples this short (`profile-measured`); 0.1.17 made the step-2 criterion explicit and a rerun
 scored 1.00 against 0.67 (Δ +0.33), one run, so it may be noise.
 
+One case covers `siang:thai-pua-repair` (tag `thai-pua-repair`): `thai-pua-repair-extracted-text` gives the skill a short
+extract with Windows Thai PUA glyphs (U+F70A, F70B, F70E, F710) plus one U+F71B that has no known mapping. Graders check the
+words come back right and that U+F71B stays in the text, neither deleted nor guessed. First run: 1.00 with and without the
+skill (Δ 0.00). Plain Claude repairs a short sample from context, so this case is a regression guard, not evidence of
+uplift; the skill's value (a checked 27-row table, a report of what it could not map, a whole 143-page extract in one
+pass) shows at a scale this fixture does not reach.
+
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
