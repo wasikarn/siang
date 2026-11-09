@@ -1,9 +1,8 @@
 # Third-party notices
 
 siang adapts rules and examples from three MIT-licensed projects (below). Where each source is
-used is listed in `skills/humanize/references.md`, "Sources adapted". Some examples are still
-close adaptations of a source's own examples; they are covered by that source's MIT license and
-are being replaced with fresh ones. No kien-thai exemplar passage (third-party writing) was copied.
+used is listed in `skills/humanize/references.md`, "Sources adapted". Examples that were close
+adaptations of a source's own examples were replaced with fresh ones on 2026-11-09. No kien-thai exemplar passage (third-party writing) was copied.
 
 ## chakrit/kien-thai
 
@@ -75,8 +74,9 @@ SOFTWARE.
 - Project: https://github.com/blader/humanizer (v2.7.0, commit a2ace14, reached method-harness on
   2026-06-10; checked against HEAD 0ef9fe5bc3572734fd3ae6c448fe00a30cd5dcf0)
 - Used in: the 30 universal patterns (`skills/humanize/patterns-universal.md`, `cue-sheet.md`):
-  pattern titles, order, much of the rule text and many before/after examples, and the worked
-  example in `examples.md`. This credit was missing until 2026-11-09.
+  pattern titles, order and structure. Its rule text, before/after examples and the worked example
+  in `examples.md` were copied until 2026-11-09, when they were replaced with siang's own; this
+  credit was missing until then.
 
 ```
 MIT License
@@ -107,6 +107,6 @@ SOFTWARE.
 The universal patterns follow the structure of
 https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing (WikiProject AI Cleanup), directly and
 through blader/humanizer. Wikipedia text is CC BY-SA 4.0
-(https://creativecommons.org/licenses/by-sa/4.0/). A few example passages in
-`patterns-universal.md` were quoted from that page; they are being replaced with fresh examples
-so that no CC BY-SA text remains in this MIT repository.
+(https://creativecommons.org/licenses/by-sa/4.0/). Example passages quoted from that
+page were replaced with fresh ones on 2026-11-09, so no CC BY-SA text remains in this MIT
+repository; §7's word list still credits the page as its source.

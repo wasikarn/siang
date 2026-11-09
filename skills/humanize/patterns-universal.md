@@ -1,4 +1,4 @@
-# Universal AI-writing patterns (§1–§30): full catalog
+# Universal AI-writing patterns (§1–§30, §59–§61): full catalog
 
 ## Contents
 
@@ -7,207 +7,224 @@
 - Style patterns
 - Communication patterns
 - Filler and hedging
+- Reader and argument patterns (§59–§61)
 - Detection guidance
 
-The 30 universal patterns, with the problem and a worked before/after for each.
-These apply to **all languages** (EN, TH, mixed). The compact 30-row table is
+The 33 universal patterns, with the problem and a worked before/after for each.
+These apply to **all languages** (EN, TH, mixed). The compact 33-row table is
 `cue-sheet.md`; open this file for the worked before/after of a tell you cannot fix,
 or for the Detection Guidance at the end before deciding prose is AI at all.
 
-Thai-specific patterns (§31–§42: terminology, calque, anti-fabrication, register,
-code-switching, AI-leaked closers) live in `patterns-thai.md`.
+Thai-specific patterns live in `patterns-thai.md` (§31–§42: terminology, calque,
+anti-fabrication, register, code-switching, AI-leaked closers; §53–§58: grammar slips, headings,
+pronouns, dates, apologies, hidden characters) and `patterns-thai-structure.md` (§43–§52).
+
+Every After below uses only facts found in its Before. Where the Before is vague, the After keeps
+the gap visible (`<N>`, `[source?]`) instead of filling it.
 
 ## CONTENT PATTERNS
 
 ### 1. Undue Emphasis on Significance, Legacy, and Broader Trends
 
-**Words to watch:** stands/serves as, is a testament/reminder, a vital/significant/crucial/pivotal/key role/moment, underscores/highlights its importance/significance, reflects broader, symbolizing its ongoing/enduring/lasting, contributing to the, setting the stage for, marking/shaping the, represents/marks a shift, key turning point, evolving landscape, focal point, indelible mark, deeply rooted
+**Words to watch:** pivotal moment, a testament to, marks a shift, sets the stage for, plays a vital/key role, underscores the importance of, reflects a broader trend, an enduring legacy, the evolving landscape, a turning point, leaves a lasting mark
 
 **Thai cue:** "ถือเป็นก้าวสำคัญ", "สะท้อนถึงความสำคัญ", "เป็นหลักฐาน", "สร้างคุณค่า", "ส่งเสริม" tacked onto the end of a sentence without adding information → suspect
 
-**Problem:** LLM writing puffs up importance by adding statements about how arbitrary aspects represent or contribute to a broader topic.
+**Problem:** The text claims that an ordinary change matters to something larger, without saying how. The reader learns nothing from the claim, and it hides the one fact that is there.
 
 **Before:**
-> สถาบันสถิติแคว้น Catalunya ก่อตั้งขึ้นอย่างเป็นทางการในปี 1989 marking a pivotal moment in the evolution of regional statistics in Spain นอกจากนี้ยังเป็นส่วนหนึ่งของ a broader movement across Spain to decentralize administrative functions
+> การย้าย database ไป PostgreSQL 16 ถือเป็นก้าวสำคัญ marking a pivotal moment in our platform's evolution and setting the stage for future growth
 
 **After:**
-> สถาบันสถิติแคว้น Catalunya ก่อตั้งปี 1989 เพื่อเก็บและตีพิมพ์สถิติระดับภูมิภาคแยกจากสำนักงานสถิติแห่งชาติสเปน
+> ย้าย database ไป PostgreSQL 16 แล้ว
 
 
 ### 2. Undue Emphasis on Notability and Media Coverage
 
-**Words to watch:** independent coverage, local/regional/national media outlets, written by a leading expert, active social media presence
+**Words to watch:** widely recognized, covered by major outlets, featured across the community, an active social media presence, a growing following, written by a leading expert
 
-**Problem:** LLMs hit readers over the head with claims of notability, often listing sources without context.
+**Problem:** The text piles up signs of fame (outlets, follower counts, "widely recognized") instead of the one specific mention that can be checked.
 
 **Before:**
-> ความเห็นของเธอถูกอ้างใน The New York Times, BBC, Financial Times และ The Hindu เธอ maintains an active social media presence with over 500,000 followers
+> The library has been widely recognized across the developer community, with coverage in Go Weekly issue 512 and an active social media presence boasting thousands of followers
 
 **After:**
-> ในบทสัมภาษณ์ The New York Times ปี 2024 เธอเสนอว่าการกำกับ AI ควรเน้นที่ outcome ไม่ใช่ method
+> Go Weekly linked the library in issue 512.
 
 
 ### 3. Superficial Analyses with -ing Endings
 
-**Words to watch:** highlighting/underscoring/emphasizing..., ensuring..., reflecting/symbolizing..., contributing to..., cultivating/fostering..., encompassing..., showcasing...
+**Words to watch:** a trailing clause starting with ensuring, reflecting, highlighting, underscoring, fostering, showcasing, contributing to, paving the way for
 
 **Thai cue:** "ซึ่งสะท้อนถึง...", "เพื่อส่งเสริม...", "ช่วยเสริมสร้าง...", "โดยเน้นย้ำถึง..." trailing a sentence as padding → suspect
 
-**Problem:** AI chatbots tack present participle ("-ing") phrases onto sentences to add fake depth.
+**Problem:** A participle clause hangs off the end of a sentence and adds a meaning the facts don't carry. Cut the tail, or turn it into a real fact if there is one.
 
 **Before:**
-> วัดใช้โทนสีน้ำเงิน เขียว ทอง resonating with the region's natural beauty symbolizing Texas bluebonnets และ the diverse Texan landscapes reflecting the community's deep connection to the land
+> The retry wrapper now backs off exponentially, ensuring resilience, reflecting our focus on reliability and fostering trust with downstream teams
 
 **After:**
-> วัดใช้สีน้ำเงิน เขียว ทอง สถาปนิกบอกว่าเลือกสีพวกนี้เพื่ออ้างอิง bluebonnets ท้องถิ่นกับ Gulf coast
+> The retry wrapper now backs off exponentially.
 
 
 ### 4. Promotional and Advertisement-like Language
 
-**Words to watch:** boasts a, vibrant, rich (figurative), profound, enhancing its, showcasing, exemplifies, commitment to, natural beauty, nestled, in the heart of, groundbreaking (figurative), renowned, breathtaking, must-visit, stunning
+**Words to watch:** blazing-fast, battle-tested, production-ready, seamless, supercharge, effortless, game-changing, best-in-class, nestled, in the heart of, vibrant, breathtaking, stunning
 
 **Thai cue:** "งดงามตระการตา", "สวยงามราวภาพวาด", "เป็นที่รู้จักในระดับสากล", "ขึ้นชื่อเรื่อง", "ตั้งอยู่ใจกลาง" → suspect when no real data backs it
 
-**Problem:** LLMs have serious problems keeping a neutral tone, especially for "cultural heritage" topics.
+**Problem:** The text sells instead of describing. In a README or release note, every adjective of praise needs a number or a source behind it, or it goes.
 
 **Before:**
-> ตั้งอยู่ท่ามกลาง breathtaking region of Gonder ในเอธิโอเปีย Alamata Raya Kobo เป็น vibrant town with a rich cultural heritage and stunning natural beauty
+> Nestled at the heart of your stack, Fluxer is a blazing-fast, battle-tested, production-ready job queue that will supercharge your workflow with breathtaking simplicity
 
 **After:**
-> Alamata Raya Kobo เป็นเมืองในเขต Gonder ของเอธิโอเปีย ขึ้นชื่อเรื่องตลาดประจำสัปดาห์และโบสถ์ศตวรรษที่ 18
+> Fluxer is a job queue. [Add a benchmark before "fast" and named production users before "battle-tested".]
 
 
 ### 5. Vague Attributions and Weasel Words
 
-**Words to watch:** Industry reports, Observers have cited, Experts argue, Some critics argue, several sources/publications (when few cited)
+**Words to watch:** experts agree, industry reports suggest, many believe, observers note, studies show (with no study named), some teams have found
 
 **Thai cue:** "ผู้เชี่ยวชาญบางท่านกล่าวว่า", "นักวิจารณ์หลายคนมองว่า", "รายงานระบุ" with no name or source → suspect
 
-**Vague association (newer, 2025+ models):** "linked to", "associated with", "connected to", "tied to" in place of the actual relation ("was CEO of", "funded", "wrote"). Thai cue: "มีความเชื่อมโยงกับ", "มีส่วนเกี่ยวข้องกับ" with the relation left unsaid. Fix: state the relation or cut the clause.
+**Vague association (newer, 2025+ models):** "linked to", "associated with", "connected to", "tied to" in place of the actual relation ("owns", "calls", "pays for", "wrote"). Thai cue: "มีความเชื่อมโยงกับ", "มีส่วนเกี่ยวข้องกับ" with the relation left unsaid. Fix: state the relation or cut the clause.
 
-**Problem:** AI chatbots attribute opinions to vague authorities without specific sources, or gesture at a relation instead of naming it.
+**Problem:** A claim leans on an unnamed authority, or says two things are related without saying how. Name the source and the relation, or mark the gap.
 
 **Before:**
-> เนื่องจากลักษณะเฉพาะ แม่น้ำฮ่วยหลาย is of interest to researchers and conservationists Experts believe it plays a crucial role in the regional ecosystem
+> Experts agree that feature flags reduce deployment risk, and industry reports suggest most high-performing teams rely on them. The rollout service is also closely linked to the payments team
 
 **After:**
-> แม่น้ำฮ่วยหลายเป็นถิ่นอาศัยของปลาเฉพาะถิ่นหลายชนิด ตามสำรวจของ Chinese Academy of Sciences ปี 2019
+> Feature flags reduce deployment risk [source?]. The payments team <owns / calls / pays for?> the rollout service.
 
 
 ### 6. Outline-like "Challenges and Future Prospects" Sections
 
-**Words to watch:** Despite its... faces several challenges..., Despite these challenges, Challenges and Legacy, Future Outlook
+**Words to watch:** despite its strengths ... faces several challenges, despite these challenges, continues to thrive, challenges and opportunities, looking ahead, future outlook
 
 **Thai cue:** "ท่ามกลางความท้าทาย", "อย่างไรก็ตาม...ยังคงเติบโต", "อนาคตของ..." as a wrap-up is usually formula → suspect
 
-**Problem:** Many LLM-generated articles include formulaic "Challenges" sections.
+**Problem:** A stock "challenges, then hope" section closes the piece whatever the topic. Keep the specific problems; drop the reassurance unless there is a real plan with an owner or date.
 
 **Before:**
-> Despite its industrial prosperity Korattur faces challenges typical of urban areas including traffic congestion and water scarcity Despite these challenges with its strategic location and ongoing initiatives Korattur continues to thrive as an integral part of Chennai's growth
+> Despite its many strengths, the monorepo faces several challenges, including slow CI and frequent merge conflicts. Despite these challenges, with ongoing initiatives, the monorepo continues to thrive as a cornerstone of our engineering culture
 
 **After:**
-> จราจรติดขัดเพิ่มขึ้นหลังปี 2015 เมื่อมี IT park ใหม่ 3 แห่ง เทศบาลเริ่มโครงการระบายน้ำปี 2022 เพื่อรับมือน้ำท่วมซ้ำซาก
+> CI on the monorepo is slow and merge conflicts are frequent. [What is being done about it, by whom, by when?]
 
 
 ## LANGUAGE AND GRAMMAR PATTERNS
 
 ### 7. Overused "AI Vocabulary" Words
 
-**High-frequency AI words** (Wikipedia list as of 2026-09): Actually, additionally, align with, boasts, bolstered, crucial, deep dive, delve, emphasizing, enduring, enhance, fostering, garner, highlight (verb), interplay, intricate/intricacies, key (adjective), landscape (abstract noun), meticulous/meticulously, pivotal, robust, showcase, tapestry (abstract noun), testament, underscore (verb), valuable, vibrant
+**High-frequency AI words** (Wikipedia's "Signs of AI writing" list, checked 2026-09, plus siang additions): additionally, align with, bolster, crucial, deep dive, delve, enduring, enhance, foster, garner, highlight (verb), interplay, intricate, key (adjective), landscape (abstract), meticulous, pivotal, robust (figurative), showcase, tapestry, testament, underscore (verb), vibrant, quietly ("quietly breaks", "quietly powers"), gate/gating (figurative: "gating our growth", "the gate to adoption")
 
 **Thai cue:** "อันที่จริง", "นอกจากนี้", "สำคัญยิ่ง", "ส่งเสริม", "เน้นย้ำ", "ภูมิทัศน์", "จุดเปลี่ยน", "สัมผัสได้", "พยาน", "ขีดเส้นใต้" → suspect when used out of context
 
-**Problem:** These words appear far more frequently in post-2023 text. They often co-occur.
+**Problem:** These words show up far more often in model output than in human writing, and they tend to come in clusters. One alone proves little; three in a sentence is a tell.
+
+**Guard:** the technical sense is fine. A feature gate, a CI gate, a gated rollout, robust statistics and a robust estimator are terms of art, not AI vocabulary.
 
 **Before:**
-> Additionally a distinctive feature of Somali cuisine is the incorporation of camel meat An enduring testament to Italian colonial influence is the widespread adoption of pasta in the local culinary landscape showcasing how these dishes have integrated into the traditional diet
+> Additionally, this PR delves into the intricate interplay between the cache and the session store, showcasing a robust approach that quietly underscores the pivotal role of invalidation
 
 **After:**
-> อาหารโซมาลียังมีเนื้ออูฐ ซึ่งถือเป็นอาหารพิเศษ พาสต้าที่เข้ามาตอนอิตาลี colonize ยังพบทั่วไป โดยเฉพาะทางใต้
+> This PR also touches cache and session-store invalidation.
 
 
 ### 8. Avoidance of "is"/"are" (Copula Avoidance)
 
-**Words to watch:** serves as/stands as/marks/represents [a], boasts/features/offers [a]
+**Words to watch:** serves as, stands as, functions as, operates as, acts as, serves to [verb], represents [a], boasts, features, offers [a]
 
 **Thai cue:** "ทำหน้าที่เป็น", "ถือเป็น", "ถือได้ว่าเป็น", "เป็นสัญลักษณ์ของ" instead of a plain "คือ" / "เป็น" → suspect
 
-**Problem:** LLMs substitute elaborate constructions for simple copulas.
+**Problem:** A longer verb phrase stands in for "is", "has" or a plain verb. The sentence gets heavier and says the same thing.
 
 **Before:**
-> Gallery 825 serves as LAAA's exhibition space for contemporary art แกลเลอรี่ features four separate spaces and boasts over 3,000 square feet
+> The `config/` directory serves as the single source of truth for environment settings. The loader functions as a thin wrapper, and the schema serves to validate input. The CLI boasts three subcommands
 
 **After:**
-> Gallery 825 คือ exhibition space ของ LAAA สำหรับ contemporary art แกลเลอรี่มี 4 ห้อง รวม 3,000 ตารางฟุต
+> `config/` is the single source of truth for environment settings. The loader is a thin wrapper, and the schema validates input. The CLI has three subcommands.
 
 
 ### 9. Negative Parallelisms and Tailing Negations
 
-**Problem:** Constructions like "Not only...but..." or "It's not just about..., it's..." are overused. So are clipped tailing-negation fragments such as "no guessing" or "no wasted motion" tacked onto the end of a sentence instead of written as a real clause.
+**Problem:** The text sets up a contrast nobody asked for: "not only X but Y", "it's not just X, it's Y", the same move split over two sentences ("It's not X. It's Y."), or the reversed form "Y rather than X" where X was never on the table. A short negative tag stuck on the end of a sentence ("no guesswork", "zero config") does the same job. Say the positive claim once.
+
+**Keep** a negation that corrects something the reader actually believes. "The timeout is not the cause; the pool is exhausted" is right when the thread has been blaming the timeout.
 
 **Thai cue:** "ไม่ใช่แค่...แต่ยัง...", "ไม่เพียงเท่านั้น แต่...", "ไม่ต้องเดาอีกต่อไป", "ไม่มีอะไรต้องเสียเวลา" as a tail → suspect
 
-**Before:**
-> It's not just about the beat riding under the vocals it's part of the aggression and atmosphere It's not merely a song it's a statement
+**Before (split across sentences):**
+> This isn't just a bug fix. It's a rethink of our retry logic. Retries now reuse the request's idempotency key, no duplicate orders
 
 **After:**
-> heavy beat เสริม aggressive tone
+> Retries now reuse the request's idempotency key, so a retried request does not create a duplicate order.
+
+**Before (Y rather than X):**
+> We store sessions in Redis rather than reinventing the wheel
+
+**After:**
+> We store sessions in Redis.
 
 **Before (tailing negation):**
-> ตัวเลือกมาจากรายการที่เลือก ไม่ต้องเดา
+> deploy ผ่าน pipeline เดียว ไม่ต้องจำคำสั่ง
 
 **After:**
-> ตัวเลือกมาจากรายการที่เลือก โดยไม่บังคับให้ผู้ใช้เดา
+> deploy ผ่าน pipeline เดียว คนที่ deploy จึงไม่ต้องจำคำสั่งเอง
 
 
 ### 10. Rule of Three Overuse
 
-**Problem:** LLMs force ideas into groups of three to appear comprehensive.
+**Problem:** Items get grouped in threes because three sounds complete, not because there are three. Often the third item is vague filler. The habit also works at paragraph scale: three sections, three bullets of equal length, three "key takeaways".
+
+**Keep three when there really are three:** a function with three parameters, a release with three fixes, three steps that all happen.
 
 **Thai cue:** "streamline processes, enhance collaboration, and foster alignment" pattern → two is enough, three is too many
 
 **Before:**
-> งานนี้ประกอบด้วย keynote sessions, panel discussions, and networking opportunities ผู้เข้าร่วมคาดหวัง innovation, inspiration, and industry insights
+> This release brings faster builds, smaller images, and a better developer experience
 
 **After:**
-> งานนี้มี talks กับ panels แล้วก็มีเวลา informal networking ระหว่าง session
+> Builds are faster and images are smaller. [By how much?]
 
 
 ### 11. Elegant Variation (Synonym Cycling)
 
 **Historical (Wikipedia, 2026-09):** common in older models, which cycled synonyms under repetition penalties, and much less frequent in newer ones. Treat as a dating signal for older AI text, not as evidence on its own. The fix still applies as a writing rule.
 
-**Problem:** older AI had repetition-penalty code causing excessive synonym substitution.
+**Problem:** The same thing gets a new name in each sentence. In technical writing this is worse than dull: the reader assumes four names mean four components.
 
 **Before:**
-> The protagonist faces many challenges The main character must overcome obstacles The central figure eventually triumphs The hero returns home
+> The worker pulls jobs from the queue. The worker process then validates each payload, and the job runner writes the result. Finally the queue consumer acks the message (one process, four names)
 
 **After:**
-> The protagonist faces many challenges but eventually triumphs and returns home
+> The worker pulls a job from the queue, validates the payload, writes the result and acks the message.
 
 
 ### 12. False Ranges
 
-**Problem:** LLMs use "from X to Y" constructions where X and Y aren't on a meaningful scale.
+**Problem:** "From X to Y" where X and Y are not two ends of one scale. It sounds broad and lists two unrelated things.
 
 **Thai cue:** "ตั้งแต่...จนถึง...", "จาก...สู่..." where the two ends are not on one scale → suspect
 
 **Before:**
-> Our journey through the universe has taken us from the singularity of the Big Bang to the grand cosmic web from the birth and death of stars to the enigmatic dance of dark matter
+> This guide takes you from installing the CLI to mastering the art of distributed tracing, from your first commit to the philosophy of observability
 
 **After:**
-> หนังสือเล่มนี้ครอบคลุม Big Bang, star formation และทฤษฎีปัจจุบันเรื่อง dark matter
+> This guide covers installing the CLI, the first commit and distributed tracing.
 
 
 ### 13. Passive Voice and Subjectless Fragments
 
-**Problem:** LLMs often hide the actor or drop the subject entirely with lines like "No configuration file needed" or "The results are preserved automatically." Rewrite these when active voice makes the sentence clearer and more direct.
+**Problem:** The text hides who does what ("logs are rotated", "no setup required"). Name the actor when it helps the reader know what to run or whom to ask.
 
 **Before:**
-> ไม่ต้องใช้ไฟล์ config ผลลัพธ์ถูกเก็บรักษาโดยอัตโนมัติ
+> เมื่อรัน `app start` ค่า config ถูกโหลดโดยอัตโนมัติ ไม่ต้องตั้งค่าเพิ่ม
 
 **After:**
-> คุณไม่จำเป็นต้องใช้ไฟล์ config ระบบเก็บผลลัพธ์ให้อัตโนมัติ
+> `app start` โหลดค่า config ให้เอง คุณไม่ต้องตั้งค่าอะไรเพิ่ม
 
 
 ## STYLE PATTERNS
@@ -219,126 +236,132 @@ code-switching, AI-leaked closers) live in `patterns-thai.md`.
 **En-dash exemption:** number ranges (`40–60%`, `§31–32`, `2–5 minutes`) are fine. That's an en dash (`–`) doing its actual job, not an AI tell. The rule is about *em dashes used for asides* and *en dashes used as em dashes*. The em dash (`—`) is what AI overuses.
 
 **Before (AI overuse):**
-> The term is primarily promoted by Dutch institutions — not by the people themselves. You don't say "Netherlands, Europe" as an address — yet this mislabeling continues — even in official documents.
+> The cache layer — added last sprint — cuts p95 latency in half — at least on the read path.
 
 **After:**
-> The term is primarily promoted by Dutch institutions, not by the people themselves. You don't say "Netherlands, Europe" as an address, yet this mislabeling continues in official documents.
+> The cache layer, added last sprint, cuts p95 latency in half, at least on the read path.
 
 **Before (AI overuse in Thai):**
-> นโยบายใหม่ — ประกาศโดยไม่แจ้งล่วงหน้า — กระทบคนงานหลายพัน การเปลี่ยนแปลง — long overdue ตาม critics — จะมีผลทันที
+> hotfix นี้ — merge เมื่อคืน — แก้ timeout ฝั่ง checkout -- แต่ยังไม่แก้ฝั่ง refund
 
 **After:**
-> นโยบายใหม่ซึ่งประกาศโดยไม่แจ้งล่วงหน้า กระทบคนงานหลายพัน การเปลี่ยนแปลงที่ critics บอกว่า long overdue จะมีผลทันที
+> hotfix ที่ merge เมื่อคืนแก้ timeout ฝั่ง checkout แต่ยังไม่แก้ฝั่ง refund
 
 Before returning the final rewrite, scan it for em dashes (`—`). Any hit means the draft isn't done, except dashes kept from the user's own English writing sample. En-dash number ranges are exempt.
 
 
 ### 15. Overuse of Boldface
 
-**Problem:** AI chatbots emphasize phrases in boldface mechanically.
+**Problem:** Bold lands on every noun that seems important, so nothing stands out. Keep bold for the one thing a skimming reader must not miss, if any.
 
 **Before:**
-> ระบบผสม **OKRs (Objectives and Key Results)**, **KPIs (Key Performance Indicators)** และ visual strategy tools เช่น **Business Model Canvas (BMC)** และ **Balanced Scorecard (BSC)**
+> Set **`DATABASE_URL`** and **`REDIS_URL`** before running **migrations**. The **worker** reads **both** at startup
 
 **After:**
-> ระบบผสม OKRs, KPIs และ visual strategy tools อย่าง Business Model Canvas กับ Balanced Scorecard
+> Set `DATABASE_URL` and `REDIS_URL` before running migrations. The worker reads both at startup.
 
 
 ### 16. Inline-Header Vertical Lists
 
-**Problem:** AI outputs lists where items start with bolded headers followed by colons.
+**Problem:** Each bullet opens with a bold label and a colon, then a sentence that repeats the label. Three short facts become a padded list.
 
 **Before:**
-> - **User Experience:** The user experience has been significantly improved with a new interface
-> - **Performance:** Performance has been enhanced through optimized algorithms
-> - **Security:** Security has been strengthened with end-to-end encryption
+> - **Logging:** Logging has been improved with structured JSON output
+> - **Errors:** Error handling has been enhanced with clearer messages
+> - **Config:** Configuration has been simplified with fewer required keys
 
 **After:**
-> อัปเดตปรับปรุง interface, เร่ง load time ด้วย optimized algorithms และเพิ่ม end-to-end encryption
+> Logs are now structured JSON, error messages are clearer, and fewer config keys are required.
 
 
 ### 17. Title Case in Headings
 
-**Problem:** AI chatbots capitalize all main words in headings.
+**Problem:** Every main word in a heading is capitalized. Most dev docs and style guides use sentence case.
 
 **Before:**
-> ## Strategic Negotiations And Global Partnerships
+> ## How To Configure Rate Limiting For Your API
 
 **After:**
-> ## Strategic negotiations and global partnerships
+> ## How to configure rate limiting for your API
 
 
 ### 18. Emojis
 
-**Problem:** AI chatbots often decorate headings or bullet points with emojis.
+**Problem:** Emojis decorate headings and bullets in text that is not a chat message.
 
 **Before:**
-> 🚀 **Launch Phase:** The product launches in Q3
-> 💡 **Key Insight:** Users prefer simplicity
-> ✅ **Next Steps:** Schedule follow-up meeting
+> 🚀 **Deploy:** v2.3 ships Thursday
+> 🐛 **Fixes:** 4 bugs closed
+> ✅ **Next:** update the runbook
 
 **After:**
-> The product launches in Q3. User research showed a preference for simplicity. Next step: schedule a follow-up meeting.
+> v2.3 ships Thursday with 4 bug fixes. Next: update the runbook.
 
 
 ### 19. Curly Quotation Marks
 
-**Problem:** ChatGPT uses curly quotes (“...”) instead of straight quotes ("...").
+**Problem:** Curly quotes (“...”) appear where the rest of the text, or the code it sits next to, uses straight quotes ("...").
 
 **Before:**
-> He said “the project is on track” but others disagreed
+> Set the `Cache-Control` header to “no-store” and redeploy
 
 **After:**
-> He said "the project is on track" but others disagreed
+> Set the `Cache-Control` header to "no-store" and redeploy
 
 
 ## COMMUNICATION PATTERNS
 
 ### 20. Collaborative Communication Artifacts
 
-**Words to watch:** I hope this helps, Of course!, Certainly!, You're absolutely right!, Would you like..., let me know, here is a...
+**Words to watch:** I hope this helps, Of course!, Certainly!, Sure, here's..., Would you like me to..., let me know if..., feel free to
 
-**Problem:** Text meant as chatbot correspondence gets pasted as content.
+**Problem:** Lines meant for the chat with the model get pasted into the document itself.
 
 **Before:**
-> Here is an overview of the French Revolution I hope this helps! Let me know if you'd like me to expand on any section
+> Here's an updated install section for the README! I hope this helps. Let me know if you'd like me to add a troubleshooting section.
+>
+> ## Install
+>
+> Run `npm install fluxer`.
 
 **After:**
-> The French Revolution began in 1789 when financial crisis and food shortages led to widespread unrest
+> ## Install
+>
+> Run `npm install fluxer`.
 
 
 ### 21. Knowledge-Cutoff Disclaimers and Speculative Gap-Filling
 
-**Words to watch:** as of [date], Up to my last training update, While specific details are limited/scarce..., based on available information, not publicly available, maintains a low profile, keeps personal details private, prefers to stay out of the spotlight, likely [grew up/studied/began], it is believed that
+**Words to watch:** as of my last update, based on the information available, details are limited/scarce, not readily documented, it appears to have been, likely [was built / grew up], it is believed that, suggesting that
 
 **Thai cue:** "ณ ขณะนี้", "ตามข้อมูลที่มีอยู่", "ยังไม่มีข้อมูลที่เปิดเผย", "เชื่อว่า", "น่าจะเติบโตในครอบครัวชนชั้นกลาง" → suspect
 
-**Problem:** Two related tells. (a) Older models leave hard knowledge-cutoff disclaimers in the text. (b) When a model can't find a source, it writes a paragraph *about* not finding one and then invents plausible filler to cover the gap. For a private person the guess almost always lands on the same stock phrases ("maintains a low profile," "keeps personal details private"), none of it sourced. Say what isn't known, or cut the sentence; don't dress a guess up as fact.
+**Problem:** Two related tells. (a) A note about the model's own knowledge date stays in the text. (b) When no source turns up, the text says so and then guesses anyway, and the guess reads like a fact. Say what is unknown, or cut the sentence.
 
 **Before (cutoff disclaimer):**
-> While specific details about the company's founding are not extensively documented in readily available sources it appears to have been established sometime in the 1990s
+> As of my last update, the library's latest version appears to be 4.x, though details may have changed
 
 **After:**
-> The company was founded in 1994, according to its registration documents
+> Latest version: <check the registry>.
 
 **Before (speculative gap-fill):**
-> Information about her early life is not publicly available suggesting she maintains a low profile and keeps personal details private She likely grew up in a middle-class household which shaped her later interest in education reform
+> Detailed documentation of the legacy billing service is not readily available, suggesting it was likely built quickly by a small team and has been maintained with minimal oversight
 
 **After:**
-> Her early life is not documented in the available sources (Or omit the section)
+> We found no documentation for the legacy billing service.
 
 
 ### 22. Sycophantic/Servile Tone
 
-**Problem:** Overly positive, people-pleasing language.
+**Problem:** Praise for the question or the asker comes before the answer and adds nothing to it.
 
 **Thai cue:** "คำถามดีมากค่ะ", "ถูกต้องเลยครับ", "เป็นประเด็นที่ดีมาก" in real writing → suspect (AI assistant leak)
 
 **Before:**
-> Great question! You're absolutely right that this is a complex topic That's an excellent point about the economic factors
+> Great catch! You're absolutely right that the retry loop has no upper bound. That's an excellent point about the backoff too
 
 **After:**
-> The economic factors you mentioned are relevant here
+> Agreed, the retry loop has no upper bound. Your point about the backoff stands too.
 
 
 ## FILLER AND HEDGING
@@ -346,143 +369,216 @@ Before returning the final rewrite, scan it for em dashes (`—`). Any hit means
 ### 23. Filler Phrases
 
 **Before → After:**
-- "In order to achieve this goal" → "To achieve this"
-- "Due to the fact that it was raining" → "Because it was raining"
-- "At this point in time" → "Now"
-- "In the event that you need help" → "If you need help"
-- "The system has the ability to process" → "The system can process"
-- "It is important to note that the data shows" → "The data shows"
+- "In order to run the tests" → "To run the tests"
+- "Due to the fact that the cache is cold" → "Because the cache is cold"
+- "At the present moment we do not support Windows" → "We don't currently support Windows"
+- "In the event that the job fails" → "If the job fails"
+- "The service has the capability to retry" → "The service can retry"
+- "It is worth noting that the endpoint is deprecated" → "The endpoint is deprecated"
 
 **Thai filler → fix:**
-- "เพื่อที่จะทำให้บรรลุเป้าหมาย" → "เพื่อให้บรรลุเป้า"
-- "เนื่องจากข้อเท็จจริงที่ว่าฝนตก" → "เพราะฝนตก"
-- "ณ จุดเวลานี้" → "ตอนนี้"
-- "ในกรณีที่คุณต้องการความช่วยเหลือ" → "ถ้าคุณต้องการความช่วยเหลือ"
-- "ระบบมีความสามารถในการประมวลผล" → "ระบบประมวลผลได้"
-- "สิ่งสำคัญที่ควรทราบคือข้อมูลแสดงให้เห็นว่า" → "ข้อมูลแสดงว่า"
+- "เพื่อที่จะทำการรัน test" → "เพื่อรัน test"
+- "เนื่องจากข้อเท็จจริงที่ว่า cache ยังว่าง" → "เพราะ cache ยังว่าง"
+- "ณ ปัจจุบันขณะนี้ยังไม่รองรับ Windows" → "ตอนนี้ยังไม่รองรับ Windows"
+- "ในกรณีที่ job เกิดความล้มเหลว" → "ถ้า job fail"
+- "service มีความสามารถในการ retry" → "service retry ได้"
+- "สิ่งที่ควรทราบคือ endpoint นี้ deprecated แล้ว" → "endpoint นี้ deprecated แล้ว"
 
 
 ### 24. Excessive Hedging
 
-**Problem:** Over-qualifying statements.
+**Problem:** One claim carries several hedges. Keep one, sized to how sure you really are.
 
 **Thai cue:** "อาจจะเป็นไปได้ว่าน่าจะอาจจะ..." → suspect (one hedge is enough)
 
 **Before:**
-> It could potentially possibly be argued that the policy might have some effect on outcomes
+> It might perhaps be possible that the flaky test could potentially be related to the timezone setup
 
 **After:**
-> The policy may affect outcomes
+> The flaky test may be related to the timezone setup.
 
 
 ### 25. Generic Positive Conclusions
 
-**Problem:** Vague upbeat endings.
+**Problem:** The piece ends on upbeat words about the future instead of the next real step. Keep the step if there is one; otherwise end on the last fact.
 
 **Before:**
-> The future looks bright for the company Exciting times lie ahead as they continue their journey toward excellence This represents a major step in the right direction
+> With this release, the future looks bright for the project. Exciting times lie ahead as we continue our journey toward a world-class developer experience. Next up is Windows support
 
 **After:**
-> The company plans to open two more locations next year
+> Next up is Windows support.
 
 
 ### 26. Hyphenated Word Pair Overuse
 
-**Words to watch:** third-party, cross-functional, client-facing, data-driven, decision-making, well-known, high-quality, real-time, long-term, end-to-end
+**Words to watch:** a run of coined compounds in one phrase: developer-obsessed, insight-rich, friction-free, outcome-focused, scale-ready, future-forward
 
-**Problem:** AI hyphenates these uniformly, including in predicate position (`the report is high-quality`). Humans hyphenate inconsistently, typically only when the compound is attributive (`a high-quality report`) and often dropping the hyphen otherwise (`the report is high quality`). Keep attributive-position hyphens; drop them when the compound follows the noun.
+**Problem:** The tell is a stack of made-up hyphen compounds, each standing in for a claim the text does not back up. A single compound is not the tell, and dictionary-standard compounds (third-party, built-in, read-only, real-time, end-to-end, open-source) are correct: keep their hyphen wherever the dictionary or the project's style guide puts it. Don't add or strip hyphens by sentence position; fix the stack by cutting the coined pairs or replacing them with the facts they stand for.
 
 **Before:**
-> The cross-functional team delivered a high-quality, data-driven report The team is cross-functional, the report is high-quality, and the methodology is data-driven
+> A developer-obsessed, insight-rich, friction-free dashboard for outcome-focused teams. Ships with built-in auth and third-party SSO.
 
 **After:**
-> The cross-functional team delivered a high-quality, data-driven report. The team is cross functional, the report is high quality, and the methodology is data driven.
+> A dashboard for <which teams?>. Ships with built-in auth and third-party SSO.
 
 
 ### 27. Persuasive Authority Tropes
 
-**Phrases to watch:** The real question is, at its core, in reality, what really matters, fundamentally, the deeper issue, the heart of the matter
+**Phrases to watch:** at its core, fundamentally, what really matters, the heart of the matter, the deeper issue, make no mistake, the truth is, in reality
 
 **Thai cue:** "คำถามที่แท้จริงคือ", "โดยแท้จริง", "ในแก่นสำคัญ", "ประเด็นที่ลึกซึ้งกว่านั้น" → suspect
 
+**Problem:** A framing phrase promises a deeper point and then states an ordinary one. Drop the framing and make the point.
+
 **Before:**
-> The real question is whether teams can adapt At its core, what really matters is organizational readiness
+> At its core, what really matters is connection pooling. Fundamentally, the heart of the matter is that we open a new connection per request
 
 **After:**
-> The question is whether teams can adapt. That mostly depends on whether the organization is ready to change its habits.
+> We open a new connection per request; the fix is connection pooling.
 
 
 ### 28. Signposting and Announcements
 
-**Phrases to watch:** Let's dive in, let's explore, let's break this down, here's what you need to know, now let's look at, without further ado
+**Phrases to watch:** Let's dive in, let's break this down, here's what you need to know, now let's look at, without further ado, in this section we will; stand-alone candor openers such as "Honestly?", "Here's the thing:", "Look,", "Real talk:", "Let's be honest:"
 
-**Problem:** LLMs announce what they are about to do instead of doing it. This meta-commentary slows the writing down and gives it a tutorial-script feel.
+**Problem:** The text announces what it is about to say, or stages a moment of frankness, before saying it. Cut the run-up and start with the point. "Honestly" or "look" inside an ordinary sentence ("I honestly don't know why it retried twice") is fine; the tell is the opener that stands on its own.
+
+**Thai cue:** "เรามาเจาะลึกกัน", "สิ่งที่คุณต้องรู้คือ", stand-alone "พูดตรงๆ นะ", "เอาจริงๆ?" before the point → suspect
 
 **Before:**
-> Let's dive into how caching works in Next.js Here's what you need to know
+> Let's dive into how the rate limiter works. Here's what you need to know: it uses a token bucket per API key
 
 **After:**
-> Next.js caches data at multiple layers, including request memoization, the data cache, and the router cache
+> The rate limiter uses a token bucket per API key.
+
+**Before (candor opener):**
+> Here's the thing: the staging DB is a week behind prod
+
+**After:**
+> The staging DB is a week behind prod.
 
 
 ### 29. Fragmented Headers
 
 **Signs to watch:** A heading followed by a one-line paragraph that simply restates the heading before the real content begins; a horizontal rule (`---`) between every section; heading levels skipped or several level-1 headings in one document.
 
-**Problem:** LLMs often add a generic sentence after a heading as a rhetorical warm-up. It usually adds nothing and makes the prose feel padded.
+**Problem:** A warm-up line under the heading repeats the heading and delays the content.
 
 **Before:**
-> ## Performance
+> ## Rollback
 >
-> Speed matters
+> Rollbacks are important.
 >
-> When users hit a slow page, they leave
+> Run `deploy rollback <release>` to restore the previous release.
 
 **After:**
-> ## Performance
+> ## Rollback
 >
-> When users hit a slow page, they leave
+> Run `deploy rollback <release>` to restore the previous release.
 
 
 ### 30. Diff-Anchored Writing
 
-**Problem:** Documentation or comments written as if narrating a change rather than describing the thing as it is. Unless the document is inherently version-scoped (changelogs, release notes, migration guides), it should read coherently without knowing what changed in the last commit.
+**Problem:** Docs and comments describe the last change instead of the current state, or describe the writer's own process and the page layout instead of the content. Unless the document is version-scoped by nature (changelog, release notes, migration guide), it should make sense to someone who never saw the previous version. Two related forms: narrating your method ("we collected these by...", "to be fair, we...") when only the result matters, and describing a layout the reader can already see ("the table below is sorted with...", "the left column shows..."). Keep a method fact the reader needs to trust the numbers, stated once and plainly.
 
-**Before:**
-> This function was added to replace the previous approach of iterating through all items which caused O(n²) performance
+**Before (diff-anchored):**
+> This function was added to replace the old per-user loop; it now fetches all users in one batched call
 
 **After:**
-> This function uses a hash map for O(1) lookups, avoiding the O(n²) cost of naive iteration
+> This function fetches all users in one batched call.
+
+**Before (method and layout narration):**
+> To be fair to every library, we ran each benchmark five times and took the median. The table below is sorted with the fastest library at the top, and the columns go from cold start to warm start
+
+**After:**
+> Median of five runs per benchmark.
+
+
+## READER AND ARGUMENT PATTERNS
+
+### 59. Re-explaining What the Reader Already Knows
+
+**Phrases to watch:** as you know, for context, to recap, a quick refresher, let me start with some background, as mentioned earlier (in a short reply)
+
+**Thai cue:** "อย่างที่ทราบกันดี", "ขอเล่าที่มาก่อน", "เพื่อให้เห็นภาพ" opening a short reply → suspect
+
+**Rule:** In a reply, lead with the decision or answer and the one fact the reader does not have yet. The full diagnosis goes in the ticket, the PR or the doc, and the reply links to it.
+
+**Why AI does it:** a model writes for a reader with no context, because that fits the most cases. A person replying in a thread already shares the background, so a recap pushes the answer to the end.
+
+**Before (reply to "can we ship Friday?"):**
+> As you know, the release depends on the payments migration, which moves card tokens from the old vault to the new one. The migration has three phases: export, re-encrypt and import. Export and re-encrypt finished Tuesday. Import failed last night on 212 tokens with an expired key. So we can't ship Friday; we need until Monday to rotate the key and re-run the import.
+
+**After:**
+> Not Friday, Monday. Import failed on 212 tokens with an expired key; we need to rotate the key and re-run it. <link to ticket>
+
+
+### 60. One-Line Closers and Dramatic Fragments
+
+**Phrases to watch:** a one-line paragraph that restates what came just before ("That's the win.", "That changes everything.", "Big difference."); a row of punchy fragments ("Faster. Simpler. Cheaper."); the same closer after every section
+
+**Thai cue:** "นี่แหละคือจุดเปลี่ยน", "จบ.", "ง่ายๆ แค่นั้น" as a paragraph of its own → suspect
+
+**Rule:** Merge the closer into the claim it repeats, or cut it. A row of fragments becomes one sentence, keeping only the fragments the text supports. A short sentence is fine when it adds a new fact.
+
+**Why AI does it:** the model copies the rhythm of marketing copy and social posts, where a short line asks the reader to pause. In technical writing the pause adds nothing the reader can use.
+
+**Before:**
+> We moved session storage from Postgres to Redis. p99 login latency dropped from 800 ms to 90 ms.
+>
+> That's the win.
+>
+> Faster. Simpler. Cheaper.
+
+**After:**
+> We moved session storage from Postgres to Redis, and p99 login latency dropped from 800 ms to 90 ms.
+
+
+### 61. Arguing with No One
+
+**Phrases to watch:** some might argue, you might be thinking, and no, this isn't..., critics will say, ... was never on the table, before you ask
+
+**Thai cue:** "บางคนอาจแย้งว่า", "อาจมีคนสงสัยว่า", "ก่อนจะมีคนถาม" with no one named → suspect
+
+**Rule:** Cut defenses against objections nobody raised and rejections of options nobody proposed. Keep an objection only when it is attributed (a reviewer, a thread, an earlier ADR) and the text answers it.
+
+**Why AI does it:** the model expects pushback that is not in the context, or keeps a rebuttal from an earlier draft after the thing it rebutted is gone.
+
+**Before (ADR):**
+> We chose SQLite for the local cache. Some might argue we should run a full Postgres instance, but that would be overkill. And no, this is not premature optimization. Rewriting the cache in Rust was never on the table either.
+
+**After:**
+> We chose SQLite for the local cache.
 
 
 ## DETECTION GUIDANCE
 
 ### What NOT to flag (false positives)
 
-A clean human writer can hit several of the patterns above without any AI involvement. Before rewriting, sanity-check that you are not gutting legitimate prose. The following are *not* reliable indicators on their own:
+Someone writing carefully without any AI can still trip several patterns above. Check before you rewrite that you are not flattening good prose. None of these is a reliable sign by itself:
 
-- **Perfect grammar and consistent style.** Many writers are professionals or have been edited. Polish does not equal AI.
-- **Mixed casual and formal registers.** This often signals a person in a technical field, a young writer, or someone with neurodivergent prose habits, not a chatbot. **For Thai: Thai writers code-switch Thai-English by habit; it is normal, not always an AI tell**
-- **"Bland" or "robotic" prose.** AI prose has *specific* tells. Generic dryness without those tells is just dry writing.
-- **Formal or academic vocabulary.** AI overuses *specific* fancy words (see §7), not all fancy words. Don't flatten "ostensibly" or "constituent" just because they sound brainy. **For Thai: formal words in a formal context are not always an AI tell**
-- **Letter-style opening or closing on a comment.** Salutations and sign-offs predate ChatGPT by centuries.
-- **Common transition words in isolation.** *Additionally*, *moreover*, *consequently* are AI-coded only when piled up. One *however* is not a tell.
-- **Curly quotes alone.** macOS, Word, Google Docs, and most CMSes auto-curl by default. Curly quotes only count when stacked with other tells.
-- **Em dashes alone.** Many editors and journalists use them often. Em dashes are evidence only when paired with formulaic sales-y rhythm. **For Thai: an em dash hints at the pattern but is not proof when it appears once in a document**
-- **Unsourced claims.** Most of the web is unsourced. Lack of citations doesn't prove anything.
-- **Correct, complex formatting.** Visual editors and templates produce clean output without any AI.
+- **Clean grammar and a steady style.** Plenty of writers are trained or edited. Polish is not proof.
+- **A mix of casual and formal register.** This is common in engineers, younger writers and people whose prose just runs that way. **For Thai: Thai writers code-switch Thai-English by habit; it is normal, not always an AI tell**
+- **Dry, plain prose.** AI text has particular tells. Dry writing without them is just dry.
+- **Formal or academic words.** §7 lists the particular words models overuse; it is not a ban on long words. Leave "ostensibly" or "constituent" alone. **For Thai: formal words in a formal context are not always an AI tell**
+- **A greeting or sign-off on a comment or email.** People wrote those long before chatbots.
+- **One transition word.** "However" or "moreover" counts only when they pile up.
+- **Curly quotes by themselves.** Most editors and word processors curl quotes automatically. Count them only next to other tells.
+- **Em dashes by themselves.** Many good writers use them a lot. They count only alongside a formulaic, salesy rhythm. **For Thai: an em dash hints at the pattern but is not proof when it appears once in a document**
+- **Missing citations.** Most writing has none.
+- **Tidy, complex formatting.** Templates and editors produce that on their own.
 
-When in doubt, look for **clusters** of tells, not isolated ones. A single em dash means nothing; em dashes plus rule-of-three plus *vibrant tapestry* plus a "Conclusion" section is a confession.
+When unsure, look for several tells together, not one. A lone em dash says nothing. Em dashes, triads, "seamless", "pivotal" and a closing "Conclusion" heading together say a lot.
 
 
 ### Signs of human writing (preserve these)
 
-When you see these, lean toward leaving the prose alone. They are evidence of a real person writing, and over-editing will destroy what makes the piece sound human:
+These point to a real writer. When you see them, edit less, because heavy rewriting removes exactly what makes the text sound like a person:
 
-- **Specific, unusual, hard-to-fabricate detail.** A real address. A weird quote. The phrase "the lawyer who used to work upstairs from my dentist." LLMs round off specifics; humans hoard them. **For Thai: a ticket link, a log timestamp, a real teammate's name, "เมื่อวานคุยกับพี่แจ็ค"**
-- **Mixed feelings and unresolved tension.** "I think this is mostly good, but it bothers me, and I can't fully explain why." LLMs default to clean takes.
-- **Dated, era-bound references.** Slang, memes, or in-jokes that map to a specific year and subculture. Models lag by a year or more.
-- **First-person editorial choices the writer can defend.** If the writer can explain *why* they made a particular cut or used a particular word, that's a strong human signal.
-- **Variety in sentence length.** Real writing alternates short and long. AI writing tends toward an even, mid-length cadence. **For Thai: alternate "ผ่าน" (short) with "ทดสอบบน staging แล้ว เคส burst ผ่าน ส่วน moto drop ยังไม่ผ่าน" (long)**
-- **Genuine asides, parenthetical, or self-corrections.** "(I keep wanting to say 'almost' here, but it really was certain.)" Models rarely interrupt themselves like this.
-- **Edits made before November 30, 2022.** ChatGPT's public launch. Anything older than that is, with very rare exceptions, not AI-written.
+- **Odd, specific detail that is hard to make up.** An exact error string, a hostname, the name of the teammate who found the bug. Models smooth details away; people keep them. **For Thai: a ticket link, a log timestamp, a real teammate's name, "เมื่อวานคุยกับพี่แจ็ค"**
+- **Doubt that stays open.** "Mostly fine, but something about the retry path still bugs me." Models prefer a clean verdict.
+- **References tied to a time and a group.** In-jokes, slang or tool names that belong to one team or one year. Models trail behind.
+- **Choices the writer can explain.** A cut or a word the author can justify is a strong sign of a person.
+- **Uneven sentence length.** People mix short and long. Model text drifts to a steady middle length. **For Thai: alternate "ผ่าน" (short) with "ทดสอบบน staging แล้ว เคส burst ผ่าน ส่วน moto drop ยังไม่ผ่าน" (long)**
+- **Real asides and self-corrections.** "(I first wrote 'always' here, but it was twice.)" Models rarely break their own flow like that.
+- **Text written before November 30, 2022.** That is when ChatGPT launched; older text is almost never AI-written.

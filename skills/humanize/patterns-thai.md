@@ -12,12 +12,12 @@
 - 38. Code-switching tells
 - 39. Register-specific tells
 - 40. AI-leaked Thai closers
-- 41. Royal register anti-pattern
+- 41. Over-formal address (pointer to 32.8)
 - 42. Quick reference
 - 53. Surface grammar slips
 - 54. Headings
 - 55. Pronouns and self-reference
-- 56. Dates and times
+- 56. Dates, times and numbers
 - 57. Apology and promises (human customer replies)
 - 58. Hidden characters and marks
 - 43-52: sentence and paragraph structure, in `patterns-thai-structure.md`
@@ -36,7 +36,7 @@
 
 (a) **Drift in meaning**: words whose meaning has drifted in Thai (e.g. `API` usually means only a web API, but in practice a lib/function interface is an API too) → **keep English for precision**
 (b) **Calque (`แปลตรงตัว`)**: a Thai verb that translates the English word literally but does not match the real action
-(c) **Non-standard transliteration**: ad-hoc transliteration that does not follow RTGS
+(c) **Non-standard transliteration**: ad-hoc Thai spelling of an English word that does not follow the Royal Society's English-to-Thai transliteration rules (`หลักเกณฑ์การทับศัพท์ภาษาอังกฤษ`). Not RTGS: RTGS is the reverse system, Thai written in Latin letters.
 
 **Meaning-overlap test (run BEFORE the decision flow below, on every candidate term — not just terms already in the glossary table):** for any Thai noun/verb standing in for an English technical term, ask *does this word's actual, common meaning overlap with the technical meaning, or does it just sound like a plausible translation?* A grammatically-fine sentence is not evidence the term is correct — `ตั๋ว` (travel/event ticket) reads as a fine translation of "ticket" and is still (a) drift-in-meaning, because its real meaning has nothing to do with an issue-tracker record. Fail this test on any term, glossary or not → treat as (a). This is the check that catches new drift the glossary table hasn't enumerated yet; the table only covers terms already caught once.
 
@@ -55,7 +55,9 @@ Customer/non-dev reads it? ─ yes ─> is there a clear Thai word? ─ yes ─>
    └ no (dev reads it) ─> เก็บอังกฤษ (default), or ทับศัพท์ (transliterate) if already embedded in Thai
 ```
 
-**Verify transliteration** at https://transliteration.orst.go.th/search (Royal Society of Thailand). Never transliterate ad hoc.
+**Verify transliteration** at https://transliteration.orst.go.th/search (Royal Society of Thailand). Never transliterate ad hoc. When a dev term must appear in Thai script, use the official spelling (`แคช`, `เบราว์เซอร์`, `อัปโหลด`, `ฟังก์ชัน`, `โพรโทคอล`, `ไฟร์วอลล์`), not an improvised one (`อัพโหลด`, `ฟังชั่น`). The Royal Society also coins Thai words for many terms (`จุดบกพร่อง` for bug, `ลงบันทึกเข้า` for login, `กิ่ง` for branch); devs rarely write those, and UIs say what the product shows (`เข้าสู่ระบบ`), so prefer the word the reader actually meets.
+
+**Audience sets the English share.** Older, government or mass-market readers get less English and established ทับศัพท์ (`แอป`, `อีเมล`, `เว็บไซต์`); a dev channel keeps the English. Text written for Thai readers is never English-only. (Adapted from Boom-Vitt/claude-thai-skills (MIT); term spellings checked against the Royal Society computer and IT term list.)
 
 **Section heading / user-facing headings:** never mix in `(Declined)` as in `## การชำระเงินไม่สำเร็จ (Declined)`; move the English word into the body or translate it as "ถูกปฏิเสธ" instead.
 
@@ -66,9 +68,14 @@ Customer/non-dev reads it? ─ yes ─> is there a clear Thai word? ─ yes ─>
 | staging / develop / production | คงอังกฤษ | "ระบบทดสอบ" / (none) / "ระบบจริง" + อธิบาย |
 | merge | merge | รวมโค้ด |
 | deploy | deploy | นำขึ้นใช้งาน |
-| session | session (เก็บอังกฤษ) | เซสชัน (RTGS, ไม่มีไม้หันอากาศ) |
+| session | session (เก็บอังกฤษ) | เซสชัน (ทับศัพท์ตามราชบัณฑิตฯ ไม่มีไม้หันอากาศ) |
 | error code | error code | ข้อความแจ้งข้อผิดพลาด |
 | declined (bank/payment) | declined (เก็บไว้ใน log เท่านั้น) | ถูกปฏิเสธ |
+| login / logout | login / logout | เข้าสู่ระบบ / ออกจากระบบ |
+| backup | backup | สำรองข้อมูล |
+| cache | cache | แคช (ถ้าต้องเขียนเป็นไทย) |
+| bug | bug | ข้อผิดพลาด (user-facing), บั๊ก (dev chat) |
+| client (software) | client | ไม่ใช่ "ลูกค้า"; ใช้ชื่อแอปหรือ "แอป" |
 | ticket / issue (Jira, GitHub) | ticket (เก็บอังกฤษ) | "รายการแจ้งงาน" หรือคง ticket — ห้ามใช้ "ตั๋ว" (แปลว่าตั๋วเดินทาง/ตั๋วหนัง คนละความหมายกับ issue-tracker record เลย — drift-in-meaning (a), ไม่ใช่แค่ทับศัพท์ผิด) |
 
 > Product-specific terms (ANPR, dwell, front-facing, PDPA, traffic-campaign) → keep them in a separate project glossary, not in this global skill.
@@ -81,10 +88,10 @@ When replacing a calque, pick a verb matching the real action — not a vague pl
 **After (default `เก็บอังกฤษ`, Thai as glue):**
 > front-facing filter ยังไม่ปล่อยขึ้น prod รอแก้ moto-drop ก่อน
 
-**Before (non-RTGS transliteration):**
+**Before (non-standard transliteration):**
 > เซสชั่นหมดอายุ
 
-**After (RTGS):**
+**After (Royal Society spelling):**
 > เซสชันหมดอายุ
 
 **Before (drift-in-meaning — dev-tracker noun, not the deploy-vocab example above):**
@@ -147,17 +154,17 @@ Same (a) drift-in-meaning failure as the `front-facing`/`API` cases above, in th
 |------|--------|----------|---------|
 | **T1 DROP** | ตัดทิ้งทันที, ไม่แม้แต่ hedge | fact ที่ตรวจไม่ได้, ผลกระทบสูง | ❌ `"Google 2024 Codex 55% เร็วขึ้น"` → ✅ ไม่พูดถึงเลย |
 | **T2 HEDGE** | เขียน claim + marker เตือนผู้อ่าน verify | claim ที่ "เคยได้ยินมา" แต่ยังไม่ verify | `"อ้างกันว่า Codex 55% (ยังไม่ได้ verify)"` |
-| **T3 CITE-VERIFIABLE** | claim + แหล่งที่ตรวจได้ (URL / paper / log) | fact ที่ตรวจแล้วจริง | `"Codex eval (Wang et al. 2024, arxiv:2404.xxxxx)"` |
+| **T3 CITE-VERIFIABLE** | claim + แหล่งที่ตรวจได้ (URL / paper / log) | fact ที่ตรวจแล้วจริง | `"Codex eval (<author> <year>, arxiv:<id>)"` |
 
 **Hedge budget (hard rule):** real people write ≤1 hedge per clause. More than 1 hedge in one clause → drop to T1 instead.
 
 ❌ `"ผมคิดว่าน่าจะประมาณว่า 55% ครับ ถ้าจะให้แน่ใจก็ต้อง verify"` — 3 hedges ใน 1 clause = T1
-✅ `"Codex eval 55% (Wang et al. 2024, arxiv:2404.xxxxx)"` — T3 หรือ ไม่พูดถึง
+✅ `"Codex eval 55% (<author> <year>, arxiv:<id>)"` — T3 หรือ ไม่พูดถึง
 
 **Honest-broker preamble (cut to claim):** never open with `ผมไม่โทษเครื่องมือ แต่...` / `ต้องบอกว่า...` / `จริงๆ แล้ว...` before the claim. Go straight to the claim.
 
 ❌ `"ผมไม่โทษเครื่องมือนะ แต่ Codex เคย benchmark 55% ไว้"` — 50 tokens preamble
-✅ `"Codex eval 55% (Wang et al. 2024, arxiv:2404.xxxxx)"` — 8 tokens
+✅ `"Codex eval 55% (<author> <year>, arxiv:<id>)"` — 8 tokens
 
 ### 32.2 Red-Flag Patterns Catalog (v2.2)
 
@@ -188,14 +195,14 @@ When citing for real (T3), use a format the reader can verify onward:
 
 | Type | Format | Example |
 |------|--------|---------|
-| Paper | `Author et al. (Year) [link/doi]` | `"Wang et al. (2024) arxiv:2404.12345"` |
+| Paper | `Author et al. (Year) [link/doi]` | `"<Author> et al. (<Year>) arxiv:<id>"` |
 | Blog | `Title — Author, Date` | `"Postgres hypertables — Timescale, 2024-11"` |
 | RFC/Standard | `RFC NNNN / ISO NNNN` | `"RFC 7231 (HTTP semantics)"` |
 | Internal doc | `path:section` | `"docs/anpr/sse-stream.md#auth"` |
 | Log/metric | `dashboard URL + timestamp` | `"grafana/tat-anpr?from=2026-06-04T15:11Z"` |
 
 ❌ `"จาก research 2024 พบว่า..."` — ไม่มี source ที่ verify ได้
-✅ `"Wang et al. (2024), arxiv:2404.12345 — CodeX eval benchmark 55% บน HumanEval"` (ถ้า verify แล้ว)
+✅ `"<Author> et al. (<Year>), arxiv:<id> — Codex 55% บน HumanEval"` (เฉพาะเมื่อเปิดอ่าน paper จริงแล้ว)
 
 ### 32.4 Thai Hedge Vocabulary (v2.2)
 
@@ -252,20 +259,20 @@ Never name-drop a brand/company/paper for authority when it cannot be verified:
 
 ❌ `"Google, Microsoft, และ MIT ต่างก็ศึกษา..."` — 3 names ไม่มี paper
 ❌ `"ตามที่ Stanford 2023 study พบ..."` — paper ที่จำไม่ได้
-✅ `"Wang et al. 2024 (arxiv:2404.xxxxx) — Codex 55% บน HumanEval"`
+✅ `"<author> <year> (arxiv:<id>) — Codex 55% บน HumanEval"`
 
 **If you name-drop, you need:**
 1. A paper/URL/link
 2. Or a "claim I once heard" framing + a clear hedge
 
-### 32.8 Royal Anti-Pattern (v2.2)
+### 32.8 Over-Formal Address in Casual Text (v2.2)
 
-Royal-register endings (`หม่อม`, `พระ`, etc.) in an informal register = AI tell:
+Very formal address (`ท่าน`, `ท่านผู้อ่าน`, `ข้าพเจ้า`, `กระผม`) in chat, standup or a dev doc reads stiff, an AI tell:
 
 ❌ `"หวังว่าจะเป็นประโยชน์ต่อท่านผู้อ่าน"` — ไม่มีใครเขียนแบบนี้ใน Slack
 ✅ `"หวังว่าพอเป็นประโยชน์"` — natural register
 
-**Rule:** match register → royal form. Chat/standup = no royal. UI = no royal. Essay = no royal except when addressing the monarch or quoting a royal speech.
+**Rule:** match the address to the register. `ท่าน` is not royal language: it is the very formal address that legal notices, privacy and PDPA text, and bank or government letters use correctly, so it stays there. Chat, standup, UI and dev docs use `คุณ` (an instruction) or `เรา` (a concept), or drop the subject. Royal language (ราชาศัพท์) is a separate vocabulary (`ทรง` + verb, royal nouns) that belongs only in text about the royal family. (Corrected 2026-11-09 after chakrit/kien-thai and Boom-Vitt/claude-thai-skills, both MIT.)
 
 ### 32.9 Hallucination Context Switch (v2.2)
 
@@ -389,14 +396,14 @@ Tell them apart:
 - `"การทดสอบ"` → `"ทดสอบ"`
 
 **Padding shapes to watch** (Adapted from chakrit/kien-thai (MIT)):
-- `ทำการ + verb` → bare verb: `ทำการติดตั้ง` → `ติดตั้ง`, `ทำการรัน` → `รัน`
+- `ทำการ` + a Thai verb → bare verb: `ทำการติดตั้ง` → `ติดตั้ง`; a stacked `การทำการ` always goes. `ทำการ` + an English verb (`ทำการ deploy`) is common in real Thai dev writing; trim it only when the passage is already heavy.
 - `มีความ + adj` → bare adjective: `มีความซับซ้อน` → `ซับซ้อน`. Exception: `เป็นความ + verb` (`เป็นความตั้งใจ`) is required grammar; keep it.
-- `ที่มี(ความ) + quality` → noun compound: `library ที่มีประสิทธิภาพสูง` → `library ประสิทธิภาพสูง`
+- `ที่มี(ความ) + quality` → noun compound: `cluster ที่มีขนาดใหญ่` → `cluster ขนาดใหญ่`
 - `การที่ X ทำให้ Y` → make X the topic, give it a real verb (§43)
 - `ของ` chains → juxtapose: `การตั้งค่าของ cluster ของทีม` → `config cluster ของทีม`
 
-❌ `เราได้ทำการตรวจสอบแล้วพบว่าโค้ดมีความซับซ้อนที่มีความยากในการ maintain`
-✅ `เช็คแล้ว โค้ดซับซ้อนและดูแลยาก`
+❌ `ทีมได้ทำการวิเคราะห์แล้วพบว่า query ตัวนี้มีความช้าและมีความสิ้นเปลือง`
+✅ `ดูแล้ว query ตัวนี้ทั้งช้าทั้งเปลือง`
 
 ### 38. Code-Switching Tells (Mixed Thai/English)
 
@@ -440,13 +447,15 @@ Tell them apart:
 **Bind the English verb to a Thai object, not an English nominal in Thai padding** (Adapted from chakrit/kien-thai (MIT)): `deploy โค้ด`, `query ตาราง`, `scale ระบบ`.
 ❌ `ทำการ deployment ของ service ใหม่` ✅ `deploy service ใหม่`
 
-**ถูก / โดน are adversative** (Adapted from chakrit/kien-thai (MIT)): keep them for real misfortune (`โดนแฮก`, `ถูก reject`) or when no agent is recoverable; recast the rest active. §31's `ถูกปฏิเสธ` (payment declined) stays, it is adversative.
-❌ `request จะถูกส่งไปที่ queue โดย API แล้วถูกประมวลผลโดย worker`
-✅ `API ส่ง request เข้า queue แล้ว worker หยิบไปทำต่อ`
+**ถูก / โดน** (Adapted from chakrit/kien-thai (MIT)): `โดน` is colloquial and adversative (`โดนแฮก`, `โดน rate limit`). `ถูก` is the milder, formal passive and is fine in neutral formal text (`ข้อมูลถูกเข้ารหัสก่อนบันทึก`, §31's `ถูกปฏิเสธ`). The tell is a chain of passives with the agent tacked on by `โดย` when the agent is known: recast that active.
+❌ `log จะถูกเก็บโดย agent แล้วถูกส่งต่อโดย collector ไปยัง storage`
+✅ `agent เก็บ log แล้ว collector ส่งเข้า storage`
 
 **Grammar calques from translation** (Adapted from Boom-Vitt/claude-thai-skills (MIT)): the "we are excited to" frame (`พวกเราตื่นเต้นที่จะ...`), articles turned into words (`หนึ่ง`, `อันนั้น` for "a"/"the"), English plural thinking on Thai nouns. Thai counts with a classifier (`3 เครื่อง`, §53) and announces with `มาแล้ว` / `เปิดให้ใช้แล้ว`.
 ❌ `พวกเราตื่นเต้นที่จะประกาศฟีเจอร์ใหม่หนึ่งตัว: dark mode`
 ✅ `dark mode มาแล้ว เปิดได้ที่ ตั้งค่า > การแสดงผล`
+
+**Idiom and formula calques** (Adapted from Boom-Vitt/claude-thai-skills (MIT)): an English idiom translated word for word (`ทำลายน้ำแข็ง` for "break the ice", `ในตอนท้ายของวัน` for "at the end of the day") or an English condolence formula translated literally reads machine-made. Use the Thai formula (`ขอแสดงความเสียใจด้วย`) or say the point plainly (`สรุปคือ`).
 
 ### 39. Register-Specific Tells (Per-Register Deep-Dive)
 
@@ -466,7 +475,7 @@ Tell them apart:
 ❌ `ได้ค่ะ 555 เดี๋ยว merge ให้ค่ะ 555 ขอบคุณค่ะ`
 ✅ `ได้เลยยย เดี๋ยว merge ให้ 555`
 
-**Emoji by function** (Adapted from Boom-Vitt/claude-thai-skills (MIT)): in Thai A, and in a human customer reply (§57), 🙏 is a working softener (thanks, sorry, please), not decoration; once per reply. A bare 👍 reads cold. More than about five emoji in a short message is a tell. Never 🤣 or 555 to someone who is complaining. B, C (system strings) and D stay at zero (cue #18).
+**Emoji by function** (Adapted from Boom-Vitt/claude-thai-skills (MIT)): in Thai A, and in a human customer reply (§57), 🙏 is a working softener (thanks, sorry, please), not decoration; once per reply. A bare 👍 reads cold. More than about five emoji in a short message is a tell. Never 🤣 or 555 to someone who is complaining, and no cheerful emoji (😊 🎉) to an upset customer, in an incident or outage message, or in condolences. B, C (system strings) and D stay at zero (cue #18).
 
 #### 39.2 Register B — Standup/PR/Commit
 
@@ -480,6 +489,8 @@ Tell them apart:
 ❌ `"วันนี้ดิฉันได้ทำการปรับปรุงระบบ API ค่ะ"` — formal, AI
 ✅ `"ปรับ API แล้ว PR #64 merged"`
 
+**Release notes** (Adapted from chakrit/kien-thai (MIT)): no first person; lead with the change and an active verb; close on the version or date. The `พอ` opener (§44) suits chat and docs, not release notes.
+
 #### 39.3 Register C — UI/Error/Notification
 
 **Tells:**
@@ -490,7 +501,7 @@ Tell them apart:
 - Status word first: `"ชำระเงินไม่สำเร็จ"`, `"บันทึกแล้ว"`, `"ยกเลิกเรียบร้อย"`
 - No "หวังว่า", "ขออภัย", "แจ้งให้ทราบ", "ยินดีให้ความช่วยเหลือ"
 
-❌ `"ขออภัยในความไม่สะดวกค่ะ เราจะพยายามปรับปรุงให้ดีขึ้น"` — AI
+❌ `"ขออภัยในความไม่สะดวกค่ะ เราจะพยายามปรับปรุงให้ดีขึ้น"` — apology and promise, no status, no action
 ✅ `"ชำระเงินไม่สำเร็จ ลองใหม่อีกครั้ง หรือเช็คยอดเงินค่ะ"` — UI-actual
 
 #### 39.4 Register D — Prose/Blog/Strategy/Essay
@@ -538,6 +549,10 @@ Tell them apart:
 | `"หากมีข้อสงสัยประการใด กรุณาติดต่อ..."` | C | drop |
 | `"เราพร้อมให้บริการ"` | C | drop |
 
+**Guard: politeness is not a tell** (Adapted from chakrit/kien-thai (MIT)). Ordinary politeness and softeners (`รบกวน`, `ขอ`, `ให้`, `นะ`, `ช่วย...หน่อย`) are native baseline; stripping them makes Thai curt (`ห้วน`). The tell is politeness above the register (a formal closer in chat, `ท่าน` in Slack) or the same polite formula on every line.
+
+**Openers to drop in every register** (Adapted from chakrit/kien-thai (MIT)): `ในโลกปัจจุบัน`, `ในโลกที่...`, `เป็นที่รู้กันว่า`, `เป็นสิ่งสำคัญที่ต้องตระหนักว่า`, and an exclaimed `นั่นเอง!`.
+
 **Particle decision table (v2.2):**
 
 | Register | Opener particle | Closer | Note |
@@ -550,15 +565,15 @@ Tell them apart:
 | C (UI, casual app) | no | no | match brand voice |
 | D (essay) | no | no | particle ทื่อๆ = AI tell |
 | D (personal blog) | `ครับ`/`ค่ะ` in the greeting only | sign-off only | body none; `ผม`/`ดิฉัน` or `เรา`, follow the author's sample |
-| C (human reply to a customer) | no | `ค่ะ`/`ครับ` once per turn | a live conversation, not a string; see §57 |
+| C (human reply to a customer) | `ค่ะ`/`ครับ` | `ค่ะ`/`ครับ` on most sentences; `นะคะ`/`นะครับ` to soften | a live conversation, not a string; a bare sentence reads curt; see §57 |
 
 Personal-blog row: Adapted from chakrit/kien-thai (MIT) (`references/register.md`). ADR, README and strategy docs stay at zero particles.
 
 **Particle slips** (Adapted from Boom-Vitt/claude-thai-skills (MIT)): `คะ` marks a question and `ค่ะ` a statement; mixing them up is a tell. Bare `นะ` with no `ค่ะ`/`ครับ` is too casual for anything customer-facing.
 
-### 41. Royal Register Anti-Pattern
+### 41. Over-Formal Address (pointer)
 
-See §32.8 — the rule and matrix already live there. §41 retained as a number-pointed entry to keep the catalog at 12 top-level sections; consult §32.8 for the canonical rule.
+See §32.8. §41 stays as a numbered pointer so catalog numbers never shift.
 
 ### 42. Quick Reference — Thai-Specific Patterns (sub-patterns listed beneath)
 
@@ -571,7 +586,7 @@ See §32.8 — the rule and matrix already live there. §41 retained as a number
 | §32.5 | Citation conventions | internal doc cite |
 | §32.6 | Epistemic frame | เขียน uncertainty |
 | §32.7 | Name-dropping discipline | อ้าง brand/paper |
-| §32.8 | Royal anti-pattern | match register |
+| §32.8 | Over-formal address | match register |
 | §32.9 | Hallucination context switch | เขียน claim ผสม |
 | §32.10 | Anti-fabrication cheat sheet | quick lookup |
 | §33 | Connective density | formal connector cluster |
@@ -587,7 +602,7 @@ See §32.8 — the rule and matrix already live there. §41 retained as a number
 | §53 | Surface grammar slips | every genre |
 | §54 | Headings | D |
 | §55 | Pronouns and self-reference | every genre |
-| §56 | Dates and times | C, public D |
+| §56 | Dates, times and numbers | C, public D |
 | §57 | Apology and promises | human customer replies |
 | §58 | Hidden characters and marks | any edited prose |
 
@@ -600,15 +615,19 @@ See §32.8 — the rule and matrix already live there. §41 retained as a number
 Adapted from chakrit/kien-thai (MIT), `references/grammar.md` and `references/ai-tells.md`. Word-level errors that read as foreign-fluent. Every genre.
 
 - **Classifier.** Counting a noun needs its own classifier; AI defaults to `ใบ` or drops it. Tech nouns: `เครื่อง` (server, device), `ตัว` (function, variable, instance, param), `อัน` (token, record, generic), `บรรทัด` (line), `รายการ` (entry, transaction), `หน้า` (page). Unsure → drop the count.
-  ❌ `เพิ่ม server อีก 2 ตัว` ✅ `เพิ่ม server อีก 2 เครื่อง`
+  ❌ `สร้าง VM ใหม่ 3 ใบ` ✅ `สร้าง VM ใหม่ 3 เครื่อง`
 - **Missing จะ.** English present covers future and modal; Thai marks it with `จะ`.
   ❌ `ใช้ batch size เท่าไหร่ขึ้นกับ RAM ของ node` ✅ `จะใช้ batch size เท่าไหร่ขึ้นอยู่กับ RAM ของ node`
 - **Look-alike function words.** `จะ` (will) vs `จน` (until); `เหมาะ` needs `กับ`.
   ❌ `เหมาะงานที่ต้อง retry` ✅ `เหมาะกับงานที่ต้อง retry`
 - **Verb calque.** Idiomatic-physical English verbs (burst, drop, cap, throttle) rarely map to the literal Thai verb.
-  ❌ `ถ้า queue เต็มก็ทิ้ง message` ✅ `ถ้า queue เต็ม message ก็โดน reject`
-- **Numbers take thinking verbs.** A quantity pairs with `คาด` / `ตรง`, not `รู้สึก`.
-  ❌ `latency ไม่ตรงกับที่รู้สึก` ✅ `latency ไม่ตรงกับที่คาด`
+  ❌ `ระบบจะบีบ request ที่เกินโควตา` (throttle) ✅ `request ที่เกินโควตาจะโดนหน่วงไว้ก่อน`
+- **Numbers take thinking verbs.** A quantity pairs with `คาด` / `ประเมิน`, not `รู้สึก`; two numbers that match are `ตรงกัน`, not `ซ้ำกัน`.
+  ❌ `ขนาด bundle ไม่เหมือนที่รู้สึกไว้` ✅ `ขนาด bundle ไม่ตรงกับที่ประเมินไว้`
+- **"Can" follows the register.** Formal or user-facing: `สามารถ + verb + ได้` (`สามารถยกเลิกได้ทุกเมื่อ`). Casual or internal: `verb + ได้` (`ยกเลิกได้`). Never drop `ได้` where the ability is the point.
+- **Conditions in specs.** "Only then" is `ถึงจะ` (`ต้องมีคน approve ก่อน ถึงจะ merge ได้`). `ก็ต่อเมื่อ...ได้` can read as permission rather than an automatic step, so check which one the spec means.
+- **A bare `เมื่อไหร่` needs a closer.** `X เมื่อไหร่ Y` alone reads unfinished; close it (`ทันที`, `ก็...เลย`).
+  ❌ `test ผ่านเมื่อไหร่ merge` ✅ `test ผ่านเมื่อไหร่ merge ทันที`
 - **ทีไร vs ไม่ว่าจะ...เมื่อไหร่.** "Whenever" splits in Thai. `ทีไร` (each time, often frustration) needs a closure (`ทุกที`, `ไม่เคย...สักที`) and no `ก็`. `ไม่ว่าจะ...เมื่อไหร่` (any time, a guarantee) needs `ก็จะ`.
   ❌ `rerun ทีไร test ก็ fail` ✅ `rerun ทีไร test fail ทุกที`
   ❌ `ไม่ว่าจะ deploy เมื่อไหร่ health check ผ่าน` ✅ `ไม่ว่าจะ deploy เมื่อไหร่ health check ก็จะผ่าน`
@@ -617,7 +636,7 @@ Adapted from chakrit/kien-thai (MIT), `references/grammar.md` and `references/ai
 
 Adapted from chakrit/kien-thai (MIT), `references/style-rules.md` and `references/craft.md`. Genre D.
 
-Question heading when the body answers it (`ทำไมต้องแยก pipeline`), declarative when the body elaborates (`เคสที่ cache พัง`). Thai headings run shorter than English; don't translate "How X shapes Y" into `วิธีที่ X ส่งผลต่อ Y`. `X คือ...` as the first sentence is the SEO default; keep it for reference docs where the definition is the point.
+Question heading when the body answers it (`ทำไมต้องแยก pipeline`), declarative when the body elaborates (`ตอนที่ queue ค้างทั้งคืน`). Thai headings run shorter than English; don't translate "How X shapes Y" into `วิธีที่ X ส่งผลต่อ Y`. `X คือ...` as the first sentence is the SEO default; keep it for reference docs where the definition is the point.
 
 ### 55. Pronouns and Self-Reference
 
@@ -627,37 +646,43 @@ Thai has no neutral I/you, so a wrong pronoun reads machine-made even when every
 - `ดิฉัน` in chat or standup is too stiff (it is formal 1st person). In A use `เรา`, the writer's own `ผม`/`ฉัน`, or no pronoun.
 - `คุณ` for every "you" sounds cold in A. Use `พี่`/`น้อง` + name, or just the name. (In a README, `คุณ` is right: §39.4.)
 - Product voice: pick one "we" (`เรา`, `ทีมงาน` or `ทางบริษัท`) and keep it for the whole thread or screen set.
-- Don't mix registers in one paragraph (`กระผม` next to `นาย`). Never `กู`/`มึง` in a brand or product voice.
+- Don't mix registers in one paragraph (`ข้าพเจ้า` next to `แก`). Never `กู`/`มึง` in a brand or product voice.
+- Customer address: default `คุณลูกค้า` (a bare `ลูกค้า` as "you" reads curt); `คุณ` + name when known; `พี่`/`น้อง` only when the customer set that tone. Keep one form for the whole thread.
+- Once a passage addresses the reader, even implicitly, keep addressing them; don't slip to `ใคร`/`คน`/`ใครๆ` for the same person. (Adapted from chakrit/kien-thai (MIT).)
 
 ❌ `ดิฉันได้ทำการ deploy แล้วค่ะ คุณลองเช็คได้เลยค่ะ` (to a teammate)
 ✅ `deploy แล้วนะ พี่โอ๊ตลองเช็คได้เลย`
 ❌ `ทางบริษัทได้รับเรื่องแล้ว เราจะแจ้งทีมงานของเรา` (three "we" forms)
 ✅ `ทีมงานรับเรื่องแล้วค่ะ ถ้ามีความคืบหน้าจะแจ้งในเธรดนี้`
 
-### 56. Dates and Times
+### 56. Dates, Times and Numbers
 
 Adapted from Boom-Vitt/claude-thai-skills (MIT), `skills/thai-date-format`.
 
-Internal dev writing (B, internal D) uses ISO dates on the CE calendar (`2026-05-16`, `01:00`). User-facing Thai (C, public D) uses:
-- the BE year with the month in letters: `16 พฤษภาคม 2569`, or `16 พ.ค. 69` in casual copy;
-- slashes only in tables (`16/05/2569`), not in prose;
-- 24-hour time with a dot, then `น.` (`01.00 น.`), never a colon and never AM/PM;
-- one era and one script per date: `16 May 2569`, or `๑๖` beside an Arabic year, reads machine-made.
+Internal dev writing (B, internal D) uses ISO dates on the CE calendar (`2027-02-03`, `09:30`). User-facing Thai (C, public D) uses:
+- the BE year with the month in letters: `3 กุมภาพันธ์ 2570`, or `3 ก.พ. 70` in casual copy;
+- slashes only in tables (`03/02/2570`), not in prose;
+- 24-hour time with a dot, both parts zero-padded, one space, then `น.` (`09.30 น.`), never a colon and never AM/PM; clock words (`บ่ายสอง`, `สองทุ่ม`) are fine in chat, wrong in UI and official text;
+- one era and one script per date: `3 February 2570`, or `๓` beside an Arabic year, reads machine-made;
+- a deadline needs a start point in specs, SLAs and notices: `ภายใน 7 วันนับจากวันที่ได้รับอีเมล`, not a bare `ภายใน 7 วัน` (Adapted from chakrit/kien-thai (MIT)).
+
+Numbers in user-facing copy: phone numbers grouped (`08X-XXX-XXXX`, or `+66 8X XXX XXXX`); money with a thousands separator and `บาท` (`1,250 บาท`), saying whether VAT is included when a price is quoted; no `!` in formal Thai.
 
 Mixing the two systems, or adding 543 to a year that is already BE, is a tell and a fabrication risk (§32). If you can't tell which era the source year is in, don't convert it.
 
-❌ `ปิดปรับปรุงระบบ 16/05/2026 1:00 AM - 3:00 AM`
-✅ `ปิดปรับปรุงระบบวันที่ 16 พฤษภาคม 2569 เวลา 01.00–03.00 น.`
+❌ `ปิดปรับปรุงระบบ 03/02/2027 1:00 AM - 3:00 AM`
+✅ `ปิดปรับปรุงระบบวันที่ 3 กุมภาพันธ์ 2570 เวลา 01.00–03.00 น.`
 
 ### 57. Apology and Promises (Human Customer Replies)
 
 Adapted from Boom-Vitt/claude-thai-skills (MIT), `skills/thai-customer-service`.
 
 For a person or brand replying to a customer (support chat, incident notice, status page). A UI or error string is §39.3 instead.
-- Size the apology to the harm. Small delay: `ขออภัยค่ะ`. Our own fault: `ขอโทษที่...`. Major incident: `ขออภัยอย่างสูง` plus what happens next. The strong form on a small issue wears it out. A stock apology phrase is itself the tell.
+- Size the apology to the harm. Small delay: `ขออภัยค่ะ`. Our own fault: `ขอโทษที่...`. Major incident: `ขออภัยอย่างสูง` plus what happens next. The strong form on a small issue wears it out. `ขออภัยในความไม่สะดวก` is the standard phrase for a small inconvenience and fine there; it becomes the tell when it is the whole reply, with no status and no next step.
 - `ขออภัย` when we caused it; `ขอแสดงความเสียใจ` when a third party did (bank, courier, cloud provider). Don't accept fault before the evidence.
 - A response time or refund the team can't confirm is fabrication (§32.1, T1). Say what you will check, not the result.
-- Empathy first, then the fix, short. Never defensive (`ก็แจ้งไว้แล้ว`, `ไม่ใช่ความผิดของระบบ`).
+- Empathy first, then the fix, short. Never defensive (`ก็แจ้งไว้แล้ว`, `ตรงนี้ทางเราไม่เกี่ยวนะคะ`).
+- A refusal gives the policy reason and one alternative. A canned reply that doesn't answer the customer's actual question is a tell. Don't open with a bare thanks to a customer who is still angry. Every reply ends with the next step: what happens, or what the customer can do.
 
 ❌ `ขออภัยอย่างสูงในความไม่สะดวกค่ะ ทีมงานจะแก้ไขให้ภายใน 5 นาทีค่ะ` (for a slow OTP)
 ✅ `ขออภัยค่ะ ตอนนี้ OTP ส่งช้ากว่าปกติ ทีมงานกำลังเช็คกับผู้ให้บริการ SMS อยู่ ได้ข้อมูลแล้วจะแจ้งในแชทนี้ค่ะ`

@@ -63,6 +63,10 @@ Correction frames (`ไม่ได้อยู่ที่ X อยู่ที
 ❌ `ต้นเหตุไม่ได้อยู่ที่ DB อยู่ที่ connection pool`
 ✅ `ต้นเหตุไม่ได้อยู่ที่ DB อยู่ที่ connection pool ต่างหาก`
 
+A result clause followed by a "no need to X" clause needs a bridge (`โดย` or `ด้วย`); that one `โดย` fits the §33 budget:
+❌ `cache ช่วยให้หน้าโหลดเร็วขึ้น ไม่ต้อง query DB ทุกครั้ง`
+✅ `cache ช่วยให้หน้าโหลดเร็วขึ้น โดยไม่ต้อง query DB ทุกครั้ง`
+
 These particles are not budgeted by §33; if one reads odd, rebuild the sentence instead of deleting it. `เป็นความ + verb` (`เป็นความตั้งใจ`) is required grammar, not §37 padding.
 
 ### 47. Drop the known subject; refer back with demonstratives
@@ -71,13 +75,13 @@ These particles are not budgeted by §33; if one reads odd, rebuild the sentence
 
 **Why AI breaks it:** English needs *it / they / we* in every clause, so AI repeats the pronoun or reaches for `มัน`.
 
-❌ `เราลอง feature flag กับ checkout เราพบว่าเรา rollback ได้เร็วขึ้น`
-✅ `เราลอง feature flag กับ checkout พบว่า rollback ได้เร็วขึ้น`
+❌ `เราย้าย cron ไปรันบน queue แล้ว เราเห็นว่าเราไม่ต้องเฝ้า server ตอนตีสองอีก`
+✅ `ย้าย cron ไปรันบน queue แล้ว ไม่ต้องเฝ้า server ตอนตีสองอีก`
 
 ❌ `worker ค้างทุกคืน มันเกิดจาก memory leak`
 ✅ `worker ค้างทุกคืน ตัวการคือ memory leak`
 
-**Limit:** if a clause opens with `เพราะ`, `ส่วน`, `ดังนั้น` and the referent is no longer clear, restore it with a demonstrative bridge (`เพราะแบบนี้...`, `ตรงนี้แหละที่...`), not with `มัน`.
+**Limit:** if a clause opens with `เพราะ`, `ส่วน`, `ดังนั้น` and the referent is no longer clear, restore it with a demonstrative bridge (`เพราะแบบนี้...`, `ตรงนี้แหละที่...`), not with `มัน`. Use `ตรงนี้แหละที่` once per piece at most: repeated, it reads as a calque of the English cleft "this is where...".
 
 ### 48. Pace with ก็
 
@@ -91,7 +95,7 @@ These particles are not budgeted by §33; if one reads odd, rebuild the sentence
 ❌ `push tag CI build image ให้อัตโนมัติ`
 ✅ `push tag แล้ว CI จะ build image ให้เอง`
 
-Use it for breath, not as a connector to sprinkle. Two limits from kien-thai: it is redundant inside a `ทีไร` frame (`ลอง deploy ทีไร พังทุกที`), and wrong when the second clause is the first by definition (total cost is the sum of line items; no `ก็`).
+Use it for breath, not as a connector to sprinkle. Two limits from kien-thai: it is redundant inside a `ทีไร` frame (`เปิด VPN ทีไร Slack หลุดทุกที`), and wrong when the second clause is the first by definition (total cost is the sum of line items; no `ก็`).
 
 ### 49. Pivot with a question, a demonstrative, or plain แต่
 
@@ -99,12 +103,12 @@ Use it for breath, not as a connector to sprinkle. Two limits from kien-thai: it
 
 **Why AI breaks it:** it pivots with the English formal connector, or lists problems and jumps straight into the fix with no turn at all.
 
-❌ `อย่างไรก็ตาม วิธีนี้มีข้อจำกัดเมื่อข้อมูลมีขนาดใหญ่`
-✅ `แต่พอข้อมูลเกินล้าน row วิธีนี้ก็เริ่มไม่ไหว`
+❌ `อย่างไรก็ตาม การ cache ในหน่วยความจำมีข้อจำกัดเมื่อมีหลาย instance`
+✅ `แต่พอรันหลาย instance cache ในหน่วยความจำก็เริ่มมีปัญหา`
 
 Problem list → fix, in an ADR:
 ❌ `build ช้า flaky test เยอะ dev รอ CI นาน เราจึงเสนอให้แยก pipeline`
-✅ `build ช้า flaky test เยอะ dev นั่งรอ CI ทั้งวัน ตรงนี้แหละที่เราอยากแยก pipeline`
+✅ `build ช้า flaky test เยอะ dev รอ CI นาน ตรงนี้แหละที่เราอยากแยก pipeline`
 
 Heuristic: for every "however" in the English draft, ask whether `แต่` or a question does the job. Usually one in two can go.
 
@@ -121,6 +125,8 @@ A 6-word sentence next to a 30-word one is normal Thai. If every sentence is abo
 Open on a fact, a symptom, a number or a question; never a panorama (`ในยุคปัจจุบัน...`) or a consensus claim (`เป็นที่ทราบกันดีว่า...`). Close without a recap (`โดยสรุปแล้ว...`): end on the next step, a question back to the reader, a quiet handoff (`เท่านี้ก่อน`), or just stop.
 ❌ `โดยสรุปแล้ว การย้ายไป Redis ช่วยเพิ่มประสิทธิภาพของระบบอย่างมาก`
 ✅ `ขั้นต่อไปคือวัด p99 หลังย้ายครบทุก region`
+
+The next step has to be one the source already states (here, a plan that lists the p99 check); never invent one to replace a recap. With no next step in the source, just stop.
 
 ### 52. Prose before bullets
 

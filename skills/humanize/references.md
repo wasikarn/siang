@@ -1,23 +1,25 @@
 # References (extends SKILL.md)
 
-> Sources + glossary for the Thai-specific patterns (§31-§42 in `patterns-thai.md`) and the universal patterns (§1-§30). No need to load this file to apply a pattern; load it when you must verify a transliteration or cite a source.
+> Sources + glossary for the Thai-specific patterns (§31-§42 and §53-§58 in `patterns-thai.md`, §43-§52 in `patterns-thai-structure.md`) and the universal patterns (§1-§30, §59-§61). No need to load this file to apply a pattern; load it when you must verify a transliteration or cite a source.
 
 ---
 
 ## Reference
 
-This skill extends [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup, with 12 Thai-specific top-level patterns (§31-§42 in `patterns-thai.md`: terminology & calque, anti-fabrication, connectives, register matrix, code-switching tells, AI-leaked closers) and a Thai-register foundation (§0).
+This skill extends [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup, by way of [blader/humanizer](https://github.com/blader/humanizer), with 28 Thai-specific top-level patterns (§31-§42 and §53-§58 in `patterns-thai.md`: terminology & calque, anti-fabrication, connectives, register matrix, code-switching tells, AI-leaked closers, grammar slips, headings, pronouns, dates, apologies, hidden characters; §43-§52 in `patterns-thai-structure.md`: sentence and paragraph structure) and a Thai-register foundation (§0).
 
 ### Sources adapted (MIT)
 
-- **[chakrit/kien-thai](https://github.com/chakrit/kien-thai)**, MIT, Copyright (c) 2026 Chakrit Wichian. The seven discourse frames and supporting structure rules (`patterns-thai-structure.md` §43–§52), surface grammar slips (§53), headings (§54), and the additions marked "Adapted from chakrit/kien-thai" in §31, §32.4, §33, §37, §38, §39.4, §40, §58 and cue rows #7, #25, #27. Rules are paraphrased; every example is new. kien-thai's own exemplar passages from third-party writers were not copied.
-- **[Boom-Vitt/claude-thai-skills](https://github.com/Boom-Vitt/claude-thai-skills)**, MIT, Copyright (c) 2026 Vittawat (Boom-Vitt). Pronouns (§55), dates and times (§56), apology and promises (§57), hidden characters (§58), and the additions marked "Adapted from Boom-Vitt/claude-thai-skills" in §38, §39.1, §40 and cue row #4. Drawn from its `thai-translate`, `thai-customer-service`, `thai-social-caption`, `thai-text-processing` and `thai-date-format` skills. Rules are paraphrased; every example is new.
+- **[blader/humanizer](https://github.com/blader/humanizer)**, MIT, Copyright (c) 2025 Siqi Chen. The universal catalog (`patterns-universal.md` §1–§30 and `cue-sheet.md`): pattern titles, order and much of the rule text came from its v2.7.0, reached method-harness in June 2026, and was not credited until 2026-11-09. §59–§61 (re-explaining, one-line closers, arguing with no one) and the step-6 re-scan and dropped-fact check in `SKILL.md` are paraphrased from its v3.1.0. Its examples and rule wording, copied until then, were replaced with siang's own on 2026-11-09.
+- **[chakrit/kien-thai](https://github.com/chakrit/kien-thai)**, MIT, Copyright (c) 2026 Chakrit Wichian. The seven discourse frames and supporting structure rules (`patterns-thai-structure.md` §43–§52), surface grammar slips (§53), headings (§54), and the additions marked "Adapted from chakrit/kien-thai" in §31, §32.4, §33, §37, §38, §39.4, §40, §46, §47, §55, §56, §58 and cue rows #7, #25, #27. Rules are paraphrased. A 2026-11-09 re-read found several examples that were the source's own example with one noun swapped; those were rewritten with a different sentence shape. kien-thai's exemplar passages from third-party writers were never copied. The 2026-11-09 corrections to §32.8 (`ท่าน` is formal, not royal) and §38 (`ถูก` vs `โดน`) also follow it.
+- **[Boom-Vitt/claude-thai-skills](https://github.com/Boom-Vitt/claude-thai-skills)**, MIT, Copyright (c) 2026 Vittawat (Boom-Vitt). Pronouns (§55), dates and times (§56), apology and promises (§57), hidden characters (§58), and the additions marked "Adapted from Boom-Vitt/claude-thai-skills" in §31, §38, §39.1, §40 and cue row #4. Drawn from its `thai-translate`, `thai-customer-service`, `thai-social-caption`, `thai-text-processing`, `thai-date-format`, `thai-resume` and `thai-id-validate` skills. Rules are paraphrased; the dates and one pronoun pair that matched its examples were replaced on 2026-11-09. Its customer-service guidance also set the particle density for human customer replies (`SKILL.md` §0, §40 table).
 
 Full license texts: `THIRD_PARTY_NOTICES.md` at the plugin root.
 
-### Sibling, not a source
+### Cited, not copied
 
-[github.com/blader/humanizer](https://github.com/blader/humanizer) (MIT) is a sibling project, not a source — independently confirmed to derive from the same Wikipedia essay, catalog 33 English-only patterns across the same 5 content/language/style/communication/filler buckets §1-§30 use here, and carry no non-English coverage. The convergence is both projects mirroring Wikipedia's own essay structure, not one copying the other.
+- thaiall.com IT dictionary (https://www.thaiall.com/itdictionary/): its large term list re-hosts the Royal Society's computer and IT terms (ภาษาไทย ภาษาสื่อ ฉบับราชบัณฑิตยสภา, 2016, pp. 421-460). No license is stated, so nothing was copied; it was used only to check the Thai spellings named in §31, and the Royal Society links below are the primary source.
+- Wikipedia text is CC BY-SA 4.0. The universal catalog follows the page's structure; example passages quoted from it were replaced on 2026-11-09, so no CC BY-SA text remains here.
 
 ### Thai-specific references
 - Royal Society of Thailand (`ราชบัณฑิตยสภา`) transliteration: https://transliteration.orst.go.th/search
@@ -68,10 +70,10 @@ Canonical table lives in `patterns-thai.md` §31 — load it for the current, co
 | ถือไว้ (HELD) | ยังไม่ปล่อย |
 | ดัน (push) | merge |
 | ระบบล้ม (down) | ระบบล่ม |
-| เซสชั่น (non-RTGS) | เซสชัน |
+| เซสชั่น (non-standard spelling) | เซสชัน |
 
 ### Typography rules (selected; full list in §0 + §14)
-- Tone and silent marks: RTGS transliterations carry no tone mark (`เซสชัน`, not `เซสชั่น`); the silent mark `์` (การันต์) appears only where a silent source letter is kept, as in `ซอฟต์แวร์`, `ฟิล์ม`.
+- Tone and silent marks: Royal Society transliterations of English words carry no tone mark (`เซสชัน`, not `เซสชั่น`); the silent mark `์` (การันต์) appears only where a silent source letter is kept, as in `ซอฟต์แวร์`, `ฟิล์ม`.
 - Hyphen: use `-` (ASCII U+002D), not en-dash `–`, in compounds (low priority, font-dependent)
 - Em dash `—`: never in Thai prose (see §14)
 - En dash `–`: number ranges only (40–60%, §31–32, `2–5 นาที`)

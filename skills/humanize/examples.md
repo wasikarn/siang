@@ -7,7 +7,7 @@
 - Per-register worked examples
 - Monolingual English examples
 
-> Worked applications of the 30 universal + 12 Thai-specific top-level patterns in `patterns-universal.md` + `patterns-thai.md`, full loop: draft → "still-AI" bullets → final rewrite. Use as a reference when stuck.
+> Worked applications of the 33 universal + 28 Thai-specific top-level patterns in `patterns-universal.md`, `patterns-thai.md` and `patterns-thai-structure.md`, full loop: draft → "still-AI" bullets → final rewrite. Use as a reference when stuck.
 >
 > ❌/✅ below = bad/good notation, not the decorative emoji §18 tells you to cut from real writing.
 >
@@ -17,49 +17,43 @@
 
 ## Full Example
 
-**Before (AI-sounding — Thai mixed):**
-> คำถามดีมากครับ! นี่คือภาพรวมของหัวข้อนี้ หวังว่าจะเป็นประโยชน์ครับ!
+**Before (AI-sounding, Thai mixed; a team post about a trial of an AI review bot):**
+> คำถามดีมากครับ! นี่คือสรุปผลการทดลองของเรา หวังว่าจะเป็นประโยชน์ครับ!
 >
-> AI-assisted coding serves as an enduring testament to the transformative potential of large language models marking a pivotal moment in the evolution of software development ใน today's rapidly evolving technological landscape these groundbreaking tools—nestled at the intersection of research and practice—are reshaping how engineers ideate, iterate, and deliver underscoring their vital role in modern workflows
+> The AI review bot serves as a testament to our team's commitment to code quality, marking a pivotal moment in how we approach peer review ใน today's rapidly evolving engineering landscape. Over a four-week trial on the `api` repo, this groundbreaking tool—seamlessly integrated into our workflow—left 140 comments, underscoring its vital role in modern development.
 >
-> At its core the value proposition is clear streamlining processes enhancing collaboration and fostering alignment It's not just about autocomplete; it's about unlocking creativity at scale ensuring that organizations can remain agile while delivering seamless, intuitive, and powerful experiences to users The tool serves as a catalyst The assistant functions as a partner The system stands as a foundation for innovation
+> At its core, the value is clear: catching bugs, saving time, and fostering a culture of learning. It's not just a linter; it's a teammate. The bot functions as a reviewer. The assistant acts as a mentor. The system stands as a safety net.
 >
-> Industry observers have noted that adoption has accelerated from hobbyist experiments to enterprise-wide rollouts from solo developers to cross-functional teams The technology has been featured in The New York Times, Wired, and The Verge Additionally the ability to generate documentation tests and refactors showcases how AI can contribute to better outcomes highlighting the intricate interplay between automation and human judgment
+> Industry observers have noted that AI review is moving from early adopters to mainstream teams, from startups to enterprises. Additionally, of the 140 comments the team accepted 31, and two caught real bugs: a missing null check and an off-by-one in pagination, showcasing the intricate interplay between automation and human judgment.
 >
-> - 💡 **Speed:** Code generation is significantly faster, reducing friction and empowering developers
-> - 🚀 **Quality:** Output quality has been enhanced through improved training, contributing to higher standards
-> - ✅ **Adoption:** Usage continues to grow, reflecting broader industry trends
+> - 💡 **Accuracy:** Many comments repeated what lint already flags, highlighting room for growth
+> - 🚀 **Speed:** We did not measure review time, reflecting our focus on outcomes
+> - ✅ **Decision:** Keep the bot on `api` and turn it off on `web`, contributing to a balanced approach
 >
-> While specific details are limited based on available information it could potentially be argued that these tools might have some positive effect Despite challenges typical of emerging technologies—including hallucinations, bias, and accountability—the ecosystem continues to thrive In order to fully realize this potential teams must align with best practices
+> Despite challenges typical of emerging technologies, the bot continues to thrive. In order to fully realize its potential, it could potentially be argued that teams should align with best practices.
 >
-> ในที่สุด อนาคตของทีมสดใส ก้าวต่อไปจะเป็นการเดินทางสู่ความเป็นเลิศ แจ้งให้ทราบหากต้องการขยายความในส่วนใดส่วนหนึ่ง!
+> ในที่สุด อนาคตของ code review สดใส ก้าวต่อไปคือการเดินทางสู่ความเป็นเลิศ แจ้งได้เลยหากต้องการให้ขยายความส่วนไหน!
 
 **Draft rewrite:**
-> AI coding tools ทำงานบางอย่างเร็วขึ้น ในการศึกษาของ Google ปี 2024 นักพัฒนาที่ใช้ Codex ทำ simple functions เสร็จเร็วขึ้น 55% เทียบกับ control group แต่ debugging กับ architectural decisions ไม่ดีขึ้น
+> ทดลองเปิด AI review bot บน repo `api` สี่สัปดาห์ bot comment ไป 140 ครั้ง ทีม accept 31 มีสองอันที่เจอ bug จริง: null check ที่หายไป กับ off-by-one ตรง pagination
 >
-> เครื่องมือพวกนี้เก่งเรื่อง boilerplate: ไฟล์ config, test scaffolding, refactor ซ้ำๆ แต่ไม่รู้ว่าตัวเองผิดตอนไหน ผมเคย mass-accept suggestion ที่ compile ผ่าน, ผ่าน lint, แต่ทำผิดอยู่ดี เพราะผมหยุด pay attention
+> หลาย comment ซ้ำกับที่ lint จับได้อยู่แล้ว ส่วน review time เราไม่ได้วัด
 >
-> มิร่า engineer ที่ fintech startup ที่ผมสัมภาษณ์ บอกว่าใช้ Copilot "เหมือน autocomplete สำหรับโค้ดน่าเบื่อๆ" แต่ review ทุกบรรทัดก่อน commit เจค senior dev ที่บริษัทใหญ่กว่า disable มัน หลังจากมันชอบ suggest pattern จาก deprecated internal library
->
-> Productivity claims ยากจะ verify GitHub บอกว่า Copilot users "accept 30% of suggestions" แต่ acceptance ไม่ใช่ correctness และ correctness ไม่ใช่ value การศึกษาของ Uplevel ปี 2024 ไม่เจอ statistically significant difference ใน pull-request throughput ระหว่างทีมที่มีกับไม่มี AI assistant
->
-> ไม่ได้แปลว่าเครื่องมือพวกนี้ไร้ประโยชน์ แปลว่ามันคือเครื่องมือ มันแทน judgment ไม่ได้ และตัดความจำเป็นของ test ไม่ได้ ถ้าคุณไม่มี test คุณบอกไม่ได้ว่า suggestion ถูกหรือเปล่า
+> สรุปคือเปิดไว้บน `api` ต่อ ปิดบน `web` เครื่องมือดีแค่ไหนก็แทนคน review ไม่ได้
 
-**What makes the below so obviously AI generated?**
-- The rhythm is still a bit too tidy (clean contrasts, evenly paced paragraphs).
-- The named people and study citations can read like plausible-but-made-up placeholders unless they're real and sourced. — **For Thai: a Thai name or Thai statistic you have never heard of is even more suspect**
-- The closer leans a touch slogan-y ("ถ้าคุณไม่มี test...") rather than sounding like a person talking.
+**What still reads as AI in the draft?**
+- Every paragraph is the same length and ends on a neat wrap-up.
+- The last line ("เครื่องมือดีแค่ไหนก็แทนคน review ไม่ได้") is a slogan (§60), and worse, an opinion the Before never states. Cut it; don't add claims while cleaning. **For Thai: a moral tacked onto the end of a Thai team post reads as AI even faster than in English**
+- "สรุปคือ" opens the decision like a template.
 
-**Now make it not obviously AI generated.**
-> AI coding tools เร่งความเร็วตรงส่วนน่าเบื่อได้ ไม่ใช่ทุกส่วน ไม่ใช่ architecture
+**Final rewrite:**
+> เปิด AI review bot บน `api` ไปสี่สัปดาห์ มัน comment 140 ครั้ง เรา accept 31 ในนั้นมีสองอันที่เป็น bug จริง คือ null check ที่หายไป กับ off-by-one ตรง pagination
 >
-> เก่งเรื่อง boilerplate: ไฟล์ config, test scaffolding, refactor แบบเดิมๆ แต่ก็เก่งเรื่องฟังดูถูกทั้งที่ผิด ผมเคย accept suggestion ที่ compile ผ่าน ผ่าน lint แต่พลาดประเด็นเพราะหยุด pay attention
+> หลาย comment ซ้ำกับที่ lint จับอยู่แล้ว review time ไม่ได้วัด เลยบอกไม่ได้ว่าเร็วขึ้นไหม
 >
-> คนที่ผมคุยด้วยแบ่งเป็นสองฝั่ง บางคนใช้เหมือน autocomplete สำหรับงานน่าเบื่อ แล้ว review ทุกบรรทัด อีกฝั่ง disable ไปเลยหลังมันชอบ suggest pattern ที่ไม่อยากได้ ทั้งสองฝั่งมีเหตุผลของตัวเอง
->
-> Productivity metrics ลื่นไหล GitHub บอก Copilot users "accept 30% of suggestions" แต่ acceptance ไม่ใช่ correctness และ correctness ไม่ใช่ value ถ้าคุณไม่มี test คุณเดาอยู่ดี
+> จะเปิดต่อบน `api` แต่ปิดบน `web`
 
-**Changes made:** Stripped the chatbot framing (I hope this helps, Let me know), significance inflation (pivotal moment, broader trends), promotional and -ing padding (underscoring, fostering), rule-of-three and synonym cycling (catalyst/partner/foundation), false ranges (from X to Y), copula avoidance (serves as, stands as), em dashes/emojis/boldface/curly quotes, the formulaic "challenges" section, cutoff and hedging disclaimers, filler and persuasive framing, the generic upbeat conclusion (อนาคตสดใส), and the sycophantic opening (คำถามดีมากครับ). Then rebuilt the voice with varied rhythm and concrete detail, and applied §0 register choice (dev register mixed Thai-English, internal team voice) plus §31 terminology (kept "AI coding tools" untranslated, kept "Copilot", kept technical terms in English).
+**Changes made:** Removed the chatbot opener and closer (§20, §22), the significance and trend claims (§1, §5), the promotional words and -ing tails (§3, §4, §7), the copula swaps and the reviewer/mentor/safety-net name cycling (§8, §11), the "not just a linter" contrast (§9), the forced triad (§10), the false range (§12), the em dashes, emojis and bold labels (§14–§18), the challenges formula and the hedge stack (§6, §24), the filler (§23) and the upbeat ending (§25). Every fact in the final (four weeks, 140, 31, the two bugs, lint overlap, no timing data, the `api`/`web` decision) is in the Before. Register: §0 dev register, internal team voice, Thai with English terms kept per §31.
 
 ---
 
@@ -68,8 +62,10 @@
 Same facts, neutral report → real voice. Illustrates `SKILL.md`'s Grit Gate (surface the grit,
 commit to a point of view):
 
-> ❌ การทดลองนี้ได้ผลลัพธ์ที่น่าสนใจ agent สร้างโค้ดได้ 3 ล้านบรรทัด developer บางส่วนประทับใจ ขณะที่บางส่วนยังคงมีข้อสงสัย
-> ✅ ผมเองก็ยังไม่รู้จะรู้สึกยังไงกับอันนี้ agent เขียนโค้ดไป 3 ล้านบรรทัดตอนคนน่าจะหลับอยู่ ครึ่ง dev community ตื่นเต้น อีกครึ่งเถียงว่ามันนับไม่ได้
+> ❌ การทดสอบ canary สองวันให้ผลลัพธ์ที่น่าสนใจ error rate ไม่เปลี่ยน latency p50 เพิ่มขึ้น 4 ms ทีมบางส่วนพร้อม rollout ขณะที่บางส่วนต้องการรออีกหนึ่งสัปดาห์
+> ✅ canary รันมาสองวัน error rate นิ่ง แต่ p50 ขึ้น 4 ms ผมยังไม่แน่ใจว่า 4 ms นี้ยอมได้ไหม ในทีมบางคนอยากปล่อยเลย บางคนขอรออีกสัปดาห์
+
+The point of view ("ผมยังไม่แน่ใจ") has to come from the author. Ask for it; don't invent one.
 
 ---
 
@@ -87,16 +83,16 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 - `"ขอเรียนให้ทราบ"` (formal opener)
 - `"อันเนื่องมาจาก"` (translation of "due to the fact that")
 - `"ความไม่เสถียรเล็กน้อย"` (vague understatement)
-- `"หวังว่าจะไม่เป็นการรบกวน"` (sycophantic hedge)
+- `"หวังว่าจะไม่เป็นการรบกวน"` (over-formal for a chat between colleagues; a plain `นะคะ` carries the same politeness, §40 guard)
 - `"ยินดีให้ความช่วยเหลือหากมีข้อสงสัย"` (AI-leaked closer)
 
 **After (chat register):**
-> สวัสดีค่ะ วันนี้ backend ปรับนิดหน่อย อาจจะเข้าไม่ได้บ้าง 5-10 นาที ถ้าเจอปัญหาทักมาค่ะ 🙏
+> สวัสดีค่ะ วันนี้ทีมปรับ backend อยู่ ระบบอาจสะดุดบ้างนะคะ ถ้าเจอปัญหาทักมาได้เลยค่ะ 🙏
 
 **Changes applied:**
-- Drop formal 3rd person → `ค่ะ` opener (chat register female)
+- Drop the formal 1st person `ดิฉัน` → `ค่ะ` opener (chat register female)
 - `backend` kept in English (dev term)
-- `5-10 นาที` = concrete estimate (the real maintenance window)
+- No duration added: the source gives none, so the rewrite doesn't invent one (§32.1); if the writer knows the window, it goes in
 - `ทักมา` action verb (UI-actual)
 - 🙏 emoji instead of a formal closer
 
@@ -112,29 +108,20 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 - `"เพื่อนร่วมทีมอีก 2 ท่าน"` (vague; no PR, no name)
 - `"อัปเดต documentation ให้ทันสมัย"` (vague; which file, which PR)
 
-**After (standup register, in the team's own standup format):**
+**After (standup register):**
 ```
 ✅ ทำเสร็จ
-- TP-549: PR #64 measurement redesign merged เข้า develop
-- review: PR #62 (P'Meow), PR #65 (P'Noi)
-
-🎯 ต่อไป
-- TP-549: เขียน strategy brief ส่ง P'Big ก่อน deploy prod
-
-🚧 รอ
-- camera firmware dependency: P'X ยังไม่ส่ง release note
-
-🙋 ถาม
-- TP-549 deploy timing: จะ roll forward ตอน traffic ต่ำ หรือ soak 7 วันก่อน?
+- measurement redesign: ปรับ API endpoint แล้ว PR #64 merged เข้า develop
+- review PR ของเพื่อนในทีม 2 ตัว
+- อัปเดต documentation
 ```
 
 **Changes applied:**
 - 1st person implied (drop `ดิฉัน`/`ผม`)
-- Verbatim ticket ID (`TP-549`), PR number (`#64`), branch (`develop`)
-- 4-section structure (✅🎯🚧🙋) per team format
-- Topic-first opener (`TP-549:`)
+- Verbatim PR number (`#64`) and branch (`develop`)
+- Topic-first lines (`measurement redesign:`)
 - Particle not on every line (terse)
-- Filter scope: own work (P'Meow/P'Noi = reviews of others' PRs, not own PRs)
+- The source names no reviewers, review PRs, doc files or next steps, so the rewrite leaves those out instead of inventing them. In a real standup, ask the writer; anything they give (ticket IDs, names) goes in verbatim (§32.1).
 
 ### Example C — UI Error Message (Register C)
 
@@ -142,21 +129,21 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 > ขออภัยในความไม่สะดวกค่ะ! การชำระเงินของท่านไม่สำเร็จ อันเนื่องมาจากระบบของธนาคารปฏิเสธการทำรายการ เรามุ่งมั่นมอบประสบการณ์ที่ดีที่สุด และพร้อมให้บริการท่านตลอด 24 ชั่วโมงค่ะ
 
 **Red flags:**
-- `"ขออภัยในความไม่สะดวกค่ะ!"` (sycophantic opener)
+- `"ขออภัยในความไม่สะดวกค่ะ!"` (an apology in place of the status; in a UI string the status comes first, §39.3)
 - `"อันเนื่องมาจาก"` (formal connector)
-- `"ท่าน"` (royal register in UI; overkill)
+- `"ท่าน"` (very formal address: right in a legal notice, too stiff in a UI string, §32.8)
 - `"มุ่งมั่นมอบประสบการณ์ที่ดีที่สุด"` (UI-aspirational, marketing calque)
 - `"พร้อมให้บริการท่านตลอด 24 ชั่วโมง"` (UI-leaked closer)
 
 **After (UI-actual):**
 > ชำระเงินไม่สำเร็จ
 > ธนาคารปฏิเสธรายการ ลองใหม่อีกครั้ง หรือเช็คยอดเงินค่ะ
-> ติดปัญหา: ทักแชทหรือโทร 02-123-4567
+> ติดปัญหา: ติดต่อ <ช่องทางของทีม>
 
 **Changes applied:**
 - Status word first (`ชำระเงินไม่สำเร็จ`)
-- `ถูกปฏิเสธ` (not "ปฏิเสธการทำรายการ"; drop the nominalization)
-- Actionable next step: `ลองใหม่อีกครั้ง` / `เช็คยอดเงิน` / `ทักแชท`
+- `ธนาคารปฏิเสธรายการ` (active verb; drops the nominalized `การทำรายการ`)
+- Actionable next step: `ลองใหม่อีกครั้ง` / `เช็คยอดเงิน`; the contact channel stays a placeholder because the source gives none
 - One `ค่ะ` opener only (UI formal register)
 - No English parenthetical in the title (`## การชำระเงิน (Declined)` ❌)
 - ≤25 words
@@ -164,14 +151,11 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 
 ### Example D — Prose / Blog (Register D)
 
-(See full example above. v2.2 adds: §32.1 anti-fabrication tier tree, §32.3 cite-as-published, §40 closers drop.)
-
-**v2.2 specific fix in the prose example:**
-- ❌ `"Google ปี 2024 Codex 55% เร็วขึ้น"` → ✅ `"Wang et al. 2024 (arxiv:2404.xxxxx) — Codex 55% บน HumanEval"` (T3 cite)
-- ❌ `"มิร่า engineer ที่ fintech startup ที่ผมสัมภาษณ์ บอกว่า..."` → give the name + interview date, or drop
-- ❌ `Uplevel ปี 2024 ไม่เจอ statistically significant difference` → check the real paper, or drop
-- ❌ `"หวังว่าจะเป็นประโยชน์"` closer → drop
-- ❌ `"ถ้าคุณไม่มี test คุณบอกไม่ได้ว่า suggestion ถูกหรือเปล่า"` slogan-y closer → soften or drop
+The Full Example above is a Register D piece. The D-specific fixes in it:
+- ❌ `Industry observers have noted that AI review is moving...` → no source is named, so drop it (§32.1, T1). If the writer has the source, cite it as published: author, year, link (§32.3).
+- ❌ `คำถามดีมากครับ! ... หวังว่าจะเป็นประโยชน์ครับ!` and `แจ้งได้เลยหากต้องการให้ขยายความ` → drop (§40).
+- ❌ a closing moral the source never states (`เครื่องมือดีแค่ไหนก็แทนคน review ไม่ได้`) → cut; cleaning text never adds a claim (§60, §51).
+- ❌ `ในที่สุด อนาคตของ...สดใส` → drop the recap and end on the decision (§51).
 
 ### Side-by-Side: Same Content, 4 Registers
 
@@ -180,7 +164,7 @@ Given the draft `ผมได้ merge PR #64 เข้า develop แล้ว 
 | Register | Rewrite | Why |
 |----------|---------|-----|
 | **A** (chat) | `"merge แล้วค่ะ PR #64 🎉"` | terse, emoji, 1st-line topic |
-| **B** (standup) | `"✅ TP-549 PR #64 merged เข้า develop"` | emoji + ticket + scope |
+| **B** (standup) | `"✅ PR #64 measurement redesign merged เข้า develop"` | status + PR + scope |
 | **C** (UI) | `"บันทึกการเปลี่ยนแปลงเรียบร้อย"` | status-word-first, action-complete |
 | **D** (blog) | `"PR #64 merge เข้า develop เมื่อเช้า เป็นก้าวแรกของ measurement redesign ก้าวต่อไปคือ..."` | narrative, personal, longer |
 
@@ -191,7 +175,7 @@ Given the draft `ผมได้ merge PR #64 เข้า develop แล้ว 
 
 ## Monolingual English Examples (v3.0)
 
-Same catalog (30 universal + 12 Thai-specific top-level in `patterns-thai.md`), but applied to drafts that contain **no Thai**. Useful when the user writes internal EN-only docs, EN UI copy, or EN strategy/blog prose. Universal patterns (§1-§30 in `patterns-universal.md`) all apply; Thai-specific patterns (§31-§42 in `patterns-thai.md`) are skipped.
+Same catalog (33 universal + 28 Thai-specific top-level), but applied to drafts that contain **no Thai**. Useful when the user writes internal EN-only docs, EN UI copy, or EN strategy/blog prose. Universal patterns (§1-§30 and §59-§61 in `patterns-universal.md`) all apply; Thai-specific patterns (§31-§58) are skipped.
 
 ### Example E — EN UI Error (Stripe-style)
 
@@ -209,23 +193,22 @@ Same catalog (30 universal + 12 Thai-specific top-level in `patterns-thai.md`), 
 - `"— we're here to help!"` — em dash + sycophantic closer
 
 **After (EN UI — register C):**
-> Card was declined.
-> Try a different card, or contact your bank.
-> Need help? support@example.com
+> Payment failed. Try again.
+> Questions? Contact <support channel>.
 
 **Changes applied:**
-- Status word first (`Card was declined.`)
-- Plain verb (`Try a different card`) instead of nominalization
-- Actionable next step + concrete channel
+- Status first (`Payment failed.`)
+- The one action the Before gives (`Try again.`)
+- The contact channel stays a placeholder: the Before names none, so don't invent an address or a cause such as "card declined"
 - No opener, no closer, no "we"
-- ≤25 words, 3 short lines (UI-actual density)
+- Under 10 words, short lines (UI-actual density)
 
 ### Example F — EN Standup / Slack message
 
 **Register:** B (Standup / PR / commit). Language axis: EN. Particle: none.
 
 **Before (AI-sounding — narrative + puffing):**
-> I hope everyone is doing well! I wanted to provide a quick update on the work I completed this week. Notably, I successfully merged PR #847 which represents a pivotal milestone in our migration journey. Additionally, I undertook a comprehensive refactor of the authentication module, showcasing my commitment to code quality. Furthermore, I collaborated with cross-functional stakeholders to align on best practices. Looking ahead, I will be leveraging my expertise to drive innovation.
+> I hope everyone is doing well! I wanted to provide a quick update on the work I completed this week. Notably, I successfully merged PR #847 which represents a pivotal milestone in our migration journey. Additionally, I undertook a comprehensive refactor of the authentication module, showcasing my commitment to code quality. Furthermore, I collaborated with key stakeholders across teams to align on best practices. Looking ahead, I will be leveraging my expertise to drive innovation.
 
 **Red flags:**
 - `"I hope everyone is doing well!"` — chatbot opener
@@ -233,25 +216,24 @@ Same catalog (30 universal + 12 Thai-specific top-level in `patterns-thai.md`), 
 - `"represents a pivotal milestone"` — §1 emphasis on legacy
 - `"undertook a comprehensive refactor"` — nominalization + AI-vocab
 - `"showcasing my commitment"` — promotional + -ing ending
-- `"collaborated with cross-functional stakeholders"` — vague weasel attribution
+- `"collaborated with key stakeholders across teams"` — vague weasel attribution
 - `"align on best practices"` — vague-upbeat contentless verb
 - `"leverage expertise to drive innovation"` — AI-vocab pileup
 - 1st-person throughout (standup author speaks from their own experience, not a narrated CV)
 
 **After (EN standup — register B):**
-> PR #847 merged to develop. Auth refactor landed in the same PR. Break it into chunks for review next time.
+> Merged PR #847 (migration). Refactored the auth module.
 >
-> Reviewed: PR #842 (Sam), PR #851 (Priya). Both have my notes inline.
+> Met <who?> about <which practice?>.
 >
-> Next: pick up the migration ticket for the analytics module, will flag blockers in #eng-help.
+> Next: <what?>
 
 **Changes applied:**
 - 1st-person implied (drop "I" at sentence start, keep it where ownership is real)
-- Verbatim PR numbers, branch names, person names — no vague stakeholders
-- `-` for tight asides, not em dashes
-- Topic-first (PR #847 / Reviewed: / Next:)
+- PR number kept verbatim; the stakeholders, the topic and the next step stay as gaps, because the Before names none of them and the author has to fill them in
+- Topic-first (PR #847 / Met / Next:)
 - No closer, no "I'm excited", no "leverage"
-- ≤80 words across 3 short paragraphs
+- Under 20 words
 
 ### Example G — EN Prose / Blog (register D)
 
@@ -269,27 +251,20 @@ Same catalog (30 universal + 12 Thai-specific top-level in `patterns-thai.md`), 
 - `"those who adapt will thrive in this new landscape"` — landscape = §7 AI vocab
 
 **After (EN prose — register D):**
-> Three years after we switched to async-first, the things that surprised me weren't the ones I expected. The big one: written decisions make weaker ideas die faster. A bad proposal that would have survived an hour-long meeting in 2019 gets three Slack replies saying "wait, why" and quietly gets revised by Friday.
->
-> The smaller surprise: people who never spoke up in meetings started writing long, careful docs. Not because we asked them to. Because the medium fit.
->
-> I'm not claiming async is better. I'm claiming the medium does more work than I gave it credit for.
+> Remote work changed <what, for which team> [source or first-hand detail?].
 
 **Changes applied:**
-- Specific anchor ("three years after we switched") — not a vague "evolution"
-- Personal voice ("surprised me", "I'm not claiming")
-- Mixed sentence length (short + long, varied rhythm)
-- No rule of three, no "industry observers", no "landscape"
-- Skeptical ending that lands somewhere real ("the medium does more work than I gave it credit for") — not a slogan
-- No em dashes, no "I'd love to hear your thoughts" closer
+- The Before has no checkable fact, so the rewrite has almost nothing left. That is the finding: ask the author what actually changed and how they know, then write that
+- Do not supply an anecdote, a date or a number for them; a made-up "three years after we switched" reads human and is still invented
+- No rule of three, no "industry observers", no "landscape", no slogan ending
 
 ### Side-by-Side: Same content, monolingual EN
 
-`"merged PR #847 to develop; auth refactor landed in the same PR — break it into chunks for review next time"`:
+`"merged PR #847 to develop; auth refactor landed in the same PR; break it into chunks for review next time"`:
 
 | Register | Rewrite | Why |
 |----------|---------|-----|
 | **A** (chat, EN) | `"PR #847's in 🎉"` | terse, emoji, no detail |
 | **B** (standup, EN) | `"PR #847 merged. auth refactor in same PR, chunk next time"` | ticket + scope + improvement |
 | **C** (UI, EN) | `"PR #847 merged to develop."` | status-only, no narrator |
-| **D** (blog, EN) | `"We merged PR #847 to develop this morning. The auth refactor rode along in the same commit. Splitting review by feature would have been cleaner, in retrospect."` | narrative, first-person, hindsight |
+| **D** (blog, EN) | `"We merged PR #847 to develop. The auth refactor rode along in the same PR; splitting it up would have made review easier."` | narrative, first-person, hindsight |

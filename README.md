@@ -19,7 +19,7 @@ claude plugin install siang@siang
 
 1. Pick the genre (A chat, B standup/PR/commit, C UI/error copy, D prose/blog/ADR) and the language.
 2. Plan the grit: the concrete specifics from the source the rewrite must keep.
-3. Name every AI tell against a 30-row universal cue sheet, plus the Thai-only patterns for any Thai.
+3. Name every AI tell against a 33-row universal cue sheet, plus the Thai-only patterns for any Thai.
 4. Draft, ask "what still reads AI?", then write the final.
 
 Two rules hold throughout: no invented facts (an unverifiable claim is dropped or hedged, never
@@ -38,7 +38,8 @@ siang started as the `tech-humanize` skill in
 [wasikarn/method-harness](https://github.com/wasikarn/method-harness). Its knowledge base draws on:
 
 - [blader/humanizer](https://github.com/blader/humanizer) (MIT, Copyright (c) 2025 Siqi Chen): the
-  30 universal patterns, their titles and order, much of their wording, and many of their examples.
+  30 universal patterns: their titles, order and structure. Its examples and wording, copied until
+  2026-11-09, were replaced with siang's own that day.
 - [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing),
   maintained by WikiProject AI Cleanup: the catalog both humanizer and siang build on.
 - [chakrit/kien-thai](https://github.com/chakrit/kien-thai) (MIT, Copyright (c) 2026 Chakrit
