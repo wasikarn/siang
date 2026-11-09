@@ -39,6 +39,11 @@ a unit mismatch, an unsourced retention claim) and a standard to review it again
 the skill and 0.57 without (Δ +0.43). A plain model finds all four checkable defects; the Δ comes from the skill's own
 contract: marking the unsourced claim unverifiable, grading findings by consequence, and ending in a verdict.
 
+One case covers `siang:personal-voice` (tag `personal-voice`): `personal-voice-terse-writer` gives the skill three
+terse chat messages and a polished draft to rewrite in that voice, plus a `voice.md` for the profile. Its first run
+scored 1.00 with the skill and 0.78 without (Δ +0.22). Both arms fix the draft; the Δ comes from the profile, where
+only the skill reports measured features (a sentence-length median) and separates habits from one-offs by sample.
+
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
 Free check, no API call: `bash tests/test-graders.sh` proves every prompt invokes
