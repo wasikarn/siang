@@ -19,30 +19,30 @@ RULES = [
     ("§7", "AI vocabulary", r"(?i)\b(delv(e|es|ing)|tapestry|testament|underscor(e|es|ed|ing)|pivotal|intricate|interplay|meticulous(ly)?|showcas(e|es|ing)|bolster(s|ed|ing)?|garner(s|ed)?|foster(s|ed|ing)?|vibrant|crucial|seamless(ly)?|deep dive|leverag(e|es|ed|ing)|comprehensive|stakeholders)\b"),
     ("§7", "AI vocabulary (abstract sense?)", r"(?i)\b(landscape|robust)\b"),
     ("§8", "copula avoidance", r"(?i)\b(serves|stands|functions) as\b"),
-    ("§9", "negative parallelism", r"(?i)\bnot (just|only)\b|\bit'?s not [^.]{1,40}[.,;] it'?s\b"),
+    ("§9", "negative parallelism", r"(?i)\bnot (just|only)\b|\bit['’]?s not [^.]{1,40}[.,;] it['’]?s\b"),
     ("§20", "chat artifact", r"(?i)\b(i hope this helps|let me know if|feel free to|certainly!|happy to help)"),
-    ("§22", "sycophancy", r"(?i)\b(great (question|catch)|you'?re absolutely right)"),
+    ("§22", "sycophancy", r"(?i)\b(great (question|catch)|you['’]?re absolutely right)"),
     ("§23", "filler phrase", r"(?i)\b(in order to|due to the fact that|in the event that)\b"),
     ("§25", "generic conclusion", r"(?i)\b(in conclusion|the future looks bright)\b|โดยสรุปแล้ว|กล่าวโดยสรุป"),
     ("§27", "authority trope", r"(?i)\b(at its core|fundamentally)\b|เป็นที่ทราบกันดีว่า|ปฏิเสธไม่ได้ว่า"),
-    ("§28", "signposting", r"(?i)\b(let'?s (dive|delve) in(to)?|here'?s the thing|here'?s what you need to know)\b"),
+    ("§28", "signposting", r"(?i)\b(let['’]?s (dive|delve) in(to)?|here['’]?s the thing|here['’]?s what you need to know)\b"),
     ("§59", "re-explaining what the reader knows", r"(?i)\b(as you know|for context|to recap)\b|อย่างที่ทราบกันดี"),
     ("§61", "arguing with no one", r"(?i)\bsome (might|may|would) argue\b|บางคนอาจแย้งว่า"),
     ("§7", "Thai AI vocabulary", r"ภูมิทัศน์|เน้นย้ำ|อย่างมหาศาล|อย่างน่าทึ่ง"),
-    ("§31", "non-standard spelling", r"อัพเดท|อัพเดต|แอพ|ลิงค์|อีเมล์|ดิจิตอล|เวอร์ชั่น|ฟีเชอร์|เซสชั่น"),
+    ("§31", "non-standard spelling", r"อัพเดท|อัพเดต|แอพ|ลิงค์|อีเมล์|ดิจิตอล|เวอร์ชั่น|ฟีเชอร์|เซสชั่น|อัพโหลด|ฟังชั่น"),
     ("§33", "connector cluster", r"อย่างไรก็ตาม|นอกจากนี้|ในขณะเดียวกัน|ทั้งนี้"),
     ("§36", "marketing calque", r"มุ่งมั่น|ประสบการณ์[^\n]{0,20}ที่ดีที่สุด|ก้าวสำคัญ"),
-    ("§37", "nominalization", r"ทำการ(?! ?[A-Za-z])|ได้ทำการ|การดำเนินการ"),  # ทำการ deploy is normal dev Thai
+    ("§37", "nominalization", r"(?<!วัน)(?<!เวลา)ทำการ(?! ?[A-Za-z])|ได้ทำการ|การดำเนินการ"),  # ทำการ deploy, วันทำการ are normal Thai
     ("§40", "leaked closer", r"หวังว่า[^\n]{0,30}เป็นประโยชน์|ยินดีให้ความช่วยเหลือ"),
     ("§32.8", "formal address (fine in legal/bank letters)", r"ท่านผู้อ่าน|ท่านลูกค้า|ของท่าน|ข้าพเจ้า|กระผม"),
     ("§51", "panorama opener", r"ในยุคปัจจุบัน|ในโลกยุคใหม่"),
     ("§56", "western date/time (user-facing Thai only; internal ISO and colon times are correct)", r"\b\d{1,2}:\d{2}\s?(AM|PM|am|pm)\b|\b\d{1,2}/\d{1,2}/\d{4}\b"),
-    ("§44", "condition after the main clause? (check order)", r"จะ[^\n]{1,40}?[ก-๛A-Za-z0-9]เมื่อ"),
+    ("§44", "condition after the main clause? (check order)", r"จะ[^\n]{1,40}?[ก-๛A-Za-z0-9]เมื่อ(?!ไหร่|ไร(?!้|ก็ตาม)|วาน|เช้า|คืน(นี้|ที่แล้ว|ก่อน|วาน)?(?![ก-๛])|กี้|ก่อน)"),
     ("§57", "apology size", r"ขออภัยอย่างสูง"),
     ("§57", "stock reassurance", r"ไม่ต้อง(กังวล|ห่วง)"),
     ("§59", "echo-back of the customer's message", r"แจ้ง(มา)?ว่า[^\n]{0,80}ใช่(ไหม|มั้ย)(คะ|ครับ)"),
     ("§58", "zero-width character", r"[\u200b\u200c\u200d\ufeff]"),
-    ("§40", "particle slip (ค่ะ for คะ)", r"(นะ|ไหม|มั้ย|หรือเปล่า)ค่ะ"),
+    ("§40", "particle slip (ค่ะ for คะ)", r"((?<!ช)นะ|(?<!ผ้า)ไหม|มั้ย|หรือเปล่า)ค่ะ"),
 ]
 COMPILED = [(s, label, re.compile(p)) for s, label, p in RULES]
 
@@ -69,13 +69,15 @@ def prose_lines(text):
         if m:
             fence, quiet = (m.group(1)[0], len(m.group(1))), True
             continue
-        # shortcut: a 4-space list continuation paragraph after a blank line is skipped as code too;
-        # upgrade to a real Markdown parser if that hides tells in nested lists.
+        # shortcut: a 4-space list continuation paragraph after a blank line is skipped as code too,
+        # a top-level fence indented 4+ spaces opens a fence (so a fence nested in a list stays
+        # protected), and a lazy blockquote continuation line (no ">") is scanned; upgrade to a real
+        # Markdown parser if any of these hides or invents tells.
         if re.match(r" {0,3}>", line) or (quiet and re.match(r"( {4}|\t)", line)):
             quiet = True
             continue
         quiet = not line.strip()
-        yield n + 1, re.sub(r"`[^`\n]*`", "", line)  # inline code is not prose either
+        yield n + 1, re.sub(r"(`+)(?!`).*?(?<!`)\1(?!`)", "", line)  # inline code (any backtick run) is not prose
 
 
 def scan(text):

@@ -1,0 +1,872 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.319",
+ "startedAt": "2026-11-09T14:51:02.213Z",
+ "durationSeconds": 150,
+ "costUsd": 1.4650102,
+ "partial": false,
+ "suite": {
+  "root": "<repo>",
+  "ablation": "with-without",
+  "caseFilter": "humanize-th-order-holdout",
+  "threshold": 1,
+  "concurrency": 1,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.15",
+    "path": "<repo>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "humanize-th-order-holdout",
+   "dir": "evals/humanize-th-order-holdout",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `handoff.md`. It is a Slack message from a Thai backend developer handing the on-call shift to a teammate after an incident (genre: Slack standup / handoff, internal, Thai). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*@?ploy)(?=[\\s\\S]*payment-gateway)(?=[\\s\\S]*INC-4821)(?=[\\s\\S]*Redis)(?=[\\s\\S]*14[:.]20)(?=[\\s\\S]*25\\s*นาที)(?=[\\s\\S]*p99)(?=[\\s\\S]*800\\s*ms)(?=[\\s\\S]*(?<!\\d)(?:5|ห้า)\\s*นาที)(?=[\\s\\S]*พี่ต้น)(?=[\\s\\S]*/v2/charge)(?=[\\s\\S]*2\\s*%)(?=[\\s\\S]*new-checkout)(?=[\\s\\S]*#312)(?=[\\s\\S]*10[:.]00)(?=[\\s\\S]*(?:postmortem|post-mortem|โพสต์มอร์?เท?ม))(?=[\\s\\S]*(?<!ไม่)ปกติ)(?![\\s\\S]*ไม่(?:ได้)?(?:กลับมา)?ปกติ)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "flag-condition-first",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "(?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "flag-order-gone",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "new-checkout[^\\n]{0,30}?(?:หลังจาก|หลัง|พอ|เมื่อ|ตอน|ถ้า|หาก)[^\\n]{0,40}?(?:hotfix|#312|PR)",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "page-condition-first",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "(?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "page-order-gone",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "พี่ต้น[^\\n]{0,20}?(?:เมื่อ|ถ้า|หาก|กรณี|ตอน|ทุกครั้งที่)[^\\n]{0,40}?(?:error|เออเร่อ|2\\s*%)",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "restart-condition-first",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "(?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "restart-order-gone",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "(?:restart|รีสตาร์[ทต])[^\\n]{0,60}?(?:หาก|ถ้า|เมื่อ|กรณี|ตอน|ทุกครั้งที่)[^\\n]{0,30}?(?:p99|latency|800)",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.18395560000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-09T14:51:02.274Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*@?ploy)(?=[\\s\\S]*payment-gateway)(?=[\\s\\S]*INC-4821)(?=[\\s\\S]*Redis)(?=[\\s\\S]*14[:.]20)(?=[\\s\\S]*25\\s*นาที)(?=[\\s\\S]*p99)(?=[\\s\\S]*800\\s*ms)(?=[\\s\\S]*(?<!\\d)(?:5|ห้า)\\s*นาที)(?=[\\s\\S]*พี่ต้น)(?=[\\s\\S]*/v2/charge)(?=[\\s\\S]*2\\s*%)(?=[\\s\\S]*new-checkout)(?=[\\s\\S]*#312)(?=[\\s\\S]*10[:.]00)(?=[\\s\\S]*(?:postmortem|post-mortem|โพสต์มอร์?เท?ม))(?=[\\s\\S]*(?<!ไม่)ปกติ)(?![\\s\\S]*ไม่(?:ได้)?(?:กลับมา)?ปกติ)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.1934842,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-09T14:51:18.792Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*@?ploy)(?=[\\s\\S]*payment-gateway)(?=[\\s\\S]*INC-4821)(?=[\\s\\S]*Redis)(?=[\\s\\S]*14[:.]20)(?=[\\s\\S]*25\\s*นาที)(?=[\\s\\S]*p99)(?=[\\s\\S]*800\\s*ms)(?=[\\s\\S]*(?<!\\d)(?:5|ห้า)\\s*นาที)(?=[\\s\\S]*พี่ต้น)(?=[\\s\\S]*/v2/charge)(?=[\\s\\S]*2\\s*%)(?=[\\s\\S]*new-checkout)(?=[\\s\\S]*#312)(?=[\\s\\S]*10[:.]00)(?=[\\s\\S]*(?:postmortem|post-mortem|โพสต์มอร์?เท?ม))(?=[\\s\\S]*(?<!ไม่)ปกติ)(?![\\s\\S]*ไม่(?:ได้)?(?:กลับมา)?ปกติ)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.182206,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-09T14:51:37.152Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*@?ploy)(?=[\\s\\S]*payment-gateway)(?=[\\s\\S]*INC-4821)(?=[\\s\\S]*Redis)(?=[\\s\\S]*14[:.]20)(?=[\\s\\S]*25\\s*นาที)(?=[\\s\\S]*p99)(?=[\\s\\S]*800\\s*ms)(?=[\\s\\S]*(?<!\\d)(?:5|ห้า)\\s*นาที)(?=[\\s\\S]*พี่ต้น)(?=[\\s\\S]*/v2/charge)(?=[\\s\\S]*2\\s*%)(?=[\\s\\S]*new-checkout)(?=[\\s\\S]*#312)(?=[\\s\\S]*10[:.]00)(?=[\\s\\S]*(?:postmortem|post-mortem|โพสต์มอร์?เท?ม))(?=[\\s\\S]*(?<!ไม่)ปกติ)(?![\\s\\S]*ไม่(?:ได้)?(?:กลับมา)?ปกติ)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.2064422,
+      "judgeCostUsd": 0,
+      "durationSeconds": 21,
+      "startedAt": "2026-11-09T14:51:54.130Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*@?ploy)(?=[\\s\\S]*payment-gateway)(?=[\\s\\S]*INC-4821)(?=[\\s\\S]*Redis)(?=[\\s\\S]*14[:.]20)(?=[\\s\\S]*25\\s*นาที)(?=[\\s\\S]*p99)(?=[\\s\\S]*800\\s*ms)(?=[\\s\\S]*(?<!\\d)(?:5|ห้า)\\s*นาที)(?=[\\s\\S]*พี่ต้น)(?=[\\s\\S]*/v2/charge)(?=[\\s\\S]*2\\s*%)(?=[\\s\\S]*new-checkout)(?=[\\s\\S]*#312)(?=[\\s\\S]*10[:.]00)(?=[\\s\\S]*(?:postmortem|post-mortem|โพสต์มอร์?เท?ม))(?=[\\s\\S]*(?<!ไม่)ปกติ)(?![\\s\\S]*ไม่(?:ได้)?(?:กลับมา)?ปกติ)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.17874060000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-09T14:52:15.434Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*@?ploy)(?=[\\s\\S]*payment-gateway)(?=[\\s\\S]*INC-4821)(?=[\\s\\S]*Redis)(?=[\\s\\S]*14[:.]20)(?=[\\s\\S]*25\\s*นาที)(?=[\\s\\S]*p99)(?=[\\s\\S]*800\\s*ms)(?=[\\s\\S]*(?<!\\d)(?:5|ห้า)\\s*นาที)(?=[\\s\\S]*พี่ต้น)(?=[\\s\\S]*/v2/charge)(?=[\\s\\S]*2\\s*%)(?=[\\s\\S]*new-checkout)(?=[\\s\\S]*#312)(?=[\\s\\S]*10[:.]00)(?=[\\s\\S]*(?:postmortem|post-mortem|โพสต์มอร์?เท?ม))(?=[\\s\\S]*(?<!ไม่)ปกติ)(?![\\s\\S]*ไม่(?:ได้)?(?:กลับมา)?ปกติ)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0.8571428571428571,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.10107060000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-09T14:52:32.941Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8571428571428571,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.1036834,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T14:52:43.419Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8571428571428571,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.103104,
+      "judgeCostUsd": 0,
+      "durationSeconds": 12,
+      "startedAt": "2026-11-09T14:52:54.157Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.7142857142857143,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.10665079999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 13,
+      "startedAt": "2026-11-09T14:53:06.252Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8571428571428571,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.10567279999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 13,
+      "startedAt": "2026-11-09T14:53:19.425Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:hotfix|#312)[\\s\\S]{0,80}?(?:เปิด|enable|new-checkout)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "flag-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:error|เออเร่อ|2\\s*%)[\\s\\S]{0,80}?พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "page-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:p99|latency|800\\s*ms)[\\s\\S]{0,80}?(?:restart|รีสตาร์[ทต])",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "restart-order-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 0.8285714285714285,
+    "passRateWithout": 0,
+    "delta": 0.17142857142857149
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 1,
+  "casesPassed": 1,
+  "overallScore": 1,
+  "overallPassRate": 1,
+  "meanDelta": 0.17142857142857149
+ }
+}

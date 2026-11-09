@@ -1,0 +1,690 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.319",
+ "startedAt": "2026-11-09T14:48:20.547Z",
+ "durationSeconds": 132,
+ "costUsd": 1.4591091999999999,
+ "partial": false,
+ "suite": {
+  "root": "<repo>",
+  "ablation": "with-without",
+  "caseFilter": "humanize-th-grammar-holdout",
+  "threshold": 1,
+  "concurrency": 1,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.15",
+    "path": "<repo>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "humanize-th-grammar-holdout",
+   "dir": "evals/humanize-th-grammar-holdout",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `pr.md`. It is a pull request description for a Thai dev team (genre B, Thai with English tech terms). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "after-fronted",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "after-trailing-gone",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "(?:restart|รีสตาร์ท)[^\\n]{0,40}(?:หลัง(?:จาก)?|เมื่อ|ตอน(?:ที่)?|ทุกครั้งที่|ถ้า|หาก)\\s*(?:มีการ\\s*)?(?:เปลี่ยน(?:ค่า)?\\s*)?`?REDIS_URL",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "if-fronted",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "if-trailing-gone",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)[^\\n]{0,20}(?:ถ้า|หาก|เมื่อ|ตอน(?:ที่)?|ทุกครั้งที่)\\s*(?:มี\\s*)?pod",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.17983739999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 16,
+      "startedAt": "2026-11-09T14:48:20.616Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.1893626,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-09T14:48:36.213Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.191413,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-09T14:48:53.837Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.1763152,
+      "judgeCostUsd": 0,
+      "durationSeconds": 16,
+      "startedAt": "2026-11-09T14:49:11.175Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.20994379999999996,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-09T14:49:27.042Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.09513740000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-09T14:49:43.791Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1083636,
+      "judgeCostUsd": 0,
+      "durationSeconds": 12,
+      "startedAt": "2026-11-09T14:49:50.827Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.10615480000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T14:50:02.692Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1051066,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T14:50:13.958Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0974748,
+      "judgeCostUsd": 0,
+      "durationSeconds": 8,
+      "startedAt": "2026-11-09T14:50:24.607Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "after-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched REDIS_URL[^\\n]{0,40}(?:restart|รีสตาร์ท)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "after-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*#412)(?=[\\s\\S]*RedisSessionStore)(?=[\\s\\S]*MemorySessionStore)(?=[\\s\\S]*8\\s*ชั่วโมง)(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*auth-api)(?=[\\s\\S]*23\\s*(?:ใบ|ticket|tickets))(?=[\\s\\S]*2,?000\\s*RPS)(?=[\\s\\S]*15\\s*นาที)(?=[\\s\\S]*login\\s*ใหม่)(?=[\\s\\S]*(?:ไม่มี[^\\n]{0,20}หลุด|ไม่หลุด))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-fronted",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched evict[^\\n]{0,60}(?:logout|ล็อกเอาต์|log out|หลุด|เด้งออก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "if-trailing-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 1,
+  "casesPassed": 1,
+  "overallScore": 1,
+  "overallPassRate": 1,
+  "meanDelta": 0
+ }
+}

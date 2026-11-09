@@ -3,7 +3,8 @@
 # compiles as a JS RegExp (the eval runtime's engine), and matches its scaffolded fixture. A
 # not_contains grader that misses the fixture can never fail; a contains grader that misses it can
 # never pass. A contains grader marked '# fixture: absent' checks a corrected form instead, so it must
-# miss the fixture. Run from anywhere: bash tests/test-graders.sh
+# miss the fixture. '# must-pass: <text>' and '# must-fail: <text>' lines in a grader's frontmatter are
+# sample outputs it must judge right. Run from anywhere: bash tests/test-graders.sh
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
 work=$(mktemp -d)
@@ -44,6 +45,11 @@ for (const g of fs.readdirSync(gdir).sort()) {
   let re;
   try { re = new RegExp(m[1].replace(/''/g, "'"), flags); }
   catch (e) { console.log(`FAIL ${c}/${g}: ${e.message}`); bad = 1; continue; }
+  // '# must-pass: <text>' / '# must-fail: <text>' lines are outputs the grader has to judge right.
+  const passes = t => /^match: not_contains$/m.test(fm) ? !re.test(t) : re.test(t);
+  for (const [, kind, t] of fm.matchAll(/^# must-(pass|fail): (.*)$/gm)) {
+    if (passes(t) !== (kind === 'pass')) { console.log(`FAIL ${c}/${g}: must-${kind} sample judged wrong: ${t}`); bad = 1; }
+  }
   const file = (fm.match(/path: ([^}\s]+)/) || [])[1];
   const sample = file ? fs.readFileSync(path.join(ws, file), 'utf8') : all;
   if (/^# fixture: absent$/m.test(fm)) {

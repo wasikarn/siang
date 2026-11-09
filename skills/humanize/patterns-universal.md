@@ -352,7 +352,7 @@ Last check before you hand the rewrite over: search it for em dashes (`—`). On
 > Detailed documentation of the legacy billing service is not readily available, suggesting it was likely built quickly by a small team and has been maintained with minimal oversight
 
 **After:**
-> We found no documentation for the legacy billing service.
+> The legacy billing service has no detailed documentation.
 
 
 ### 22. Sycophantic/Servile Tone

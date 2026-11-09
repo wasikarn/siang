@@ -7,9 +7,11 @@ scan="$root/skills/humanize/scripts/scan.py"
 work=$(mktemp -d)
 trap 'python3 -c "import shutil,sys; shutil.rmtree(sys.argv[1])" "$work"' EXIT
 fail=0
-expect() {  # expect <label> <want-substring> <<< text
-  local out; out=$(python3 "$scan" - )
-  if [[ "$out" == *"$2"* ]]; then echo "PASS $1"; else echo "FAIL $1: wanted '$2' in:"; echo "$out"; fail=1; fi
+expect() {  # expect <label> <want> <<< text; a count ("0 candidate(s)") must start the summary line
+  local out ok=0; out=$(python3 "$scan" - )
+  if [[ "$2" =~ ^[0-9]+\ candidate ]]; then [[ "${out##*$'\n'}" == "$2"* ]] && ok=1
+  else [[ "$out" == *"$2"* ]] && ok=1; fi
+  if (( ok )); then echo "PASS $1"; else echo "FAIL $1: wanted '$2' in:"; echo "$out"; fail=1; fi
 }
 fixture() { (cd "$work" && bash "$root/evals/$1/scaffold.sh" >/dev/null && cat "$work/$2"); }
 
@@ -72,5 +74,55 @@ expect "§57 stock reassurance"         "§57"  <<< "ไม่ต้องกั
 expect "§58 zero-width space"          "§58"  <<< "เปิด VPN​ก่อนนะ"
 expect "§40 particle slip"             "§40"  <<< "ส่งสลิปได้ไหมค่ะ"
 expect "§44 trailing เมื่อ"            "§44"  <<< "request ของ API จะช้าลงเกือบเท่าตัวเมื่อมีคนอัปโหลดรูปพร้อมกัน"
-expect "§44 leading condition ok"      "0 candidate(s)" <<< "พอมีคนอัปโหลดรูปพร้อมกันเยอะ request ก็ช้าลง"
+expect "§44 พอ-first sentence ok"     "0 candidate(s)" <<< "พอมีคนอัปโหลดรูปพร้อมกันเยอะ request ก็ช้าลง"
+expect "§44 leading เมื่อ ok"          "0 candidate(s)" <<< "เมื่อมีคนอัปโหลดรูปพร้อมกัน request จะช้าลงเกือบเท่าตัว"
+# Correct Thai words that contain a rule's letters must not fire (audit 2026-11-10).
+expect "วันทำการ/เวลาทำการ/ที่ทำการ ok" "0 candidate(s)" <<'MD'
+ระบบจะคืนเงินภายใน 3 วันทำการค่ะ
+เวลาทำการ 9.00-17.00 น.
+MD
+expect "ที่ + ทำการ + verb still flagged" "§37 nominalization" <<< "ระบบที่ทำการติดตั้งอัตโนมัติ"
+expect "§44 เมื่อไร้ still flagged"     "§44" <<< "ระบบจะล้มเมื่อไร้การเชื่อมต่อ"
+expect "§44 เมื่อคืน+noun still flagged" "§44" <<< "ร้านจะคืนเงินให้เมื่อคืนสินค้าครบแล้วค่ะ"
+expect "§44 เมื่อไรก็ตาม still flagged" "§44" <<< "ระบบจะแจ้งเตือนเมื่อไรก็ตามที่ CPU เกิน 80%"
+expect "§44 เมื่อคืนนี้ ok"            "0 candidate(s)" <<< "ทีมจะสรุปผลที่คุยกันเมื่อคืนนี้"
+expect "เมื่อไหร่/เมื่อวาน after จะ ok"  "0 candidate(s)" <<'MD'
+งานนี้จะเสร็จเมื่อไหร่คะ
+ทีมจะสรุปผลจากที่คุยกันเมื่อวาน
+MD
+expect "ชนะค่ะ/ผ้าไหมค่ะ ok"            "0 candidate(s)" <<'MD'
+ทีมเราชนะค่ะ
+ร้านนี้ขายผ้าไหมค่ะ
+MD
+expect "§31 อัพโหลด"                  "§31 non-standard spelling: อัพโหลด" <<< "ไฟล์อัพโหลดไม่ขึ้น"
+expect "§31 ฟังชั่น"                   "§31 non-standard spelling: ฟังชั่น" <<< "เรียกฟังชั่นนี้ก่อน"
+# Curly apostrophes, as models often emit them, still name the tell.
+expect "§9 curly apostrophe"          "§9"   <<< "It’s not a refactor. It’s a rewrite."
+expect "§22 curly apostrophe"         "§22"  <<< "You’re absolutely right."
+expect "§28 curly apostrophe"         "§28"  <<< "Here’s the thing."
+# A fence indented under a list item is still a fence: its code is protected.
+expect "fence nested in a list skipped" "0 candidate(s)" <<'MD'
+- Example:
+    ```
+    delve — code
+    ```
+
+Plain prose.
+MD
+expect "double-backtick inline code skipped" "0 candidate(s)" <<< 'Use ``echo `date` — output`` here.'
+# One probe per rule not covered above, so a broken regex fails here.
+expect "§8"   "§8"   <<< "The cache serves as a buffer."
+expect "§20"  "§20"  <<< "Let me know if you need more."
+expect "§23"  "§23"  <<< "We retry in order to avoid drops."
+expect "§25"  "§25"  <<< "โดยสรุปแล้วระบบทำงานได้"
+expect "§27"  "§27"  <<< "At its core, this is a queue."
+expect "§59 English" "§59" <<< "As you know, the job runs nightly."
+expect "§61"  "§61"  <<< "Some might argue this is slow."
+expect "§7 Thai" "§7 Thai AI vocabulary" <<< "ทีมขอเน้นย้ำเรื่องนี้"
+expect "§7 landscape" "§7 AI vocabulary (abstract sense?)" <<< "The cloud landscape changed."
+expect "§33"  "§33"  <<< "นอกจากนี้ยังแก้บั๊กด้วย"
+expect "§36"  "§36"  <<< "เรามุ่งมั่นพัฒนาระบบ"
+expect "§32.8" "§32.8" <<< "ขอบคุณท่านลูกค้าทุกท่าน"
+expect "§51"  "§51"  <<< "ในยุคปัจจุบันทุกคนใช้แอป"
+expect "§19"  "§19 curly quote" <<< "He said “ship it”."
 exit "$fail"

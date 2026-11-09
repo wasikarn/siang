@@ -7,7 +7,7 @@
   `git-hooks/pre-commit` refuses a `skills/` commit without a bump; enable it once per clone with
   `git config core.hooksPath git-hooks` (relative path). Its test: `bash tests/test-version-hook.sh`.
   `.github/workflows/check.yml` runs a looser version check (one bump per pushed range or PR; the hook wants one per
-  commit) plus both tests on every push and PR, so a clone without the hook is still caught
+  commit) plus the six `tests/*.sh` scripts (listed by hand: add a new test there too) on every push and PR, so a clone without the hook is still caught
   (after the push, not before). Amending a skills/ fix into a commit that already bumped still
   needs a fresh bump, since the hook compares with HEAD.
 - Skill files may contain Thai: Thai writing is the subject matter.

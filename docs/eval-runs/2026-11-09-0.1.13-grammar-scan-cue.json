@@ -1,0 +1,462 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.319",
+ "startedAt": "2026-11-09T14:23:10.964Z",
+ "durationSeconds": 99,
+ "costUsd": 1.4556994,
+ "partial": false,
+ "suite": {
+  "root": "<repo>",
+  "ablation": "with-without",
+  "caseFilter": "humanize-th-grammar-planted",
+  "threshold": 1,
+  "concurrency": 1,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.12",
+    "path": "<repo>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "humanize-th-grammar-planted",
+   "dir": "evals/humanize-th-grammar-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `pr.md`. It is a pull request description for a Thai dev team (genre B, a PR description that runs to paragraphs, Thai with English tech terms). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "additive-takes-duay",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "อย่างเดียว(?![^\\n]*ด้วย)",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "classifier-fixed",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "condition-first",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "ช้าลง[^\\n]*(เมื่อ|ตอน|ถ้า|หาก)[^\\n]*อัปโหลด",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-wrong-classifier",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "\\d+ ?ใบ",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 9,
+      "costUsd": 0.4601008,
+      "judgeCostUsd": 0,
+      "durationSeconds": 22,
+      "startedAt": "2026-11-09T14:23:11.007Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.23345860000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 23,
+      "startedAt": "2026-11-09T14:23:33.372Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.4530586,
+      "judgeCostUsd": 0,
+      "durationSeconds": 21,
+      "startedAt": "2026-11-09T14:23:56.143Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1007202,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-09T14:24:17.467Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.10310340000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T14:24:27.136Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1052578,
+      "judgeCostUsd": 0,
+      "durationSeconds": 12,
+      "startedAt": "2026-11-09T14:24:37.749Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 1,
+  "casesPassed": 1,
+  "overallScore": 1,
+  "overallPassRate": 1,
+  "meanDelta": 0
+ }
+}

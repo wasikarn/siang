@@ -8,7 +8,7 @@ adaptations of a source's own examples were replaced with fresh ones on 2026-11-
 
 - Project: https://github.com/chakrit/kien-thai (read at commit 3695c889a23538e97ddae45c53e8b894730b41f5)
 - Used for: Thai discourse frames and structure rules (`patterns-thai-structure.md` §43-§52),
-  surface grammar slips (§53), headings (§54), and marked additions to §31-§40, §58 and the cue sheet.
+  surface grammar slips (§53), headings (§54), and marked additions to §31-§40, §55, §56 and §58.
 - Files read: `skills/kien-thai/SKILL.md`, `references/ai-tells.md`, `references/grammar.md`,
   `references/style-rules.md`, `references/register.md`, `references/craft.md`.
 
@@ -120,5 +120,6 @@ repository; §7's word list still credits the page as its source.
 from that page, and the humanizer text described above. Those passages are © Wikipedia contributors,
 https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing, licensed CC BY-SA 4.0
 (https://creativecommons.org/licenses/by-sa/4.0/); they stay under that license wherever the old
-commits are used, and are not covered by siang's MIT license. The humanizer text in those commits is
-covered by its MIT notice above.
+commits are used, and are not covered by siang's MIT license. Commits before `6d5fb22` (siang 0.1.11,
+2026-11-09) also still carry text copied from humanizer v2.7.0 (runs of up to 49 words) and kien-thai;
+that text is covered by their MIT notices above.

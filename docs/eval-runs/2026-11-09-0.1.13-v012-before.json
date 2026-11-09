@@ -1,0 +1,1893 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.319",
+ "startedAt": "2026-11-09T14:09:59.727Z",
+ "durationSeconds": 467,
+ "costUsd": 4.796604,
+ "partial": false,
+ "suite": {
+  "root": "<repo>",
+  "ablation": "with-without",
+  "tagFilters": [
+   "v012"
+  ],
+  "threshold": 1,
+  "concurrency": 1,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.12",
+    "path": "<repo>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "humanize-th-calque-planted",
+   "dir": "evals/humanize-th-calque-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `incident.md`. It is an incident update a developer posts in the team's Slack channel (genre B, Thai with English tech terms). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*23:10)(?=[\\s\\S]*order-db)(?=[\\s\\S]*พฤหัส)(?=[\\s\\S]*22:00)(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*#412[^\\n]*(ยังไม่|พัก|รอ[^\\n]{0,10}review))(?=[\\s\\S]*(งด|ห้าม|อย่า|หยุด|ไม่ต้อง|พัก)[^\\n]{0,12}batch)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "listed-calques-gone",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "ระบบล้ม|ถือไว้",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "window-calque-gone",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "หน้าต่างเวลา",
+      "flags": "",
+      "match": "not_contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.1815472,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-09T14:09:59.772Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*23:10)(?=[\\s\\S]*order-db)(?=[\\s\\S]*พฤหัส)(?=[\\s\\S]*22:00)(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*#412[^\\n]*(ยังไม่|พัก|รอ[^\\n]{0,10}review))(?=[\\s\\S]*(งด|ห้าม|อย่า|หยุด|ไม่ต้อง|พัก)[^\\n]{0,12}batch)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "listed-calques-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "window-calque-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.2180842,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-09T14:10:16.774Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*23:10)(?=[\\s\\S]*order-db)(?=[\\s\\S]*พฤหัส)(?=[\\s\\S]*22:00)(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*#412[^\\n]*(ยังไม่|พัก|รอ[^\\n]{0,10}review))(?=[\\s\\S]*(งด|ห้าม|อย่า|หยุด|ไม่ต้อง|พัก)[^\\n]{0,12}batch)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "listed-calques-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "window-calque-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 9,
+      "costUsd": 0.231268,
+      "judgeCostUsd": 0,
+      "durationSeconds": 20,
+      "startedAt": "2026-11-09T14:10:34.394Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*23:10)(?=[\\s\\S]*order-db)(?=[\\s\\S]*พฤหัส)(?=[\\s\\S]*22:00)(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*#412[^\\n]*(ยังไม่|พัก|รอ[^\\n]{0,10}review))(?=[\\s\\S]*(งด|ห้าม|อย่า|หยุด|ไม่ต้อง|พัก)[^\\n]{0,12}batch)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "listed-calques-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "window-calque-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.096287,
+      "judgeCostUsd": 0,
+      "durationSeconds": 8,
+      "startedAt": "2026-11-09T14:10:54.132Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*23:10)(?=[\\s\\S]*order-db)(?=[\\s\\S]*พฤหัส)(?=[\\s\\S]*22:00)(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*#412[^\\n]*(ยังไม่|พัก|รอ[^\\n]{0,10}review))(?=[\\s\\S]*(งด|ห้าม|อย่า|หยุด|ไม่ต้อง|พัก)[^\\n]{0,12}batch)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "listed-calques-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "window-calque-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.09722139999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-09T14:11:02.065Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*23:10)(?=[\\s\\S]*order-db)(?=[\\s\\S]*พฤหัส)(?=[\\s\\S]*22:00)(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*#412[^\\n]*(ยังไม่|พัก|รอ[^\\n]{0,10}review))(?=[\\s\\S]*(งด|ห้าม|อย่า|หยุด|ไม่ต้อง|พัก)[^\\n]{0,12}batch)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "listed-calques-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "window-calque-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0987688,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-09T14:11:10.700Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*23:10)(?=[\\s\\S]*order-db)(?=[\\s\\S]*พฤหัส)(?=[\\s\\S]*22:00)(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*#412[^\\n]*(ยังไม่|พัก|รอ[^\\n]{0,10}review))(?=[\\s\\S]*(งด|ห้าม|อย่า|หยุด|ไม่ต้อง|พัก)[^\\n]{0,12}batch)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "listed-calques-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "window-calque-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "humanize-th-chat-clean",
+   "dir": "evals/humanize-th-chat-clean",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `chat.md`. It is a LINE message a developer sends to a senior teammate (genre A, Thai with English tech terms). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "address-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?![\\s\\S]*คุณ)[\\s\\S]*พี่ต้น",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*staging[^\\n]*ยัง(พัง|ไม่ผ่าน|ไม่ขึ้น|error|fail))(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*พรุ่งนี้)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-added-formality",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?![\\s\\S]*(ครับ|ค่ะ|นะคะ|ดิฉัน|ทำการ|ดำเนินการ|เรียบร้อย))",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-added-laugh-or-emoji",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?![\\s\\S]*\\p{Extended_Pictographic})(?![\\s\\S]*555)",
+      "flags": "u",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "softeners-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*อ่ะ)(?=[\\s\\S]*ป่ะ)(?=[\\s\\S]*น้า)",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1411744,
+      "judgeCostUsd": 0,
+      "durationSeconds": 8,
+      "startedAt": "2026-11-09T14:11:20.350Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "address-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*คุณ)[\\s\\S]*พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*staging[^\\n]*ยัง(พัง|ไม่ผ่าน|ไม่ขึ้น|error|fail))(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*พรุ่งนี้)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-formality",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(ครับ|ค่ะ|นะคะ|ดิฉัน|ทำการ|ดำเนินการ|เรียบร้อย))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-laugh-or-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})(?![\\s\\S]*555)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "softeners-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*อ่ะ)(?=[\\s\\S]*ป่ะ)(?=[\\s\\S]*น้า)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1402604,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-09T14:11:28.199Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "address-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*คุณ)[\\s\\S]*พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*staging[^\\n]*ยัง(พัง|ไม่ผ่าน|ไม่ขึ้น|error|fail))(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*พรุ่งนี้)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-formality",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(ครับ|ค่ะ|นะคะ|ดิฉัน|ทำการ|ดำเนินการ|เรียบร้อย))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-laugh-or-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})(?![\\s\\S]*555)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "softeners-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*อ่ะ)(?=[\\s\\S]*ป่ะ)(?=[\\s\\S]*น้า)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1394586,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-09T14:11:35.448Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "address-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*คุณ)[\\s\\S]*พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*staging[^\\n]*ยัง(พัง|ไม่ผ่าน|ไม่ขึ้น|error|fail))(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*พรุ่งนี้)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-formality",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(ครับ|ค่ะ|นะคะ|ดิฉัน|ทำการ|ดำเนินการ|เรียบร้อย))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-laugh-or-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})(?![\\s\\S]*555)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "softeners-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*อ่ะ)(?=[\\s\\S]*ป่ะ)(?=[\\s\\S]*น้า)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.09203059999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-09T14:11:42.911Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "address-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*คุณ)[\\s\\S]*พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*staging[^\\n]*ยัง(พัง|ไม่ผ่าน|ไม่ขึ้น|error|fail))(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*พรุ่งนี้)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-formality",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(ครับ|ค่ะ|นะคะ|ดิฉัน|ทำการ|ดำเนินการ|เรียบร้อย))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-laugh-or-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})(?![\\s\\S]*555)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "softeners-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*อ่ะ)(?=[\\s\\S]*ป่ะ)(?=[\\s\\S]*น้า)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0892424,
+      "judgeCostUsd": 0,
+      "durationSeconds": 6,
+      "startedAt": "2026-11-09T14:11:49.977Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "address-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*คุณ)[\\s\\S]*พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*staging[^\\n]*ยัง(พัง|ไม่ผ่าน|ไม่ขึ้น|error|fail))(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*พรุ่งนี้)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-formality",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(ครับ|ค่ะ|นะคะ|ดิฉัน|ทำการ|ดำเนินการ|เรียบร้อย))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-laugh-or-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})(?![\\s\\S]*555)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "softeners-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*อ่ะ)(?=[\\s\\S]*ป่ะ)(?=[\\s\\S]*น้า)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0892706,
+      "judgeCostUsd": 0,
+      "durationSeconds": 5,
+      "startedAt": "2026-11-09T14:11:55.492Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "address-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*คุณ)[\\s\\S]*พี่ต้น",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*staging[^\\n]*ยัง(พัง|ไม่ผ่าน|ไม่ขึ้น|error|fail))(?=[\\s\\S]*REDIS_URL)(?=[\\s\\S]*พรุ่งนี้)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-formality",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(ครับ|ค่ะ|นะคะ|ดิฉัน|ทำการ|ดำเนินการ|เรียบร้อย))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-added-laugh-or-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})(?![\\s\\S]*555)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "softeners-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*อ่ะ)(?=[\\s\\S]*ป่ะ)(?=[\\s\\S]*น้า)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "humanize-th-cs-echo-planted",
+   "dir": "evals/humanize-th-cs-echo-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `reply.md`. It is a chat reply a female support agent of an online shop sends to a customer (genre C, a live conversation with a customer, Thai). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*B7731)(?=[\\s\\S]*22\\.00)(?=[\\s\\S]*09\\.00)(?=[\\s\\S]*ยัง(ไม่(เปลี่ยน|อัปเดต|ขึ้น)|(ขึ้น|เป็น|แสดง|ค้าง)[^\\n]{0,8}รอ)[^\\n]*สลิป)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-echo-back",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "แจ้ง(มา)?ว่า|ใช่(ไหม|มั้ย)คะ",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-particle-slip",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "นะค่ะ|(ไหม|มั้ย|หรือเปล่า|ไหน|อะไร)ค่ะ",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-template-empathy",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "ไม่ต้องกังวล|เข้าใจความ(รู้สึก|กังวล)",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 0.5,
+      "passed": false,
+      "turns": 9,
+      "costUsd": 0.2629502,
+      "judgeCostUsd": 0,
+      "durationSeconds": 26,
+      "startedAt": "2026-11-09T14:12:00.982Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*B7731)(?=[\\s\\S]*22\\.00)(?=[\\s\\S]*09\\.00)(?=[\\s\\S]*ยัง(ไม่(เปลี่ยน|อัปเดต|ขึ้น)|(ขึ้น|เป็น|แสดง|ค้าง)[^\\n]{0,8}รอ)[^\\n]*สลิป)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-echo-back",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-particle-slip",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-template-empathy",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0.75,
+      "passed": false,
+      "turns": 8,
+      "costUsd": 0.2547638,
+      "judgeCostUsd": 0,
+      "durationSeconds": 30,
+      "startedAt": "2026-11-09T14:12:26.767Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*B7731)(?=[\\s\\S]*22\\.00)(?=[\\s\\S]*09\\.00)(?=[\\s\\S]*ยัง(ไม่(เปลี่ยน|อัปเดต|ขึ้น)|(ขึ้น|เป็น|แสดง|ค้าง)[^\\n]{0,8}รอ)[^\\n]*สลิป)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-echo-back",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-particle-slip",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-template-empathy",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0.75,
+      "passed": false,
+      "turns": 10,
+      "costUsd": 0.28620919999999994,
+      "judgeCostUsd": 0,
+      "durationSeconds": 30,
+      "startedAt": "2026-11-09T14:12:56.532Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*B7731)(?=[\\s\\S]*22\\.00)(?=[\\s\\S]*09\\.00)(?=[\\s\\S]*ยัง(ไม่(เปลี่ยน|อัปเดต|ขึ้น)|(ขึ้น|เป็น|แสดง|ค้าง)[^\\n]{0,8}รอ)[^\\n]*สลิป)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-echo-back",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-particle-slip",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-template-empathy",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1042964,
+      "judgeCostUsd": 0,
+      "durationSeconds": 12,
+      "startedAt": "2026-11-09T14:13:26.917Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*B7731)(?=[\\s\\S]*22\\.00)(?=[\\s\\S]*09\\.00)(?=[\\s\\S]*ยัง(ไม่(เปลี่ยน|อัปเดต|ขึ้น)|(ขึ้น|เป็น|แสดง|ค้าง)[^\\n]{0,8}รอ)[^\\n]*สลิป)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-echo-back",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-particle-slip",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-template-empathy",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.75,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.1020328,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T14:13:38.740Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-echo-back",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-particle-slip",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-template-empathy",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.75,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.10849600000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 14,
+      "startedAt": "2026-11-09T14:13:49.955Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-echo-back",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-particle-slip",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-template-empathy",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 0.6666666666666666,
+    "passRate": 0,
+    "scoreWithout": 0.8333333333333334,
+    "passRateWithout": 0.3333333333333333,
+    "delta": -0.16666666666666674
+   }
+  },
+  {
+   "name": "humanize-th-grammar-planted",
+   "dir": "evals/humanize-th-grammar-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `pr.md`. It is a pull request description for a Thai dev team (genre B, a PR description that runs to paragraphs, Thai with English tech terms). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "additive-takes-duay",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "อย่างเดียว(?![^\\n]*ด้วย)",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "classifier-fixed",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "condition-first",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "ช้าลง[^\\n]*(เมื่อ|ตอน|ถ้า|หาก)[^\\n]*อัปโหลด",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-wrong-classifier",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "\\d+ ?ใบ",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 0.8,
+      "passed": false,
+      "turns": 12,
+      "costUsd": 0.28190620000000005,
+      "judgeCostUsd": 0,
+      "durationSeconds": 24,
+      "startedAt": "2026-11-09T14:14:03.707Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.2190588,
+      "judgeCostUsd": 0,
+      "durationSeconds": 20,
+      "startedAt": "2026-11-09T14:14:28.051Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.2212696,
+      "judgeCostUsd": 0,
+      "durationSeconds": 24,
+      "startedAt": "2026-11-09T14:14:47.684Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1039548,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T14:15:12.089Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.13913940000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 20,
+      "startedAt": "2026-11-09T14:15:23.023Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.10257400000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-09T14:15:43.222Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "additive-takes-duay",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "classifier-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 ?(เครื่อง|ตัว|VMs?\\b|instances?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "condition-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*api-server)(?=[\\s\\S]*resize-worker)(?=[\\s\\S]*hash)(?=[\\s\\S]*hostname)(?=[\\s\\S]*(หนึ่งสัปดาห์|1 สัปดาห์|7 วัน))(?=[\\s\\S]*(production[^\\n]{0,6}(ยังไม่|ไม่ต้อง|รอ|ค่อย|ไว้ทีหลัง|ทีหลัง)|(ยังไม่|ไม่ต้อง)[^\\n]{0,12}production))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-wrong-classifier",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 0.9333333333333332,
+    "passRate": 0.6666666666666666,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": -0.06666666666666676
+   }
+  },
+  {
+   "name": "humanize-th-hidden-planted",
+   "dir": "evals/humanize-th-hidden-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `vpn.md`. It is an internal wiki page for a Thai dev team (genre D, internal, Thai with English tech terms). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*WireGuard)(?=[\\s\\S]*90 วัน)(?=[\\s\\S]*(เฉพาะ(ผ่าน|ทาง|ใน)?[^\\n]{0,12}VPN|(?<!ไม่)ต้อง(ต่อ|ใช้|เข้า|ผ่าน)[^\\n]{0,8}VPN|VPN[^\\n]{0,15}เท่านั้น))(?=[\\s\\S]*(ไม่(ได้)?(มีการ)?(แจ้ง)?เตือน))",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-zwsp",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "\\u200B",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "one-yamok-form",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "[ก-๛](?<!ต่าง) ๆ[\\s\\S]*[ก-๛](?<!ต่าง)ๆ|[ก-๛](?<!ต่าง)ๆ[\\s\\S]*[ก-๛](?<!ต่าง) ๆ",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.19149720000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 20,
+      "startedAt": "2026-11-09T14:15:53.219Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*WireGuard)(?=[\\s\\S]*90 วัน)(?=[\\s\\S]*(เฉพาะ(ผ่าน|ทาง|ใน)?[^\\n]{0,12}VPN|(?<!ไม่)ต้อง(ต่อ|ใช้|เข้า|ผ่าน)[^\\n]{0,8}VPN|VPN[^\\n]{0,15}เท่านั้น))(?=[\\s\\S]*(ไม่(ได้)?(มีการ)?(แจ้ง)?เตือน))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-zwsp",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-yamok-form",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 9,
+      "costUsd": 0.23143000000000005,
+      "judgeCostUsd": 0,
+      "durationSeconds": 25,
+      "startedAt": "2026-11-09T14:16:13.342Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*WireGuard)(?=[\\s\\S]*90 วัน)(?=[\\s\\S]*(เฉพาะ(ผ่าน|ทาง|ใน)?[^\\n]{0,12}VPN|(?<!ไม่)ต้อง(ต่อ|ใช้|เข้า|ผ่าน)[^\\n]{0,8}VPN|VPN[^\\n]{0,15}เท่านั้น))(?=[\\s\\S]*(ไม่(ได้)?(มีการ)?(แจ้ง)?เตือน))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-zwsp",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-yamok-form",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.20997300000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 22,
+      "startedAt": "2026-11-09T14:16:38.759Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*WireGuard)(?=[\\s\\S]*90 วัน)(?=[\\s\\S]*(เฉพาะ(ผ่าน|ทาง|ใน)?[^\\n]{0,12}VPN|(?<!ไม่)ต้อง(ต่อ|ใช้|เข้า|ผ่าน)[^\\n]{0,8}VPN|VPN[^\\n]{0,15}เท่านั้น))(?=[\\s\\S]*(ไม่(ได้)?(มีการ)?(แจ้ง)?เตือน))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-zwsp",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-yamok-form",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1367782,
+      "judgeCostUsd": 0,
+      "durationSeconds": 19,
+      "startedAt": "2026-11-09T14:17:00.963Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*WireGuard)(?=[\\s\\S]*90 วัน)(?=[\\s\\S]*(เฉพาะ(ผ่าน|ทาง|ใน)?[^\\n]{0,12}VPN|(?<!ไม่)ต้อง(ต่อ|ใช้|เข้า|ผ่าน)[^\\n]{0,8}VPN|VPN[^\\n]{0,15}เท่านั้น))(?=[\\s\\S]*(ไม่(ได้)?(มีการ)?(แจ้ง)?เตือน))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-zwsp",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-yamok-form",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.12181920000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 16,
+      "startedAt": "2026-11-09T14:17:20.049Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*WireGuard)(?=[\\s\\S]*90 วัน)(?=[\\s\\S]*(เฉพาะ(ผ่าน|ทาง|ใน)?[^\\n]{0,12}VPN|(?<!ไม่)ต้อง(ต่อ|ใช้|เข้า|ผ่าน)[^\\n]{0,8}VPN|VPN[^\\n]{0,15}เท่านั้น))(?=[\\s\\S]*(ไม่(ได้)?(มีการ)?(แจ้ง)?เตือน))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-zwsp",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-yamok-form",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1038416,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-09T14:17:36.194Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*WireGuard)(?=[\\s\\S]*90 วัน)(?=[\\s\\S]*(เฉพาะ(ผ่าน|ทาง|ใน)?[^\\n]{0,12}VPN|(?<!ไม่)ต้อง(ต่อ|ใช้|เข้า|ผ่าน)[^\\n]{0,8}VPN|VPN[^\\n]{0,15}เท่านั้น))(?=[\\s\\S]*(ไม่(ได้)?(มีการ)?(แจ้ง)?เตือน))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-zwsp",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-yamok-form",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 5,
+  "casesPassed": 3,
+  "overallScore": 0.9199999999999999,
+  "overallPassRate": 0.7333333333333333,
+  "meanDelta": -0.046666666666666703
+ }
+}

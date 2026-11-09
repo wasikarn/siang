@@ -1,0 +1,4557 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.319",
+ "startedAt": "2026-11-09T13:26:22.798Z",
+ "durationSeconds": 1002,
+ "costUsd": 9.7964306,
+ "partial": false,
+ "suite": {
+  "root": "<repo>",
+  "ablation": "with-without",
+  "tagFilters": [
+   "humanize"
+  ],
+  "threshold": 1,
+  "concurrency": 1,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.11",
+    "path": "<repo>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "humanize-clean",
+   "dir": "evals/humanize-clean",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `standup.md`. It is an English daily standup.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "criteria",
+     "type": "llm",
+     "weight": 1,
+     "graderMarkdown": "Score 1 only if the skill recognises human writing and edits lightly: the final rewrite keeps the three paragraphs (Yesterday / Today / Blocker), the disagreement with Ploy and the \"profile it instead of arguing\" point of view, and the fixture-drift explanation (names, tickets, numbers and files are checked by `grit-kept.md`); at most a few words change; no forced grit, no added opinions, no new closer. An output identical to the draft is the correct result and passes.",
+     "config": {
+      "criteria": "Score 1 only if the skill recognises human writing and edits lightly: the final rewrite keeps the three paragraphs (Yesterday / Today / Blocker), the disagreement with Ploy and the \"profile it instead of arguing\" point of view, and the fixture-drift explanation (names, tickets, numbers and files are checked by `grit-kept.md`); at most a few words change; no forced grit, no added opinions, no new closer. An output identical to the draft is the correct result and passes.",
+      "focus": "last_message"
+     }
+    },
+    {
+     "name": "grit-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*2026-09-04)(?=[\\s\\S]*\\bPloy\\b)(?=[\\s\\S]*\\bCSV\\b)(?=[\\s\\S]*N\\+1)(?=[\\s\\S]*\\bTuesday\\b)[\\s\\S]*test_retry_backoff[\\s\\S]*conftest\\.py[\\s\\S]*2\\.5s[\\s\\S]*PR #218[\\s\\S]*OPS-91",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.1740471,
+      "judgeCostUsd": 0.0005281000000000001,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-09T13:26:22.842Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "Standup 2026-09-04\n\nYesterday: chased the flaky `test_retry_backoff` for most of the afternoon. Turned out the fake clock in conftest.py wasn't reset between parametrized cases, so the third case inherited 2.5s of drift. Fix is PR #218, one fixture, already merged.\n\nToday: pairing with Ploy on the invoice export. She thinks the CSV encoder is the slow part, I think it's the N+1 on customer lookups. We'll profile it instead of arguing.\n\nBlocker: still waiting on staging DB creds from ops (asked Tuesday, ticket OPS-91)."
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*2026-09-04)(?=[\\s\\S]*\\bPloy\\b)(?=[\\s\\S]*\\bCSV\\b)(?=[\\s\\S]*N\\+1)(?=[\\s\\S]*\\bTuesday\\b)[\\s\\S]*test_retry_backoff[\\s\\S]*conftest\\.py[\\s\\S]*2\\.5s[\\s\\S]*PR #218[\\s\\S]*OPS-91",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.1791861,
+      "judgeCostUsd": 0.0003815,
+      "durationSeconds": 15,
+      "startedAt": "2026-11-09T13:26:40.694Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: FAIL PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         false,
+         true,
+         true
+        ],
+        "evidence": "Standup 2026-09-04\n\nYesterday: chased the flaky `test_retry_backoff` for most of the afternoon. Turned out the fake clock in conftest.py wasn't reset between parametrized cases, so the third case inherited 2.5s of drift. Fix is PR #218 (small, one fixture), already merged.\n\nToday: pairing with Ploy on the invoice export. She thinks the CSV encoder is the slow part, I think it's the N+1 on customer lookups. We'll profile it instead of arguing.\n\nBlocker: still waiting on staging DB creds from ops (asked Tuesday, ticket OPS-91)."
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*2026-09-04)(?=[\\s\\S]*\\bPloy\\b)(?=[\\s\\S]*\\bCSV\\b)(?=[\\s\\S]*N\\+1)(?=[\\s\\S]*\\bTuesday\\b)[\\s\\S]*test_retry_backoff[\\s\\S]*conftest\\.py[\\s\\S]*2\\.5s[\\s\\S]*PR #218[\\s\\S]*OPS-91",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.1681032,
+      "judgeCostUsd": 0.0006178000000000001,
+      "durationSeconds": 15,
+      "startedAt": "2026-11-09T13:26:55.970Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "Standup 2026-09-04\n\nYesterday: chased the flaky `test_retry_backoff` for most of the afternoon. Turned out the fake clock in conftest.py wasn't reset between parametrized cases, so the third case inherited 2.5s of drift. Fixed in PR #218 (small, one fixture). Merged.\n\nToday: pairing with Ploy on the invoice export. She thinks the CSV encoder is the slow part, I think it's the N+1 on customer lookups. We'll profile it instead of arguing.\n\nBlocker: still waiting on staging DB creds from ops (asked Tuesday, ticket OPS-91)."
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*2026-09-04)(?=[\\s\\S]*\\bPloy\\b)(?=[\\s\\S]*\\bCSV\\b)(?=[\\s\\S]*N\\+1)(?=[\\s\\S]*\\bTuesday\\b)[\\s\\S]*test_retry_backoff[\\s\\S]*conftest\\.py[\\s\\S]*2\\.5s[\\s\\S]*PR #218[\\s\\S]*OPS-91",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0909954,
+      "judgeCostUsd": 0.0005703999999999998,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T13:27:10.583Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "Standup 2026-09-04\n\nYesterday: spent most of the afternoon chasing the flaky `test_retry_backoff`. The fake clock in conftest.py wasn't getting reset between parametrized cases, so the third case picked up 2.5s of drift. Fixed in PR #218 (small, just one fixture). Merged.\n\nToday: pairing with Ploy on the invoice export. She thinks the CSV encoder is the slow part, I think it's the N+1 on customer lookups. We're going to profile it instead of arguing.\n\nBlocker: still waiting on staging DB creds from ops (asked Tuesday, ticket OPS-91)."
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*2026-09-04)(?=[\\s\\S]*\\bPloy\\b)(?=[\\s\\S]*\\bCSV\\b)(?=[\\s\\S]*N\\+1)(?=[\\s\\S]*\\bTuesday\\b)[\\s\\S]*test_retry_backoff[\\s\\S]*conftest\\.py[\\s\\S]*2\\.5s[\\s\\S]*PR #218[\\s\\S]*OPS-91",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0966541,
+      "judgeCostUsd": 0.0006344999999999996,
+      "durationSeconds": 15,
+      "startedAt": "2026-11-09T13:27:21.900Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "Standup 2026-09-04\n\nYesterday: chased the flaky `test_retry_backoff` most of the afternoon. Turned out the fake clock in conftest.py wasn't getting reset between parametrized cases, so the third case inherited 2.5s of drift. Fixed in PR #218 (one fixture), merged.\n\nToday: pairing with Ploy on the invoice export. She thinks the CSV encoder is the slow part, I think it's the N+1 on customer lookups. We'll profile it instead of arguing.\n\nBlocker: still waiting on staging DB creds from ops. Asked Tuesday, ticket OPS-91."
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*2026-09-04)(?=[\\s\\S]*\\bPloy\\b)(?=[\\s\\S]*\\bCSV\\b)(?=[\\s\\S]*N\\+1)(?=[\\s\\S]*\\bTuesday\\b)[\\s\\S]*test_retry_backoff[\\s\\S]*conftest\\.py[\\s\\S]*2\\.5s[\\s\\S]*PR #218[\\s\\S]*OPS-91",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.089947,
+      "judgeCostUsd": 0.0005722000000000001,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T13:27:36.965Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "Standup 2026-09-04\n\nYesterday: spent most of the afternoon on the flaky `test_retry_backoff`. The fake clock in conftest.py wasn't getting reset between parametrized cases, so the third case picked up 2.5s of drift. Fixed in PR #218 (small, one fixture), merged.\n\nToday: pairing with Ploy on the invoice export. She thinks the CSV encoder is the slow part, I think it's the N+1 on customer lookups. We're going to profile it instead of arguing.\n\nBlocker: still waiting on staging DB creds from ops (asked Tuesday, ticket OPS-91)."
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*2026-09-04)(?=[\\s\\S]*\\bPloy\\b)(?=[\\s\\S]*\\bCSV\\b)(?=[\\s\\S]*N\\+1)(?=[\\s\\S]*\\bTuesday\\b)[\\s\\S]*test_retry_backoff[\\s\\S]*conftest\\.py[\\s\\S]*2\\.5s[\\s\\S]*PR #218[\\s\\S]*OPS-91",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "humanize-en-prose-planted",
+   "dir": "evals/humanize-en-prose-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `docs/rollout.md`. The reader is the engineering team; genre is prose (D), English only.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "grit-complete",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*PR #412)(?=[\\s\\S]*flags/rollout\\.py)(?=[\\s\\S]*\\b5%)(?=[\\s\\S]*2026-08-30)(?=[\\s\\S]*\\b3%)(?=[\\s\\S]*0\\.4%)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "grit-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "PR #412[\\s\\S]*flags/rollout\\.py[\\s\\S]*3%",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-ai-vocab",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "\\b(delve|testament|tapestry|underscores?|fostering|interplay)\\b",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-em-dash",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "—",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-forced-triad",
+     "type": "llm",
+     "weight": 1,
+     "graderMarkdown": "A forced triad is three adjectives or abstract phrases stacked in a row for rhythm, such as \"robust, scalable, and seamless\" or \"careful, data-driven, and collaborative\". A list of three concrete facts (a file, a number, a date) is not one. Score 0 only if you can copy, word for word from the final rewrite, three such adjectives or abstract phrases that sit next to each other in one sentence. Otherwise score 1.",
+     "config": {
+      "criteria": "A forced triad is three adjectives or abstract phrases stacked in a row for rhythm, such as \"robust, scalable, and seamless\" or \"careful, data-driven, and collaborative\". A list of three concrete facts (a file, a number, a date) is not one. Score 0 only if you can copy, word for word from the final rewrite, three such adjectives or abstract phrases that sit next to each other in one sentence. Otherwise score 1.",
+      "focus": "last_message"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "tells-gone",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "\\bnot just\\b|in conclusion|hope this helps|let me know",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.1976619,
+      "judgeCostUsd": 0.0003872999999999997,
+      "durationSeconds": 21,
+      "startedAt": "2026-11-09T13:27:48.196Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "grit-complete",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*PR #412)(?=[\\s\\S]*flags/rollout\\.py)(?=[\\s\\S]*\\b5%)(?=[\\s\\S]*2026-08-30)(?=[\\s\\S]*\\b3%)(?=[\\s\\S]*0\\.4%)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #412[\\s\\S]*flags/rollout\\.py[\\s\\S]*3%",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-ai-vocab",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-forced-triad",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "# Rollout notes: feature flag for the new checkout\n\nPR #412 added `flags/rollout.py`, which puts the new checkout flow behind a flag at 5% of traffic. On 2026-08-30 the flagged cohort had a 3% error rate, against 0.4% on the control. The extra errors involve the new address validator and legacy carts."
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "tells-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.19552329999999998,
+      "judgeCostUsd": 0.00043970000000000033,
+      "durationSeconds": 20,
+      "startedAt": "2026-11-09T13:28:08.926Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "grit-complete",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*PR #412)(?=[\\s\\S]*flags/rollout\\.py)(?=[\\s\\S]*\\b5%)(?=[\\s\\S]*2026-08-30)(?=[\\s\\S]*\\b3%)(?=[\\s\\S]*0\\.4%)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #412[\\s\\S]*flags/rollout\\.py[\\s\\S]*3%",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-ai-vocab",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-forced-triad",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "# Rollout notes: feature flag for the new checkout\n\nPR #412 added `flags/rollout.py`, which gates the new checkout flow at 5% of traffic. On 2026-08-30 the gated cohort had a 3% error rate, against 0.4% for the control. The gap points to the new address validator running against legacy carts."
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "tells-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.198639,
+      "judgeCostUsd": 0.0004683999999999999,
+      "durationSeconds": 22,
+      "startedAt": "2026-11-09T13:28:28.747Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "grit-complete",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*PR #412)(?=[\\s\\S]*flags/rollout\\.py)(?=[\\s\\S]*\\b5%)(?=[\\s\\S]*2026-08-30)(?=[\\s\\S]*\\b3%)(?=[\\s\\S]*0\\.4%)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #412[\\s\\S]*flags/rollout\\.py[\\s\\S]*3%",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-ai-vocab",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-forced-triad",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "# Rollout notes: feature flag for the new checkout\n\nPR #412 added `flags/rollout.py`, which puts 5% of traffic on the new checkout flow.\n\nOn 2026-08-30 the gated cohort had a 3% error rate, against 0.4% on the control. That's about seven times higher. The gap comes from how the new address validator interacts with legacy carts."
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "tells-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1010613,
+      "judgeCostUsd": 0.0003876999999999995,
+      "durationSeconds": 14,
+      "startedAt": "2026-11-09T13:28:50.505Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "grit-complete",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*PR #412)(?=[\\s\\S]*flags/rollout\\.py)(?=[\\s\\S]*\\b5%)(?=[\\s\\S]*2026-08-30)(?=[\\s\\S]*\\b3%)(?=[\\s\\S]*0\\.4%)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #412[\\s\\S]*flags/rollout\\.py[\\s\\S]*3%",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-ai-vocab",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-forced-triad",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "# Rollout notes: new checkout feature flag\n\nPR #412 added `flags/rollout.py`, which sends 5% of traffic to the new checkout flow. On 2026-08-30 the error rate was 3% in that cohort and 0.4% in the control group. The gap points to a problem between the new address validator and legacy carts."
+       },
+       {
+        "name": "tells-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.09297059999999999,
+      "judgeCostUsd": 0.0003918000000000003,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T13:29:04.243Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "grit-complete",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*PR #412)(?=[\\s\\S]*flags/rollout\\.py)(?=[\\s\\S]*\\b5%)(?=[\\s\\S]*2026-08-30)(?=[\\s\\S]*\\b3%)(?=[\\s\\S]*0\\.4%)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #412[\\s\\S]*flags/rollout\\.py[\\s\\S]*3%",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-ai-vocab",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-forced-triad",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "# Rollout notes: new checkout feature flag\n\nPR #412 added `flags/rollout.py`, which puts 5% of traffic on the new checkout flow. On 2026-08-30, 3% of requests in that group failed, compared with 0.4% in the control group. The gap seems to come from how the new address validator handles legacy carts."
+       },
+       {
+        "name": "tells-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0956082,
+      "judgeCostUsd": 0.0004813999999999999,
+      "durationSeconds": 12,
+      "startedAt": "2026-11-09T13:29:15.180Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "grit-complete",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*PR #412)(?=[\\s\\S]*flags/rollout\\.py)(?=[\\s\\S]*\\b5%)(?=[\\s\\S]*2026-08-30)(?=[\\s\\S]*\\b3%)(?=[\\s\\S]*0\\.4%)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #412[\\s\\S]*flags/rollout\\.py[\\s\\S]*3%",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-ai-vocab",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-forced-triad",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "# Rollout notes: feature flag for the new checkout\n\nPR #412 added `flags/rollout.py`, which sends 5% of traffic through the new checkout flow and keeps the rest on the old one. On 2026-08-30 the gated cohort's error rate was 3%, against 0.4% for control, about 7.5 times higher. The gap points to the new address validator not handling legacy carts correctly."
+       },
+       {
+        "name": "tells-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "humanize-en-subtle-planted",
+   "dir": "evals/humanize-en-subtle-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `update.md`. It is an engineer's Slack update to their team (genre B, English). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*workers/export\\.py)(?=[\\s\\S]*4 minutes)(?=[\\s\\S]*30)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-diff-narration",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "was added to replace",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-negative-parallelism",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "It'?s not a refactor",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-one-line-closer",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "That'?s the win",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-signposting",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "Here'?s the thing|As you know",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-strawman",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "Some might argue|It isn'?t\\.|overkill",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.1831382,
+      "judgeCostUsd": 0,
+      "durationSeconds": 13,
+      "startedAt": "2026-11-09T13:29:27.406Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*workers/export\\.py)(?=[\\s\\S]*4 minutes)(?=[\\s\\S]*30)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-diff-narration",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-negative-parallelism",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-one-line-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-signposting",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-strawman",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.18042039999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 12,
+      "startedAt": "2026-11-09T13:29:40.300Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*workers/export\\.py)(?=[\\s\\S]*4 minutes)(?=[\\s\\S]*30)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-diff-narration",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-negative-parallelism",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-one-line-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-signposting",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-strawman",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.17338199999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-09T13:29:52.360Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*workers/export\\.py)(?=[\\s\\S]*4 minutes)(?=[\\s\\S]*30)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-diff-narration",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-negative-parallelism",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-one-line-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-signposting",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-strawman",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.092754,
+      "judgeCostUsd": 0,
+      "durationSeconds": 8,
+      "startedAt": "2026-11-09T13:30:09.708Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*workers/export\\.py)(?=[\\s\\S]*4 minutes)(?=[\\s\\S]*30)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-diff-narration",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-negative-parallelism",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-one-line-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-signposting",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-strawman",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.09094939999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-09T13:30:17.441Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*workers/export\\.py)(?=[\\s\\S]*4 minutes)(?=[\\s\\S]*30)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-diff-narration",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-negative-parallelism",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-one-line-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-signposting",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-strawman",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.6666666666666666,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.09363880000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 8,
+      "startedAt": "2026-11-09T13:30:24.891Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-diff-narration",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-negative-parallelism",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-one-line-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-signposting",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-strawman",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 0.8888888888888888,
+    "passRateWithout": 0.6666666666666666,
+    "delta": 0.11111111111111116
+   }
+  },
+  {
+   "name": "humanize-file-prose-only",
+   "dir": "evals/humanize-file-prose-only",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) to humanize `README.md` in place: edit the file so its prose reads human. Genre D, English.\n\nYour final message is the full content of the edited `README.md`, verbatim, and nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "code-block-intact",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "```bash\\n# warm every region — takes ~4 min\\ncache-warmer --regions all --force\\n```",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "after each deploy[\\s\\S]*regions\\.yaml[\\s\\S]*/warm",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "frontmatter-intact",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "-{3}\\ntitle: cache-warmer\\nowner: platform\\n-{3}",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-dash-outside-code",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "^[^#\\n][^\\n]*—",
+      "flags": "m",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "prose-fixed",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "\\b(delve|robust|landscape|serves as)\\b",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.16071,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T13:30:33.239Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-block-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ```bash\\n# warm every region — takes ~4 min\\ncache-warmer --regions all --force\\n```",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched after each deploy[\\s\\S]*regions\\.yaml[\\s\\S]*/warm",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "frontmatter-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched -{3}\\ntitle: cache-warmer\\nowner: platform\\n-{3}",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-dash-outside-code",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "prose-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.15485679999999996,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T13:30:44.531Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-block-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ```bash\\n# warm every region — takes ~4 min\\ncache-warmer --regions all --force\\n```",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched after each deploy[\\s\\S]*regions\\.yaml[\\s\\S]*/warm",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "frontmatter-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched -{3}\\ntitle: cache-warmer\\nowner: platform\\n-{3}",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-dash-outside-code",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "prose-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1474412,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-09T13:30:55.345Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-block-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ```bash\\n# warm every region — takes ~4 min\\ncache-warmer --regions all --force\\n```",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched after each deploy[\\s\\S]*regions\\.yaml[\\s\\S]*/warm",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "frontmatter-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched -{3}\\ntitle: cache-warmer\\nowner: platform\\n-{3}",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-dash-outside-code",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "prose-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.09626920000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 6,
+      "startedAt": "2026-11-09T13:31:04.708Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-block-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ```bash\\n# warm every region — takes ~4 min\\ncache-warmer --regions all --force\\n```",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched after each deploy[\\s\\S]*regions\\.yaml[\\s\\S]*/warm",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "frontmatter-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched -{3}\\ntitle: cache-warmer\\nowner: platform\\n-{3}",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-dash-outside-code",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "prose-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.0993094,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-09T13:31:10.877Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-block-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ```bash\\n# warm every region — takes ~4 min\\ncache-warmer --regions all --force\\n```",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched after each deploy[\\s\\S]*regions\\.yaml[\\s\\S]*/warm",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "frontmatter-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched -{3}\\ntitle: cache-warmer\\nowner: platform\\n-{3}",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-dash-outside-code",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "prose-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.095312,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-09T13:31:18.054Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-block-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ```bash\\n# warm every region — takes ~4 min\\ncache-warmer --regions all --force\\n```",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched after each deploy[\\s\\S]*regions\\.yaml[\\s\\S]*/warm",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "frontmatter-intact",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched -{3}\\ntitle: cache-warmer\\nowner: platform\\n-{3}",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-dash-outside-code",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "prose-fixed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "humanize-th-cs-planted",
+   "dir": "evals/humanize-th-cs-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `reply-draft.md`. It is a shop admin's draft reply in a LINE chat to a customer who wrote \"สั่งของไป 3 วันแล้ว tracking ไม่ขยับเลยค่ะ\". The admin is a woman and writes as the shop (a human reply to a customer, genre C in content but a live conversation). The courier has given the shop no delivery date. No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "action-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "เร่ง|ประสาน|(ติดต่อ|แจ้ง|ตาม)(ทาง|กับ|ให้)?(บริษัท)?ขนส่ง",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "criteria",
+     "type": "llm",
+     "weight": 1,
+     "graderMarkdown": "Score 1 if the final message reads as a Thai chat reply from a shop admin to a customer: it says where the parcel is now, says what the shop has done or will do, and has no letter-style greeting (such as \"เรียน\") or sign-off. Score 0 otherwise.",
+     "config": {
+      "criteria": "Score 1 if the final message reads as a Thai chat reply from a shop admin to a customer: it says where the parcel is now, says what the shop has done or will do, and has no letter-style greeting (such as \"เรียน\") or sign-off. Score 0 otherwise.",
+      "focus": "last_message"
+     }
+    },
+    {
+     "name": "no-aspirational",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "มุ่งมั่น|ประสบการณ์[^\\n]*ที่ดีที่สุด|จะเป็นประโยชน์|feel free|ขออภัยอย่างสูง",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-invented-promise",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "พรุ่งนี้|ภายใน ?\\d|\\d ?(-|ถึง) ?\\d ?วัน|วันทำการ|คืนเงิน|ชดเชย|ส่วนลด|คูปอง|Kerry|Flash|J&T|ไปรษณีย์ไทย|ส่งของใหม่|ส่งใหม่",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-over-formal-address",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "เรียน ท่าน|ท่านลูกค้า|ของท่าน|ให้กับท่าน|ต่อท่าน|ผู้มีอุปการคุณ",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "order-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "A20418",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "particles-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "(ค่ะ|คะ)[\\s\\S]*(ค่ะ|คะ)[^ก-๛]*$",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 11,
+      "costUsd": 0.24542049999999999,
+      "judgeCostUsd": 0.0004276999999999996,
+      "durationSeconds": 25,
+      "startedAt": "2026-11-09T13:31:24.624Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "action-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched เร่ง|ประสาน|(ติดต่อ|แจ้ง|ตาม)(ทาง|กับ|ให้)?(บริษัท)?ขนส่ง",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ขออภัยที่ให้รอนะคะ แอดมินเช็กออเดอร์ A20418 ให้แล้ว ตอนนี้พัสดุยังค้างอยู่ที่ศูนย์คัดแยกของขนส่งค่ะ แอดมินติดต่อขนส่งให้เร่งแล้ว แต่ทางขนส่งยังไม่ได้แจ้งวันส่งที่แน่นอนมาค่ะ ได้ความคืบหน้าเมื่อไหร่ แอดมินจะแจ้งในแชทนี้เลยนะคะ"
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-promise",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-over-formal-address",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched A20418",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particles-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (ค่ะ|คะ)[\\s\\S]*(ค่ะ|คะ)[^ก-๛]*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.226324,
+      "judgeCostUsd": 0.00036399999999999974,
+      "durationSeconds": 27,
+      "startedAt": "2026-11-09T13:31:49.735Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "action-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched เร่ง|ประสาน|(ติดต่อ|แจ้ง|ตาม)(ทาง|กับ|ให้)?(บริษัท)?ขนส่ง",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ขออภัยที่ให้รอนานนะคะ แอดเช็กออเดอร์ A20418 ให้แล้ว ตอนนี้พัสดุยังค้างอยู่ที่ศูนย์คัดแยกของขนส่งค่ะ\n\nแอดแจ้งขนส่งให้เร่งแล้ว แต่ทางขนส่งยังไม่ได้ให้วันส่งที่แน่นอนมาค่ะ ได้ความคืบหน้าเมื่อไหร่ แอดจะแจ้งในแชทนี้ทันทีนะคะ 🙏"
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-promise",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-over-formal-address",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched A20418",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particles-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (ค่ะ|คะ)[\\s\\S]*(ค่ะ|คะ)[^ก-๛]*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.2178384,
+      "judgeCostUsd": 0.00041560000000000034,
+      "durationSeconds": 28,
+      "startedAt": "2026-11-09T13:32:16.945Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "action-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched เร่ง|ประสาน|(ติดต่อ|แจ้ง|ตาม)(ทาง|กับ|ให้)?(บริษัท)?ขนส่ง",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ขอโทษที่ให้รอนานนะคะ 🙏 ทางร้านเช็กออเดอร์ A20418 ให้แล้ว ตอนนี้พัสดุยังอยู่ที่ศูนย์คัดแยกของขนส่งค่ะ tracking เลยยังไม่ขยับ\n\nร้านติดต่อขนส่งให้ช่วยเร่งแล้วนะคะ แต่ขนส่งยังไม่ได้แจ้งวันที่จะส่งถึงมา พอได้ข้อมูลแล้วจะรีบแจ้งในแชทนี้เลยค่ะ"
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-promise",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-over-formal-address",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched A20418",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particles-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (ค่ะ|คะ)[\\s\\S]*(ค่ะ|คะ)[^ก-๛]*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1137554,
+      "judgeCostUsd": 0.00040820000000000006,
+      "durationSeconds": 20,
+      "startedAt": "2026-11-09T13:32:44.697Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "action-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched เร่ง|ประสาน|(ติดต่อ|แจ้ง|ตาม)(ทาง|กับ|ให้)?(บริษัท)?ขนส่ง",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ขอโทษที่ให้รอนะคะ แอดเช็กออเดอร์ A20418 ให้แล้ว ตอนนี้พัสดุยังอยู่ที่ศูนย์คัดแยกของขนส่งค่ะ tracking เลยยังไม่ขยับ\n\nแอดแจ้งขนส่งให้เร่งแล้วนะคะ แต่ทางขนส่งยังไม่ได้บอกเลยว่าจะส่งถึงวันไหน พอได้ข่าวแล้วแอดจะรีบทักมาบอกค่ะ"
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-promise",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-over-formal-address",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched A20418",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particles-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (ค่ะ|คะ)[\\s\\S]*(ค่ะ|คะ)[^ก-๛]*$",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1044626,
+      "judgeCostUsd": 0.00042800000000000043,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-09T13:33:04.785Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "action-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched เร่ง|ประสาน|(ติดต่อ|แจ้ง|ตาม)(ทาง|กับ|ให้)?(บริษัท)?ขนส่ง",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ขอโทษที่ให้รอนะคะ แอดเช็กออเดอร์ A20418 ให้แล้ว ตอนนี้พัสดุยังค้างอยู่ที่ศูนย์คัดแยกของขนส่งค่ะ\n\nแอดตามขนส่งให้แล้ว แต่ทางนั้นยังไม่ได้บอกวันส่งที่แน่นอนมาเลย ได้ข้อมูลเพิ่มเมื่อไหร่แอดทักมาบอกนะคะ"
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-promise",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-over-formal-address",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched A20418",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particles-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (ค่ะ|คะ)[\\s\\S]*(ค่ะ|คะ)[^ก-๛]*$",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.12947789999999998,
+      "judgeCostUsd": 0.0003837000000000007,
+      "durationSeconds": 21,
+      "startedAt": "2026-11-09T13:33:21.459Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "action-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched เร่ง|ประสาน|(ติดต่อ|แจ้ง|ตาม)(ทาง|กับ|ให้)?(บริษัท)?ขนส่ง",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ขอโทษที่ให้รอนะคะ แอดมินเช็กออเดอร์ A20418 ให้แล้ว ตอนนี้พัสดุยังค้างอยู่ที่ศูนย์คัดแยกของขนส่งค่ะ\n\nร้านติดต่อขนส่งให้ช่วยเร่งแล้วนะคะ แต่ทางขนส่งยังไม่แจ้งวันส่งมาเลยค่ะ ได้ข่าวยังไงแอดมินจะรีบทักมาบอกนะคะ 🙏"
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-promise",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-over-formal-address",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched A20418",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particles-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (ค่ะ|คะ)[\\s\\S]*(ค่ะ|คะ)[^ก-๛]*$",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "humanize-th-notice-planted",
+   "dir": "evals/humanize-th-notice-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `notice.md`. It is an in-app maintenance notice that a bank app shows to its Thai users (genre C, user-facing, Thai). The year in the draft is on the CE calendar. No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "date-be",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "3 (กุมภาพันธ์|ก\\.พ\\.) (2570|70)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "โอนเงิน",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-exclamation",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "!",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-western-date-time",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "AM|PM|2027|\\d{1,2}:\\d{2}",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "phone-grouped",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "081-234-5678|\\+66 81 234 5678",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "time-thai",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "01\\.00( น\\.)? ?(–|-|ถึง) ?03\\.00 น\\.",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 10,
+      "costUsd": 0.31349059999999995,
+      "judgeCostUsd": 0,
+      "durationSeconds": 23,
+      "startedAt": "2026-11-09T13:33:42.256Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "date-be",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 (กุมภาพันธ์|ก\\.พ\\.) (2570|70)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched โอนเงิน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclamation",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-western-date-time",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "phone-grouped",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 081-234-5678|\\+66 81 234 5678",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "time-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 01\\.00( น\\.)? ?(–|-|ถึง) ?03\\.00 น\\.",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 11,
+      "costUsd": 0.340781,
+      "judgeCostUsd": 0,
+      "durationSeconds": 25,
+      "startedAt": "2026-11-09T13:34:05.629Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "date-be",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 (กุมภาพันธ์|ก\\.พ\\.) (2570|70)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched โอนเงิน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclamation",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-western-date-time",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "phone-grouped",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 081-234-5678|\\+66 81 234 5678",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "time-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 01\\.00( น\\.)? ?(–|-|ถึง) ?03\\.00 น\\.",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.2255192,
+      "judgeCostUsd": 0,
+      "durationSeconds": 23,
+      "startedAt": "2026-11-09T13:34:30.173Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "date-be",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 (กุมภาพันธ์|ก\\.พ\\.) (2570|70)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched โอนเงิน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclamation",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-western-date-time",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "phone-grouped",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 081-234-5678|\\+66 81 234 5678",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "time-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 01\\.00( น\\.)? ?(–|-|ถึง) ?03\\.00 น\\.",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.10924339999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 14,
+      "startedAt": "2026-11-09T13:34:53.432Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "date-be",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 (กุมภาพันธ์|ก\\.พ\\.) (2570|70)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched โอนเงิน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclamation",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-western-date-time",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "phone-grouped",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 081-234-5678|\\+66 81 234 5678",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "time-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 01\\.00( น\\.)? ?(–|-|ถึง) ?03\\.00 น\\.",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.6666666666666666,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.10668699999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 13,
+      "startedAt": "2026-11-09T13:35:07.729Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "date-be",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 (กุมภาพันธ์|ก\\.พ\\.) (2570|70)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched โอนเงิน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclamation",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-western-date-time",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "phone-grouped",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 081-234-5678|\\+66 81 234 5678",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "time-thai",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in last_message",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1158446,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-09T13:35:20.572Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "date-be",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 3 (กุมภาพันธ์|ก\\.พ\\.) (2570|70)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched โอนเงิน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclamation",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-western-date-time",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "phone-grouped",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 081-234-5678|\\+66 81 234 5678",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "time-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 01\\.00( น\\.)? ?(–|-|ถึง) ?03\\.00 น\\.",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 0.8888888888888888,
+    "passRateWithout": 0.6666666666666666,
+    "delta": 0.11111111111111116
+   }
+  },
+  {
+   "name": "humanize-th-spelling-planted",
+   "dir": "evals/humanize-th-spelling-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `release-note.md`. It is an in-app release note that a bank app shows to its Thai end users (user-facing Thai). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*4\\.2)(?=[\\s\\S]*เดบิต)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-nonstandard-spelling",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "อัพเดท|อัพเดต|แอพ|ลิงค์|อีเมล์|ดิจิตอล|เวอร์ชั่น|ฟีเชอร์",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "standard-spelling",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*ดิจิทัล)(?=[\\s\\S]*ลิงก์)(?=[\\s\\S]*อีเมล(?!์))",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 9,
+      "costUsd": 0.22284300000000004,
+      "judgeCostUsd": 0,
+      "durationSeconds": 24,
+      "startedAt": "2026-11-09T13:35:38.105Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.2)(?=[\\s\\S]*เดบิต)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-nonstandard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "standard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ดิจิทัล)(?=[\\s\\S]*ลิงก์)(?=[\\s\\S]*อีเมล(?!์))",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.17049659999999997,
+      "judgeCostUsd": 0,
+      "durationSeconds": 14,
+      "startedAt": "2026-11-09T13:36:01.986Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.2)(?=[\\s\\S]*เดบิต)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-nonstandard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "standard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ดิจิทัล)(?=[\\s\\S]*ลิงก์)(?=[\\s\\S]*อีเมล(?!์))",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.2257392,
+      "judgeCostUsd": 0,
+      "durationSeconds": 21,
+      "startedAt": "2026-11-09T13:36:15.867Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.2)(?=[\\s\\S]*เดบิต)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-nonstandard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "standard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ดิจิทัล)(?=[\\s\\S]*ลิงก์)(?=[\\s\\S]*อีเมล(?!์))",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1015642,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T13:36:36.719Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.2)(?=[\\s\\S]*เดบิต)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-nonstandard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "standard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ดิจิทัล)(?=[\\s\\S]*ลิงก์)(?=[\\s\\S]*อีเมล(?!์))",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0972346,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-09T13:36:47.945Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.2)(?=[\\s\\S]*เดบิต)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-nonstandard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "standard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ดิจิทัล)(?=[\\s\\S]*ลิงก์)(?=[\\s\\S]*อีเมล(?!์))",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1032178,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T13:36:57.193Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.2)(?=[\\s\\S]*เดบิต)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-nonstandard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "standard-spelling",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ดิจิทัล)(?=[\\s\\S]*ลิงก์)(?=[\\s\\S]*อีเมล(?!์))",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "humanize-th-standup-planted",
+   "dir": "evals/humanize-th-standup-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `standup.md`. It is a daily standup for a Thai dev team (genre B, Thai with English tech terms). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "calque-gone",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "(?<!ผลัก)(?<!ความ)(?<!กด)(?<!แรง)ดัน|สะท้อนถึง|สมบูรณ์แบบ|เรียบร้อยแล้ว",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "claim-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "staging[^\\n]*(?<!ไม่)(?<!ไม่ได้)ผ่าน",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "grit-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "PR #77[\\s\\S]*payment-worker[\\s\\S]*09:40",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-em-dash",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "—",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-leaked-closer",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "หวังว่า[^\\n]*เป็นประโยชน์|แจ้งได้เลย",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "particle-trimmed",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^- .*ครับ\\s*$[\\s\\S]*^- .*ครับ\\s*$",
+      "flags": "m",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.223909,
+      "judgeCostUsd": 0,
+      "durationSeconds": 19,
+      "startedAt": "2026-11-09T13:37:08.452Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "calque-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "claim-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched staging[^\\n]*(?<!ไม่)(?<!ไม่ได้)ผ่าน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #77[\\s\\S]*payment-worker[\\s\\S]*09:40",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-leaked-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particle-trimmed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 10,
+      "costUsd": 0.21353,
+      "judgeCostUsd": 0,
+      "durationSeconds": 21,
+      "startedAt": "2026-11-09T13:37:27.527Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "calque-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "claim-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched staging[^\\n]*(?<!ไม่)(?<!ไม่ได้)ผ่าน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #77[\\s\\S]*payment-worker[\\s\\S]*09:40",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-leaked-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particle-trimmed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 9,
+      "costUsd": 0.22730260000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 20,
+      "startedAt": "2026-11-09T13:37:48.227Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "calque-gone",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "claim-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched staging[^\\n]*(?<!ไม่)(?<!ไม่ได้)ผ่าน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #77[\\s\\S]*payment-worker[\\s\\S]*09:40",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-leaked-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particle-trimmed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0.6666666666666666,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.0980922,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-09T13:38:08.422Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "calque-gone",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "claim-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched staging[^\\n]*(?<!ไม่)(?<!ไม่ได้)ผ่าน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #77[\\s\\S]*payment-worker[\\s\\S]*09:40",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-leaked-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particle-trimmed",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.6666666666666666,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.09511059999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-09T13:38:18.071Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "calque-gone",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "claim-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched staging[^\\n]*(?<!ไม่)(?<!ไม่ได้)ผ่าน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #77[\\s\\S]*payment-worker[\\s\\S]*09:40",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-leaked-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particle-trimmed",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8333333333333334,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.0943538,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-09T13:38:25.512Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "calque-gone",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "claim-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched staging[^\\n]*(?<!ไม่)(?<!ไม่ได้)ผ่าน",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "grit-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PR #77[\\s\\S]*payment-worker[\\s\\S]*09:40",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-leaked-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "particle-trimmed",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 0.7222222222222222,
+    "passRateWithout": 0,
+    "delta": 0.2777777777777778
+   }
+  },
+  {
+   "name": "humanize-th-structure-planted",
+   "dir": "evals/humanize-th-structure-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `post.md`. It is a short internal engineering blog post in Thai for the company's developers (genre D, Thai with English tech terms). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "^(?=[\\s\\S]*orders)(?=[\\s\\S]*820)(?=[\\s\\S]*140)(?=[\\s\\S]*instance)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-clause-periods",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "[A-Za-zก-๛]{2}\\. ",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-formal-pivot",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "อย่างไรก็ตาม",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-panorama-or-recap",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "ในยุคปัจจุบัน|โดยสรุปแล้ว",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-relative-chain",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "ซึ่ง[^\\n]*ซึ่ง",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-repeated-subject",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "เรา[^\\n]{0,20}เรา[^\\n]{0,20}เรา",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 9,
+      "costUsd": 0.28638220000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 31,
+      "startedAt": "2026-11-09T13:38:32.914Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*orders)(?=[\\s\\S]*820)(?=[\\s\\S]*140)(?=[\\s\\S]*instance)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-clause-periods",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-pivot",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-panorama-or-recap",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-relative-chain",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-repeated-subject",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 11,
+      "costUsd": 0.37340660000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 35,
+      "startedAt": "2026-11-09T13:39:03.623Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*orders)(?=[\\s\\S]*820)(?=[\\s\\S]*140)(?=[\\s\\S]*instance)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-clause-periods",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-pivot",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-panorama-or-recap",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-relative-chain",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-repeated-subject",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 10,
+      "costUsd": 0.35974860000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 37,
+      "startedAt": "2026-11-09T13:39:38.274Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*orders)(?=[\\s\\S]*820)(?=[\\s\\S]*140)(?=[\\s\\S]*instance)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-clause-periods",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-pivot",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-panorama-or-recap",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-relative-chain",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-repeated-subject",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.1061712,
+      "judgeCostUsd": 0,
+      "durationSeconds": 12,
+      "startedAt": "2026-11-09T13:40:15.375Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*orders)(?=[\\s\\S]*820)(?=[\\s\\S]*140)(?=[\\s\\S]*instance)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-clause-periods",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-pivot",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-panorama-or-recap",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-relative-chain",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-repeated-subject",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0994274,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-09T13:40:27.759Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*orders)(?=[\\s\\S]*820)(?=[\\s\\S]*140)(?=[\\s\\S]*instance)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-clause-periods",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-pivot",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-panorama-or-recap",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-relative-chain",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-repeated-subject",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.0969124,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-09T13:40:39.134Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*orders)(?=[\\s\\S]*820)(?=[\\s\\S]*140)(?=[\\s\\S]*instance)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-clause-periods",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-pivot",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-panorama-or-recap",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-relative-chain",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-repeated-subject",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "humanize-th-ui-planted",
+   "dir": "evals/humanize-th-ui-planted",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) on `payment-declined.md`. It is the copy for a payment-declined screen shown to Thai end users (genre C, UI, Thai with English only where a user would read it). No writing sample is available.\n\nWork through the skill's loop (draft, \"still AI\" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same humanize task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 12,
+   "graders": [
+    {
+     "name": "criteria",
+     "type": "llm",
+     "weight": 1,
+     "graderMarkdown": "Score 1 only if all hold in the final rewrite: it is UI-actual (says the payment did not go through and what the user does next: retry, check the card or balance, or contact the bank or support) with no line about the team's commitment, the user's experience, or \"protecting your security\"; it is at most three short sentences plus an optional one-line heading, well under half the source's length; the decline is said in Thai (ไม่สำเร็จ / ถูกปฏิเสธ / ไม่ผ่าน) rather than as the inline \"(Declined)\" parenthetical; particles are at most one ค่ะ/ครับ.",
+     "config": {
+      "criteria": "Score 1 only if all hold in the final rewrite: it is UI-actual (says the payment did not go through and what the user does next: retry, check the card or balance, or contact the bank or support) with no line about the team's commitment, the user's experience, or \"protecting your security\"; it is at most three short sentences plus an optional one-line heading, well under half the source's length; the decline is said in Thai (ไม่สำเร็จ / ถูกปฏิเสธ / ไม่ผ่าน) rather than as the inline \"(Declined)\" parenthetical; particles are at most one ค่ะ/ครับ.",
+      "focus": "last_message"
+     }
+    },
+    {
+     "name": "next-step-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "ลอง(ทำรายการ)?(ใหม่|อีกครั้ง)|เช็[กค]|ตรวจสอบ|ติดต่อ",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-aspirational",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "ก้าวสำคัญ|มุ่งมั่น|ประสบการณ์ที่ดีที่สุด|always!",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-chat-closer",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": "last_message",
+      "pattern": "Let me know|further assistance|ขออภัย!",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 11,
+      "costUsd": 0.3010992,
+      "judgeCostUsd": 0.0005982000000000001,
+      "durationSeconds": 28,
+      "startedAt": "2026-11-09T13:40:48.093Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ชำระเงินไม่สำเร็จ\n\nรายการถูกปฏิเสธ ลองทำรายการใหม่อีกครั้ง หรือติดต่อเจ้าหน้าที่"
+       },
+       {
+        "name": "next-step-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ลอง(ทำรายการ)?(ใหม่|อีกครั้ง)|เช็[กค]|ตรวจสอบ|ติดต่อ",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.24006600000000003,
+      "judgeCostUsd": 0.0005510000000000011,
+      "durationSeconds": 30,
+      "startedAt": "2026-11-09T13:41:16.438Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ชำระเงินไม่สำเร็จ\n\nรายการถูกปฏิเสธ ลองใหม่อีกครั้ง หรือติดต่อเจ้าหน้าที่ค่ะ"
+       },
+       {
+        "name": "next-step-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ลอง(ทำรายการ)?(ใหม่|อีกครั้ง)|เช็[กค]|ตรวจสอบ|ติดต่อ",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 10,
+      "costUsd": 0.25987709999999997,
+      "judgeCostUsd": 0.0006312999999999996,
+      "durationSeconds": 25,
+      "startedAt": "2026-11-09T13:41:46.150Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ชำระเงินไม่สำเร็จ\n\nรายการถูกปฏิเสธ ลองชำระเงินอีกครั้ง หรือติดต่อเจ้าหน้าที่ถ้ายังไม่ผ่านค่ะ"
+       },
+       {
+        "name": "next-step-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ลอง(ทำรายการ)?(ใหม่|อีกครั้ง)|เช็[กค]|ตรวจสอบ|ติดต่อ",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 3,
+      "costUsd": 0.10886730000000001,
+      "judgeCostUsd": 0.0007229000000000003,
+      "durationSeconds": 22,
+      "startedAt": "2026-11-09T13:42:11.280Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ชำระเงินไม่สำเร็จ\n\nทำรายการนี้ไม่ได้ในตอนนี้ ลองใหม่อีกครั้ง หรือติดต่อเจ้าหน้าที่หากยังไม่ผ่าน"
+       },
+       {
+        "name": "next-step-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ลอง(ทำรายการ)?(ใหม่|อีกครั้ง)|เช็[กค]|ตรวจสอบ|ติดต่อ",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 2,
+      "costUsd": 0.09693990000000001,
+      "judgeCostUsd": 0.0007118999999999997,
+      "durationSeconds": 15,
+      "startedAt": "2026-11-09T13:42:33.387Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ชำระเงินไม่สำเร็จ\n\nระบบยังทำรายการนี้ไม่ได้ ลองชำระอีกครั้ง หากยังไม่ผ่าน ติดต่อเจ้าหน้าที่ได้เลย"
+       },
+       {
+        "name": "next-step-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ลอง(ทำรายการ)?(ใหม่|อีกครั้ง)|เช็[กค]|ตรวจสอบ|ติดต่อ",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 2,
+      "costUsd": 0.0967159,
+      "judgeCostUsd": 0.0007903000000000007,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-09T13:42:48.452Z",
+      "error": null,
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "criteria",
+        "passed": true,
+        "weight": 1,
+        "explanation": "judge votes: PASS PASS PASS",
+        "withOnly": false,
+        "scored": true,
+        "judgeVotes": [
+         true,
+         true,
+         true
+        ],
+        "evidence": "ชำระเงินไม่สำเร็จ\n\nรายการนี้ถูกปฏิเสธ ลองชำระใหม่อีกครั้ง ถ้ายังไม่ผ่าน ติดต่อเจ้าหน้าที่ได้เลย"
+       },
+       {
+        "name": "next-step-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ลอง(ทำรายการ)?(ใหม่|อีกครั้ง)|เช็[กค]|ตรวจสอบ|ติดต่อ",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-aspirational",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 10,
+  "casesPassed": 10,
+  "overallScore": 1,
+  "overallPassRate": 1,
+  "meanDelta": 0.05000000000000001
+ }
+}

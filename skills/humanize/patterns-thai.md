@@ -57,7 +57,7 @@ Customer/non-dev reads it? ─ yes ─> is there a clear Thai word? ─ yes ─>
 
 **Verify transliteration** at https://transliteration.orst.go.th/search (Royal Society of Thailand). Never transliterate ad hoc. When a dev term must appear in Thai script, use the official spelling (`แคช`, `เบราว์เซอร์`, `อัปโหลด`, `ฟังก์ชัน`, `โพรโทคอล`, `ไฟร์วอลล์`), not an improvised one (`อัพโหลด`, `ฟังชั่น`). The Royal Society also coins Thai words for many terms (`จุดบกพร่อง` for bug, `ลงบันทึกเข้า` for login, `กิ่ง` for branch); devs rarely write those, and UIs say what the product shows (`เข้าสู่ระบบ`), so prefer the word the reader actually meets.
 
-**Where usage beats the Royal Society spelling** (evidence: `docs/research/thai-tech-terms-2026.md`, Firefox, Google, Microsoft and GitHub counts, 2026-11-09). For five everyday words no product uses the official form, so siang deliberately follows usage: `ฟีเจอร์` (not ฟีเชอร์), `โค้ด` (not โคด), `บั๊ก` (not บัก), `แชท` (not แชต), `ซิงค์` (not ซิงก์). Elsewhere usage follows the Royal Society and so does siang: `อัปเดต` (not อัพเดท), `แอป` (not แอพ), `ลิงก์` (not ลิงค์), `อีเมล` (not อีเมล์), `ดิจิทัล` (not ดิจิตอล), `เวอร์ชัน` (not เวอร์ชั่น). Two more have no product majority, so siang picks: `เช็ก` (not เช็ค), the Royal Society form, which BOT, the only product-side source that uses the verb, also writes (GitHub leans เช็ค); and `โปรเจกต์` (not โปรเจค or โปรเจ็กต์), which GitHub uses about 3.6x as often as the next form, while the Royal Society's `พรอเจกต์` has no real usage. When the text tells the reader what to tap, use the product's own UI string even when products disagree: sign-in is `เข้าสู่ระบบ` (Microsoft, banks), `ลงชื่อเข้าใช้` (Google) or `ลงชื่อเข้า` (Apple); prompt is `พรอมต์` (Google) or `พร้อมท์` (Microsoft).
+**Where usage beats the Royal Society spelling** (evidence: `docs/research/thai-tech-terms-2026.md`, Firefox, Google, Microsoft and GitHub counts, 2026-11-09). For five everyday words products almost never use the official form (the one exception found: Microsoft's terminology writes `บัก` twice), so siang deliberately follows usage: `ฟีเจอร์` (not ฟีเชอร์), `โค้ด` (not โคด), `บั๊ก` (not บัก), `แชท` (not แชต), `ซิงค์` (not ซิงก์). Elsewhere usage follows the Royal Society and so does siang: `อัปเดต` (not อัพเดท), `แอป` (not แอพ), `ลิงก์` (not ลิงค์), `อีเมล` (not อีเมล์), `ดิจิทัล` (not ดิจิตอล), `เวอร์ชัน` (not เวอร์ชั่น). Two more have no product majority, so siang picks: `เช็ก` (not เช็ค), the Royal Society form, which BOT, the only product-side source that uses the verb, also writes (GitHub leans เช็ค); and `โปรเจกต์` (not โปรเจค or โปรเจ็กต์), which GitHub uses about 3.6x as often as the next form, while the Royal Society's `พรอเจกต์` has no real usage. When the text tells the reader what to tap, use the product's own UI string even when products disagree: sign-in is `เข้าสู่ระบบ` (Microsoft, banks), `ลงชื่อเข้าใช้` (Google) or `ลงชื่อเข้า` (Apple); prompt is `พรอมต์` (Google) or `พร้อมท์` (Microsoft).
 
 **Audience sets the English share.** Older, government or mass-market readers get less English and established ทับศัพท์ (`แอป`, `อีเมล`, `เว็บไซต์`); a dev channel keeps the English. Text written for Thai readers is never English-only. AI vocabulary is the exception to "less English": even government guidance keeps `AI`, `Generative AI` and `Prompt` in Latin script (ETDA, per the research note above). (Adapted from Boom-Vitt/claude-thai-skills (MIT); term spellings checked against the Royal Society computer and IT term list.)
 
@@ -171,7 +171,7 @@ Same (a) drift-in-meaning failure as the `front-facing`/`API` cases above, in th
 
 ### 32.2 Red-Flag Patterns Catalog (v2.2)
 
-Patterns that show AI is fabricating without knowing it; drop on sight:
+Patterns that show AI is fabricating without knowing it. When the rewrite would add one, drop it on sight; when the author wrote it, keep it and strip only unbacked certainty (ADR 0001, §32.10):
 
 1. **Path confidence without diff**: `"src/presentation/middleware/rate-limiter.ts"` with no grep of the file
 2. **Round numbers without source**: `"55% faster"`, `"2-5 นาที"`, `"500 req/min"` that look too neat
@@ -279,10 +279,10 @@ Very formal address (`ท่าน`, `ท่านผู้อ่าน`, `ข�
 
 ### 32.9 Hallucination Context Switch (v2.2)
 
-When AI "context switches" from a verifiable claim → an unverifiable one → drop the whole clause:
+When the rewrite "context switches" from a verifiable claim → an unverifiable one it added → drop the whole added clause (an author's clause stays, ADR 0001):
 
 ❌ `"Postgres trigger ใช้ `pg_notify` แล้ว Redis เคย benchmark 55% บน HumanEval"`
-   — `pg_notify` is verifiable, "55% HumanEval" is not, **drop the whole clause**
+   — `pg_notify` is verifiable, "55% HumanEval" is not and the rewrite added it, **drop the whole added clause**
 
 ✅ `"Postgres trigger ใช้ `pg_notify`"`
    — all verifiable
@@ -534,7 +534,7 @@ Tell them apart:
 ❌ `ขั้นตอนนี้ช่วยให้นักพัฒนาตั้งค่า env ได้เร็วขึ้น`
 ✅ `ขั้นตอนนี้ช่วยให้คุณตั้งค่า env ได้เร็วขึ้น`
 
-**Structure:** for D prose (and long B), run `patterns-thai-structure.md` §43-§52 before this lexical pass; many §33 and §37 tells disappear once the sentence shape is Thai.
+**Structure:** for any Thai text over one sentence, run `patterns-thai-structure.md` before this lexical pass (all of §43-§52 for D prose and long B, §44 sentence order for A, C and short B); many §33 and §37 tells disappear once the sentence shape is Thai.
 
 ### 40. AI-Leaked Thai Closers (v2.2 — Comprehensive)
 
@@ -551,8 +551,8 @@ Tell them apart:
 | `"Let me know if you need more"` | D | drop |
 | `"If you need further assistance"` | A, C, D | drop |
 | `"Feel free to reach out"` | A, D | drop |
-| `"สามารถติดต่อเราได้ตลอด 24 ชั่วโมง"` | C | drop, unless the hours are real and contacting is the reply's next step (§57) |
-| `"หากมีข้อสงสัยประการใด กรุณาติดต่อ..."` | C | drop the formula; a verified channel that is the next step stays (§57) |
+| `"สามารถติดต่อเราได้ตลอด 24 ชั่วโมง"` | C | drop, unless the author gave those hours and contacting is the reply's next step (§57) |
+| `"หากมีข้อสงสัยประการใด กรุณาติดต่อ..."` | C | drop the formula; the channel stays when it is the next step (an author fact, ADR 0001; §57) |
 | `"เราพร้อมให้บริการ"` | C | drop |
 
 **Guard: politeness is not a tell** (Adapted from chakrit/kien-thai (MIT)). Ordinary politeness and softeners (`รบกวน`, `ขอ`, `ให้`, `นะ`, `ช่วย...หน่อย`) are native baseline; stripping them makes Thai curt (`ห้วน`). The tell is politeness above the register (a formal closer in chat, `ท่าน` in Slack) or the same polite formula on every line.
@@ -604,7 +604,7 @@ See §32.8. §41 stays as a numbered pointer so catalog numbers never shift.
 | §38 | Code-switching tells | mixed register |
 | §39 | Register-specific tells | 4 register deep-dive |
 | §40 | AI-leaked closers | closers + particle |
-| §43-§52 | Sentence and paragraph structure | D prose, long B (`patterns-thai-structure.md`) |
+| §43-§52 | Sentence and paragraph structure | D prose, long B; §44 order in every genre (`patterns-thai-structure.md`) |
 | §53 | Surface grammar slips | every genre |
 | §54 | Headings | D |
 | §55 | Pronouns and self-reference | every genre |
@@ -686,7 +686,7 @@ Adapted from Boom-Vitt/claude-thai-skills (MIT), `skills/thai-customer-service`.
 For a person or brand replying to a customer (support chat, incident notice, status page). A UI or error string is §39.3 instead.
 - Size the apology to the harm. Small delay: `ขออภัยค่ะ`. Our own fault: `ขอโทษที่...`. Major incident: `ขออภัยอย่างสูง` plus what happens next. The strong form on a small issue wears it out. `ขออภัยในความไม่สะดวก` is the standard phrase for a small inconvenience and fine there; it becomes the tell when it is the whole reply, with no status and no next step.
 - `ขออภัย` when we caused it; `ขอแสดงความเสียใจ` when a third party did (bank, courier, cloud provider). Don't accept fault before the evidence.
-- A response time or refund the team can't confirm is fabrication (§32.1, T1). Say what you will check, not the result.
+- A response time or refund the team can't confirm is fabrication when the rewrite adds it (§32.1, T1). When the author wrote it but the context says the team can't keep it (the courier gave no date), cut the promise and keep the status: a commitment is not a fact (ADR 0001). Say what you will check, not the result.
 - Empathy first, then the fix, short. Never defensive (`ก็แจ้งไว้แล้ว`, `ตรงนี้ทางเราไม่เกี่ยวนะคะ`).
 - Empathy means the fix or the status, not a stock line. `ไม่ต้องกังวลนะคะ` and `ไม่ต้องห่วงค่ะ` reassure without saying why: cut them and let the explanation do the calming.
 - Don't read the customer's message back to them (`รับทราบค่ะ คุณลูกค้าแจ้งว่า... ใช่ไหมคะ`); they know what they wrote. Answer first. Repeating an order or ticket number inside the answer is fine; it confirms which case you mean (§59).
