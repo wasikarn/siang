@@ -26,6 +26,17 @@ def _dst(h):
     return "".join("%04X" % MAP.get(int(u, 16), int(u, 16)) if len(u) == 4 else u for u in units)
 
 
+def _nmap(h):
+    """How many UTF-16 units of a destination hex string the PUA table changes."""
+    return sum(1 for i in range(0, len(h) - 3, 4) if int(h[i:i + 4], 16) in MAP)
+
+
+def _clean(text):
+    """Drop % comments and whitespace inside <hex> strings of a mapping section body, both legal in a CMap."""
+    text = re.sub(r"%[^\r\n]*", "", text)
+    return re.sub(r"<([0-9A-Fa-f\s]*)>", lambda m: "<" + re.sub(r"\s+", "", m.group(1)) + ">", text)
+
+
 def _step(h, i):
     return "%0*X" % (len(h), int(h, 16) + i)
 
@@ -46,16 +57,20 @@ def _fix_range(lo, hi, dst):
 
 
 def fix_cmap(text):
-    """Return (new_text, number_of_destination_units_changed)."""
+    """Return (new_text, number of destination characters the PUA table remapped)."""
     extra = []
+    changed = [0]
 
     def section(m):
-        kind, body = m.group(2), m.group(3)
+        kind, body = m.group(2), _clean(m.group(3))
         if kind == "bfchar":
             pairs = [(s, _dst(d)) for s, d in CHAR.findall(body)]
+            changed[0] += sum(_nmap(d) for _, d in CHAR.findall(body))
             return "%d beginbfchar\n%s\nendbfchar" % (len(pairs), "\n".join("<%s> <%s>" % p for p in pairs))
         lines = []
         for lo, hi, dst in RANGE.findall(body):
+            n = int(hi, 16) - int(lo, 16) + 1
+            changed[0] += sum(_nmap(h) for h in re.findall(HEX, dst)) if dst.startswith("[") else sum(_nmap(_step(dst[1:-1], i)) for i in range(n))
             kept, chars = _fix_range(lo, hi, dst)
             lines += kept
             extra.extend(chars)
@@ -66,7 +81,7 @@ def fix_cmap(text):
         chunk = extra[i:i + 100]
         out = out.replace("endcmap", "%d beginbfchar\n%s\nendbfchar\nendcmap" % (
             len(chunk), "\n".join("<%s> <%s>" % p for p in chunk)), 1)
-    return out, sum(1 for a, b in zip(re.findall(HEX, text), re.findall(HEX, out)) if a != b)
+    return out, changed[0]
 
 
 def main(argv):
@@ -84,12 +99,12 @@ def main(argv):
         if isinstance(obj, pikepdf.Dictionary) and obj.get("/Type") == "/Font" and obj.get("/ToUnicode") is not None:
             old = obj.ToUnicode.read_bytes().decode("latin-1")
             new, n = fix_cmap(old)
-            if new != old:
+            if n:
                 obj.ToUnicode.write(new.encode("latin-1"))
                 fonts += 1
                 changed += n
     pdf.save(argv[1])
-    print("pua_pdf: %d font map(s) rewritten, %d destination(s) changed -> %s" % (fonts, changed, argv[1]), file=sys.stderr)
+    print("pua_pdf: %d font map(s) rewritten, %d character(s) remapped -> %s" % (fonts, changed, argv[1]), file=sys.stderr)
     return 0
 
 

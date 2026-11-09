@@ -15,6 +15,7 @@ trap 'python3 -c "import shutil,sys; shutil.rmtree(sys.argv[1])" "$work"' EXIT
 import sys, pikepdf
 pdf = pikepdf.new()
 cmap = b"""/CIDInit /ProcSet findresource begin 12 dict begin begincmap
+/CIDSystemInfo << /Registry (Adobe) /Ordering (UCS) /Supplement 0 >> def
 /CMapName /T def /CMapType 2 def
 1 begincodespacerange <00> <ff> endcodespacerange
 2 beginbfchar

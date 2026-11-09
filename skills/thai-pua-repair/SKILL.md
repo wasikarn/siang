@@ -10,7 +10,7 @@ Old Windows UPC fonts (DilleniaUPC, AngsanaUPC, BrowalliaUPC, CordiaUPC) draw a 
 ## The loop
 
 1. **Detect.** Extract the text: `pdftotext -enc UTF-8 <pdf> <out.txt>`, then run `python3 "${CLAUDE_SKILL_DIR}/scripts/pua_fix.py" --check <out.txt>`.
-   Done when: the report names how many characters are mapped (exit 1 means the bug is present, exit 0 means nothing to fix).
+   Done when: the report names how many characters are mapped (exit 1 means the bug is present, exit 0 means nothing to fix, exit 2 means private-use characters with no mapping are present, whether or not mapped ones are too).
 2. **Fix.** `python3 "${CLAUDE_SKILL_DIR}/scripts/pua_fix.py" <out.txt> > fixed.txt`.
    Done when: `fixed.txt` exists and the report line is read in full.
 3. **Verify.** For each distinct codepoint the report counted, read three words from `fixed.txt` around it and confirm each is valid Thai; then run `--check` on `fixed.txt`.

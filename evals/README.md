@@ -13,14 +13,15 @@ chat control (§39.1). Plain Claude passes four of them too; their job is to cat
 it, as it did on the echo-back and grammar cases (0.67 and 0.93 against plain 0.83 and 1.00,
 2026-11-09). With the §57/§59 rules and the scan.py §44 cue, siang scored 1.00 on both over 3 runs.
 That is weak evidence: the rules were written from these two fixtures, and grammar moved from 1 miss
-in 3 to 0 in 3, within run-to-run noise. Three held-out cases (tag `holdout`, written by an agent that
-never saw the rules) then tested both fixes on other wording, 5 runs per arm. Echo-back held (siang
+in 3 to 0 in 3, within run-to-run noise. Held-out cases (tag `holdout`, written by an agent that never saw
+the rules) then tested both fixes on other wording, 5 runs per arm, two cases in one run and a third later. Echo-back held (siang
 1.00, plain 1.00). Trailing conditions did not: siang 0.60 against plain 1.00, because SKILL.md loaded
 the Thai structure rules only for long prose. After step 3 loaded them for any Thai text over one
 sentence and step 6 added a read for trailing conditions, siang scored 1.00 on that case and on a third
-blind case (an on-call handoff, three trailing conditions); plain Claude also reorders them there.
+blind case (an on-call handoff, three trailing conditions); plain Claude also reorders them there (it first
+scored 0.83, until the graders accepted spoken times such as `10 โมง` and the topic-first `รอ hotfix…ก่อน`).
 
-A neutral-prompt check (2026-11-09) reran all 18 humanize cases on Sonnet 5.5 with prompts that only ask to rewrite the text so it reads like a person wrote it (no genre letter, no loop steps), 3 runs per arm. The skill fired in all 54 with-arm runs. Mean Δ was +0.04, the same as Opus with the original prompts. The gain sits in th-notice +0.33 (plain Claude writes western times), th-standup +0.22 (particles, the calque ดัน), th-chat-clean +0.13 (plain Claude over-polishes a clean chat) and en-subtle +0.11 (the strawman stays); th-grammar-planted is −0.07, and both arms keep the echo-back in th-cs-echo-planted and `VM 3 ใบ`. A with-arm run costs about 1.7x a plain one on Sonnet and 2.1x on Opus. The neutral prompts lived in a scratch copy; the repo's prompts still name the skill.
+A neutral-prompt check (2026-11-09) reran all 18 humanize cases on Sonnet 5.5 with prompts that ask to rewrite the text so it reads like a person wrote it, with no genre letter or loop steps but still "(use the `siang:humanize` skill if you have it)", 3 runs per arm. The skill fired in all 54 with-arm runs; since the prompt named it, that is not trigger evidence (the `trigger-*` cases test that). Mean Δ was +0.04, the same as Opus with the original prompts. The gain sits in th-notice +0.33 (plain Claude writes western times), th-standup +0.22 (particles, the calque ดัน), th-chat-clean +0.13 (plain Claude over-polishes a clean chat) and en-subtle +0.11 (the strawman stays); th-grammar-planted is −0.07, and both arms fail the echo-back grader in th-cs-echo-planted (the pre-0.1.24 pattern, outputs never read) and the `VM 3 ใบ` grader. A with-arm run costs about 1.7x a plain one on Sonnet and 2.1x on Opus. Results are in `docs/eval-runs/`; the repo's prompts still name the skill. After the 0.1.24 deep-audit fixes, all 14 Thai cases reran with-arm only, 3 runs each: 42 of 42 at 1.00.
 
 Each case is `prompt.md` (invokes the skill by `skill: "siang:humanize"`), `case.yaml` (a
 `scaffold_script` that writes the fixture), and `graders/`. `skill-fired.md` is
@@ -95,13 +96,20 @@ steps, and graded on outcomes (is each planted defect found; does the draft show
 facts) rather than on the skills' own vocabulary. 3 runs per arm: `holdout-document-review-calibration-sop` 1.00 vs 1.00 and
 `holdout-document-review-change-record` 1.00 vs 1.00 (Δ 0.00 on both), `holdout-personal-voice-chatty` 1.00 vs 0.88 (+0.13),
 `holdout-personal-voice-formal` 0.96 vs 0.88 (+0.08; the sign-off phrase is missed on some with-arm runs). So the +0.38 on
-`document-review-planted-sop` came from grading the skill's own output format, not from finding more defects. Known
+`document-review-planted-sop` came from grading the skill's own output format, not from finding more defects.
 After 0.1.21 (step 5 now requires every profile habit, closers included, to be found in the draft as a quoted fragment),
 the two `personal-voice` cases reran at 3 runs per arm: `holdout-personal-voice-formal` 1.00 vs 0.83 (+0.17, the sign-off
 now survives in every with-arm run) and `holdout-personal-voice-chatty` 0.96 vs 0.88 (+0.08; one with-arm run copied the
 bullet list that only one sample has, so the one-off exclusion still slips occasionally). Known
 looseness in these graders: a bare number (14, 21, 12, 18, 45, 300) counts as a hit even in an unrelated finding, and
 `review.md` starts with a "no issues found" line so a run that never writes it fails the all-clear grader.
+
+Grader changes after these runs (0.1.25, deep-audit fixes): the `order`, `units` and unmarked-claim graders of
+`document-review-planted-sop`, `technical-writing-hidden-facts` and `technical-writing-unverified-claim` were
+tightened or loosened, grader step numbers in the technical-writing and document-review cases were updated, and the
+`thai-pua-repair-extracted-text` fixture no longer doubles a standard sara-a next to U+F710. Every Δ and score
+quoted for those cases in this file and in the READMEs was measured under the earlier graders and has not been
+re-run, so treat it as measured before 0.1.25 and not comparable to a new run.
 
 No-op pruning check (0.1.23): `technical-writing` and `document-review` dropped the steps plain Claude already does (the
 Diátaxis table, the style-rule list, the claim and requirement ID inventory), keeping `TODO: verify`, running each printed

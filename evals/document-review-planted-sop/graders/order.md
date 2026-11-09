@@ -1,6 +1,6 @@
 ---
 type: regex
-pattern: 'restore\.conf[\s\S]*(step|before|after|order)|(step|before|after|order)[\s\S]*restore\.conf'
+pattern: 'restore\.conf(?:(?!\bpass\b)[\s\S]){0,150}?(?:before|after|\border(?:ing)?\b|precede|later|earlier|too late|sequence)|(?:before|after|\border(?:ing)?\b|precede|later|earlier|too late|sequence)(?:(?!\bpass\b)[\s\S]){0,150}?restore\.conf'
 match: contains
 flags: i
 target: {source: file, path: review.md}

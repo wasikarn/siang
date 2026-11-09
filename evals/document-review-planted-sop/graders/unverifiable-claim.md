@@ -6,4 +6,4 @@ flags: i
 target: {source: file, path: review.md}
 # fixture: absent
 ---
-The 90-day retention claim has no source in the documents, so the ledger marks it unverifiable rather than pass (skill step 3).
+The 90-day retention claim has no source in the documents, so the ledger marks it unverifiable rather than pass (skill step 2).

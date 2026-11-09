@@ -5,4 +5,4 @@ match: contains
 target: {source: file, path: draft.md}
 # fixture: absent
 ---
-นะ ends every sample, so it is a habit and the draft carries it.
+นะ appears in every sample, so it is a habit and the draft carries it.

@@ -1,6 +1,6 @@
 ---
 type: regex
-pattern: '30 ?(min|s)\b[\s\S]*(contradict|inconsisten|mismatch|disagree|unit)|(contradict|inconsisten|mismatch|disagree|unit)[\s\S]*30 ?(min|s)\b'
+pattern: '30 ?(min(utes?)?|s(ec(onds?)?)?)\b[\s\S]*(contradict|inconsisten|mismatch|disagree)|(contradict|inconsisten|mismatch|disagree)[\s\S]*30 ?(min(utes?)?|s(ec(onds?)?)?)\b'
 match: contains
 flags: i
 target: {source: file, path: review.md}

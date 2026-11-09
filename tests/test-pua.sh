@@ -38,6 +38,8 @@ plain=$(printf 'สวัสดีครับ' | python3 "$fix" 2>/dev/null)
 printf 'สวัสดี' | python3 "$fix" --check 2>/dev/null && ok "--check clean exits 0" || bad "--check clean exits 0"
 set +e; printf 'ไม\xef\x9c\x8a' | python3 "$fix" --check >/dev/null 2>&1; code=$?; set -e
 [ "$code" = 1 ] && ok "--check finds the bug, exit 1" || bad "--check finds the bug, exit 1 (exit $code)"
+set +e; printf 'ไม\xef\x9c\x8a หมาย\xef\x9c\x9b' | python3 "$fix" --check >/dev/null 2>&1; code=$?; set -e
+[ "$code" = 2 ] && ok "--check with mapped and unmapped glyphs, exit 2" || bad "--check with mapped and unmapped glyphs, exit 2 (exit $code)"
 
 # ToUnicode rewriting (pua_pdf.py fix_cmap is pure text, so it needs no pikepdf or PDF).
 python3 - "$root/skills/thai-pua-repair/scripts/pua_pdf.py" <<'PY' || fail=1
@@ -64,6 +66,16 @@ checks = {
     "section counts match entries": "2 beginbfrange" in out and "3 beginbfchar" in out,
     "no mapped PUA left": not any(c in out.upper() for c in ("<F70", "<F71A", "<F710", "<F711", "<F712")),
 }
+checks["reported count is the 6 mapped glyphs (1 bfchar, 2 + 3 in ranges)"] = n == 6
+ws, nws = m.fix_cmap("2 beginbfchar\n<41> <0E 01>\n<42> <F70A>\nendbfchar\nendcmap")
+checks["whitespace inside a hex string keeps the character"] = "<41> <0E01>" in ws and "<42> <0E48>" in ws and nws == 1
+cmt, _ = m.fix_cmap("2 beginbfchar\n<41> <0E21>\n<42> <F70A>\n% obsolete <42> <F70B>\nendbfchar\nendcmap")
+checks["a % comment adds no mapping"] = "<42> <0E48>" in cmt and "0E49" not in cmt and "<41> <0E21>" in cmt
+hdr = "/CIDSystemInfo << /Registry (Adobe%Compat) /Ordering (UCS) /Supplement 0 >> def\n1 beginbfchar\n<41> <F70A>\nendbfchar\nendcmap"
+hout, _ = m.fix_cmap(hdr)
+checks["CMap header outside the mapping sections is untouched"] = "/CIDSystemInfo << /Registry (Adobe%Compat) /Ordering (UCS) /Supplement 0 >> def" in hout and "<41> <0E48>" in hout
+_, nlow = m.fix_cmap("1 beginbfchar\n<41> <0e01>\nendbfchar\nendcmap")
+checks["a hex-case change is not counted"] = nlow == 0
 for k, v in checks.items():
     print(("PASS " if v else "FAIL ") + "ToUnicode: " + k)
 sys.exit(0 if all(checks.values()) else 1)

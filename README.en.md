@@ -12,7 +12,7 @@ notice within a line, and then they stop trusting the rest.
 
 siang is a Claude Code plugin that removes that smell in English, Thai, and Thai-English
 code-switching, and covers the nearby jobs: writing a doc a reader can follow, auditing a record
-against its standard, and keeping your own voice. เสียง means "voice".
+against its standard, keeping your own voice, and repairing text extracted from a Thai PDF. เสียง means "voice".
 
 ## Who it's for
 
@@ -34,7 +34,7 @@ claude plugin install siang@siang
 |---|---|---|
 | `siang:humanize` | a draft reads like a model wrote it | names every AI tell against a cue sheet, rewrites, then re-reads for what is left |
 | `siang:technical-writing` | you need a how-to, tutorial, reference page, runbook or README | picks one Diátaxis quadrant per doc, takes facts from the code and from commands it runs, marks anything unchecked `TODO: verify` |
-| `siang:document-review` | a record must match a standard (SOP, runbook, policy, spec) | lists the claims, checks each for precision, logic, traceability and compliance, returns a graded ledger and a verdict |
+| `siang:document-review` | a record must match a standard (SOP, runbook, policy, spec) | checks every requirement, number, date and cross-reference for precision, logic, traceability and compliance, returns a graded ledger and a verdict |
 | `siang:thai-pua-repair` | text extracted from a Thai PDF shows private-use glyphs or broken tone marks | maps the 27 Windows UPC-font glyphs (U+F700..U+F71A) back to standard Thai, reports any it cannot map, and, on request, rewrites the PDF's ToUnicode maps so the file itself copies and searches correctly (`pua_pdf.py`, needs pikepdf) |
 | `siang:personal-voice` | you want drafts in your own voice | measures your samples, keeps a feature only if two samples show it, drafts from your facts, checks the draft against the profile |
 
@@ -94,14 +94,17 @@ not the total: plain Claude already scores high on many cases.
   in both runs below, 3 runs per arm each.
   - Opus 5.5 (2026-11-09, siang 0.1.16, the repo's prompts): all 54 with-arm runs passed, but plain Claude nearly
     did too. A with-arm run cost 2.1 times a plain one ($0.216 vs $0.102).
-  - Sonnet 5.5, with neutral prompts that only ask for a human-sounding rewrite: siang did not pass every case. It
-    kept the echo-back in th-cs-echo-planted (0.67, same as plain) and `VM 3 ใบ` in th-grammar-planted (0.53 vs
+  - Sonnet 5.5, with prompts that ask for a human-sounding rewrite with no genre letter or loop steps, but still add
+    "(use the `siang:humanize` skill if you have it)": siang did not pass every case. It failed the old echo-back
+    grader in th-cs-echo-planted (0.67, same as plain; the outputs were never read) and the `VM 3 ใบ` grader in
+    th-grammar-planted (0.53 vs
     plain 0.60). The gain sits in Thai dates and times, Thai standup register, leaving a clean Thai chat message
     alone, and subtle English tells. A with-arm run cost 1.7 times a plain one ($0.081 vs $0.048).
 
-  Both runs come from a separate test session; the repo holds the cases, not those run logs. The neutral prompts
-  were kept in a scratch copy, and the repo's prompts still name the skill, so rerunning them will not reproduce
-  the Sonnet figures exactly.
+  Both runs' results (scores, costs and every grader verdict) are in [`docs/eval-runs/`](docs/eval-runs/); the
+  Sonnet run's prompts are recorded there, but the repo's prompts still name the skill, so rerunning them will not
+  reproduce the Sonnet figures exactly. After the deep-audit fixes (0.1.24), all 14 Thai cases reran with-arm only
+  at 1.00 in 42 of 42 runs.
 - 13 cases cover the other four skills, 3 runs per arm each: 9 written by the skills' author and 4 held-out
   cases written by an agent that never saw the skills' steps. Results are mixed and mostly small.
   - `document-review`: Δ +0.38 on its own case, but that case grades the skill's own output format (grades, a

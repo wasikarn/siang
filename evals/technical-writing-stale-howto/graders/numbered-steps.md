@@ -6,4 +6,4 @@ flags: m
 target: {source: file, path: docs/rotate-key.md}
 # fixture: absent
 ---
-The how-to has numbered steps, one action each (step 4 how-to shape).
+The how-to has numbered steps, one action each (step 3: how-to steps).
