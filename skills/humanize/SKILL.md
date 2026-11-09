@@ -33,7 +33,7 @@ Two constraints hold through every step:
 6. **Final rewrite.** Resolve each step-5 bullet: name the fix, or write "kept as tradeoff: <reason>" (formal vocabulary the genre requires, for instance). Scan the delivered text for the literal `—` character (cue #14): claiming the dashes are cut is not the same as counting zero. Re-scan for the tells that most often survive a rewrite: not-X-but-Y (§9), one-line closers (§60), forced triads (§10), bold labels (§15). Compare against the source for what the rewrite dropped: every fact, number, name and qualifier is still there or was cut on purpose (in UI copy, a vague line that contradicts a specific status is cut, §36.1). Re-read aloud; vary sentence length; confirm the step-2 grit actually landed in the text.
    Done when: every bullet has a named resolution, the `—` count is zero (unless the user's own English writing sample uses em dashes on purpose, §14; never in Thai), and the step-2 specifics are present.
 
-Deliver: the named tells, the draft, the still-AI bullets, the final rewrite, and optionally a short change summary. When the input is a file and the user asked to edit or humanize it, write the final back into that file as well.
+Deliver: the named tells, the draft, the still-AI bullets, the final rewrite, and optionally a short change summary. When the user asks for the final rewrite only, the last message is that rewrite alone, with nothing before or after it: quoted tells in the working would put the AI phrases back into the delivered text. When the input is a file and the user asked to edit or humanize it, write the final back into that file as well.
 
 ## §0. Register and language gate
 
