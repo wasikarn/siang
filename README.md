@@ -1,10 +1,25 @@
 # siang (เสียง)
 
-A Claude Code plugin that humanizes dev and tech writing in English, Thai, and Thai-English
-code-switching, so a chat message, standup, PR description, UI string, or ADR reads like a
-person wrote it, not a model.
+**Claude Code skills for dev and tech writing that reads like a person wrote it.**
 
-เสียง means "voice". The plugin has four skills: `siang:humanize`, `siang:technical-writing`, `siang:document-review` and `siang:personal-voice`.
+[ภาษาไทย](README.th.md)
+
+> Text from a model has a smell.
+
+A standup that opens with "I'm excited to share", a PR description with three bullets of equal
+length, a Thai notice that ends every sentence in ครับ and leans on "ซึ่ง" and "โดย". Readers
+notice within a line, and then they stop trusting the rest.
+
+siang is a Claude Code plugin that removes that smell in English, Thai, and Thai-English
+code-switching, and covers the nearby jobs: writing a doc a reader can follow, auditing a record
+against its standard, and keeping your own voice. เสียง means "voice".
+
+## Who it's for
+
+- Developers who let a model draft chat, standups, PR and commit text, UI strings, ADRs or
+  READMEs, in English or Thai.
+- Teams whose Thai output from a model reads like a translation.
+- Anyone who has pasted a draft and thought "this sounds like AI".
 
 ## Install
 
@@ -13,30 +28,74 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## What it does
+## The four skills
 
-`/siang:humanize` (or ask Claude to humanize, de-AI, or rewrite a draft) runs a fixed loop:
+| Skill | Use it when | What it does |
+|---|---|---|
+| `siang:humanize` | a draft reads like a model wrote it | names every AI tell against a cue sheet, rewrites, then re-reads for what is left |
+| `siang:technical-writing` | you need a how-to, tutorial, reference page, runbook or README | picks one Diátaxis quadrant per doc, takes facts from the code and from commands it runs, marks anything unchecked `TODO: verify` |
+| `siang:document-review` | a record must match a standard (SOP, runbook, policy, spec) | lists the claims, checks each for precision, logic, traceability and compliance, returns a graded ledger and a verdict |
+| `siang:personal-voice` | you want drafts in your own voice | measures your samples, keeps a feature only if two samples show it, drafts from your facts, checks the draft against the profile |
+
+Run one with a slash command (`/siang:humanize`) or just ask. Example prompts:
+
+```
+humanize this standup update, genre B, keep every number
+```
+
+```
+use siang:technical-writing to rewrite docs/deploy.md for an on-call engineer
+```
+
+```
+use siang:document-review on sop-restore.md against standard.md, review only
+```
+
+```
+use siang:personal-voice: samples/ are my messages, rewrite draft.md like me
+```
+
+## How `humanize` works
+
+It runs a fixed loop:
 
 1. Pick the genre (A chat, B standup/PR/commit, C UI/error copy, D prose/blog/ADR) and the language.
-2. Plan the grit: the concrete specifics from the source the rewrite must keep.
-3. Name every AI tell against a 33-row universal cue sheet, plus the Thai-only patterns for any Thai.
-   `scripts/scan.py` runs first and lists the tells a pattern can catch (em dashes, AI vocabulary,
-   chat closers, Thai spelling and date formats) with line and section; the model judges each hit
-   and reads for the rest.
+2. Plan the grit: the concrete specifics from the source that the rewrite must keep.
+3. Name every AI tell against a 33-row universal cue sheet, plus the Thai-only patterns for any
+   Thai. `scripts/scan.py` runs first and lists the tells a pattern can catch (em dashes, AI
+   vocabulary, chat closers, Thai spelling and date formats) with line and section; the model
+   judges each hit and reads for the rest.
 4. Draft, ask "what still reads AI?", then write the final.
 
 Two rules hold throughout: no invented facts (an unverifiable claim is dropped or hedged, never
-made up), and on a file only the prose changes; code blocks, commands, frontmatter and quotes stay
-byte-identical.
+made up), and on a file only the prose changes; code blocks, commands, frontmatter and quotes
+stay byte-identical.
 
 ## Layout
 
-- `skills/humanize/`: `SKILL.md` and its references (cue sheet, universal patterns, Thai patterns,
-  Thai sentence structure, examples, sources), plus `scripts/scan.py`.
-- `evals/`: ten cases in `claude plugin eval`'s native layout (`evals/README.md`). Read the
-  with/without-siang delta (Δ), not the total: plain Claude already scores high on several cases.
-- `tests/`: free checks that CI runs on every push: grader self-test, version-bump hook, every §
-  and cue reference resolves, and `scan.py` finds planted tells.
+| Path | Contents |
+|---|---|
+| `skills/humanize/` | `SKILL.md`, cue sheet, universal and Thai patterns, Thai sentence structure, examples, sources, `scripts/scan.py` |
+| `skills/technical-writing/` | `SKILL.md` |
+| `skills/document-review/` | `SKILL.md` |
+| `skills/personal-voice/` | `SKILL.md` |
+| `evals/` | 24 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
+| `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells |
+
+## Evals
+
+Each case runs twice, with siang and without it, and the number to read is the difference (Δ),
+not the total: plain Claude already scores high on many cases.
+
+- 18 cases cover `humanize`, English and Thai. Several are regression guards that plain Claude
+  also passes; their job is to catch siang losing to it.
+- 6 cases cover the other three skills. First runs, one run per arm: `document-review` 1.00 vs
+  0.57 (Δ +0.43), `personal-voice` Δ +0.22 on two cases, `technical-writing` Δ +0.14 on its
+  hardest case and 0.00 on two easier ones. Treat these as first signals, not settled results.
+
+Free check, no API call: `bash tests/test-graders.sh`. A paid run is
+`claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
+(swap the tag for `technical-writing`, `document-review` or `personal-voice`).
 
 ## Credits
 
