@@ -13,8 +13,12 @@ chat control (§39.1). Plain Claude passes four of them too; their job is to cat
 it, as it did on the echo-back and grammar cases (0.67 and 0.93 against plain 0.83 and 1.00,
 2026-11-09). With the §57/§59 rules and the scan.py §44 cue, siang scored 1.00 on both over 3 runs.
 That is weak evidence: the rules were written from these two fixtures, and grammar moved from 1 miss
-in 3 to 0 in 3, within run-to-run noise. A held-out fixture with the same tells in other words would
-show whether the fix generalizes.
+in 3 to 0 in 3, within run-to-run noise. Three held-out cases (tag `holdout`, written by an agent that
+never saw the rules) then tested both fixes on other wording, 5 runs per arm. Echo-back held (siang
+1.00, plain 1.00). Trailing conditions did not: siang 0.60 against plain 1.00, because SKILL.md loaded
+the Thai structure rules only for long prose. After step 3 loaded them for any Thai text over one
+sentence and step 6 added a read for trailing conditions, siang scored 1.00 on that case and on a third
+blind case (an on-call handoff, three trailing conditions); plain Claude also reorders them there.
 
 Each case is `prompt.md` (invokes the skill by `skill: "siang:humanize"`), `case.yaml` (a
 `scaffold_script` that writes the fixture), and `graders/`. `skill-fired.md` is
