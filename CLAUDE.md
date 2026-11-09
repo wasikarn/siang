@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 - Validate before committing: `claude plugin validate .`, `bash tests/test-graders.sh`,
-  `bash tests/test-section-refs.sh` (every §N and cue #N resolves), `bash tests/test-scan.sh` and `bash tests/test-pua.sh`.
+  `bash tests/test-section-refs.sh` (every §N and cue #N resolves), `bash tests/test-scan.sh` `bash tests/test-pua.sh` and `bash tests/test-pua-pdf.sh` (skips without pikepdf and pdftotext).
 - Bump `version` in `.claude-plugin/plugin.json` on any skill change: `claude plugin update` copies
   nothing while the version is unchanged.
   `git-hooks/pre-commit` refuses a `skills/` commit without a bump; enable it once per clone with

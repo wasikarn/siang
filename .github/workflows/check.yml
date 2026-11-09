@@ -45,3 +45,9 @@ jobs:
 
       - name: pua_fix.py maps Thai PUA glyphs
         run: bash tests/test-pua.sh
+
+      - name: pua_pdf.py repairs a PDF end to end
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+          python3 -m pip install --quiet pikepdf
+          bash tests/test-pua-pdf.sh

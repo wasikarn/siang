@@ -39,4 +39,34 @@ printf 'สวัสดี' | python3 "$fix" --check 2>/dev/null && ok "--check 
 set +e; printf 'ไม\xef\x9c\x8a' | python3 "$fix" --check >/dev/null 2>&1; code=$?; set -e
 [ "$code" = 1 ] && ok "--check finds the bug, exit 1" || bad "--check finds the bug, exit 1 (exit $code)"
 
+# ToUnicode rewriting (pua_pdf.py fix_cmap is pure text, so it needs no pikepdf or PDF).
+python3 - "$root/skills/thai-pua-repair/scripts/pua_pdf.py" <<'PY' || fail=1
+import importlib.util, sys
+spec = importlib.util.spec_from_file_location("pua_pdf", sys.argv[1]); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+cm = """1 begincodespacerange <0000> <00ff> endcodespacerange
+2 beginbfchar
+<0072> <F70E>
+<0073> <F71B>
+endbfchar
+3 beginbfrange
+<006e> <006f> <F70A>
+<0010> <0012> <F70F>
+<0020> <0021> <0E01>
+endbfrange
+endcmap"""
+out, n = m.fix_cmap(cm)
+checks = {
+    "bfchar F70E becomes U+0E4C": "<0072> <0E4C>" in out,
+    "unmapped F71B stays": "<0073> <F71B>" in out,
+    "consecutive range F70A..F70B stays one range at 0E48": "<006e> <006f> <0E48>" in out,
+    "non-consecutive range becomes bfchar entries": all(x in out for x in ("<0010> <0E0D>", "<0011> <0E31>", "<0012> <0E4D>")) and "<0010> <0012>" not in out,
+    "plain Thai range untouched": "<0020> <0021> <0E01>" in out,
+    "section counts match entries": "2 beginbfrange" in out and "3 beginbfchar" in out,
+    "no mapped PUA left": not any(c in out.upper() for c in ("<F70", "<F71A", "<F710", "<F711", "<F712")),
+}
+for k, v in checks.items():
+    print(("PASS " if v else "FAIL ") + "ToUnicode: " + k)
+sys.exit(0 if all(checks.values()) else 1)
+PY
+
 [ "$fail" -eq 0 ] || exit 1
