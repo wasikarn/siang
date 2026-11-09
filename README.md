@@ -81,7 +81,7 @@ stay byte-identical.
 | `skills/document-review/` | `SKILL.md` |
 | `skills/personal-voice/` | `SKILL.md` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 24 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
+| `evals/` | 27 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
 | `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells, `pua_fix.py` maps every known glyph |
 
 ## Evals
@@ -91,13 +91,15 @@ not the total: plain Claude already scores high on many cases.
 
 - 18 cases cover `humanize`, English and Thai. Several are regression guards that plain Claude
   also passes; their job is to catch siang losing to it.
-- 6 cases cover the other three skills. First runs, one run per arm: `document-review` 1.00 vs
-  0.57 (Δ +0.43), `personal-voice` Δ +0.22 and +0.33 on its two cases, `technical-writing` Δ +0.14 on its
-  hardest case and 0.00 on two easier ones. Treat these as first signals, not settled results.
+- 9 cases cover the other four skills, 3 runs per arm each. `document-review` 1.00 vs 0.62
+  (Δ +0.38) and `personal-voice` 1.00 vs 0.78 and 0.96 vs 0.70 (Δ +0.22 and +0.26) hold up. The rest is small
+  or zero: `technical-writing` Δ +0.10 on its hardest case and 0.00 on two easier ones, `thai-pua-repair`
+  Δ +0.08 on its compressed-PDF case and 0.00 on two others. Plain Claude already does most of what those two
+  skills ask; their gain is a few things it drops (an unverified claim, a glyph it cannot map).
 
 Free check, no API call: `bash tests/test-graders.sh`. A paid run is
 `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(swap the tag for `technical-writing`, `document-review` or `personal-voice`).
+(swap the tag for `technical-writing`, `document-review`, `personal-voice` or `thai-pua-repair`).
 
 ## Credits
 

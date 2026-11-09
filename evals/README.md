@@ -73,6 +73,14 @@ stream, so the PDF cannot be edited by hand and every font map must be found. Fi
 skill, 0.75 without (Δ +0.25). Both arms repaired the tone marks and the range that must split; the plain model lost the
 unmappable U+F71B on some lines (deleted or replaced), which the skill leaves in place and reports.
 
+Three-run check of the nine non-humanize cases (2026-11-09, 3 runs per arm, with vs without): `document-review-planted-sop`
+1.00 vs 0.62 (Δ +0.38); `personal-voice-terse-writer` 1.00 vs 0.78 (+0.22); `personal-voice-thai-oneoffs` 0.96 vs 0.70
+(+0.26); `technical-writing-hidden-facts` 1.00 vs 0.90 (+0.10); `thai-pua-repair-pdf-compressed` 1.00 vs 0.92 (+0.08);
+`technical-writing-stale-howto`, `technical-writing-unverified-claim`, `thai-pua-repair-extracted-text` and
+`thai-pua-repair-pdf-file` all 1.00 vs 1.00 (Δ 0.00). The single-run Δs above were noisy where they were small (the
+`technical-writing-unverified-claim` guard shows no gap over three runs). The `profile-lists-oneoffs` grader still fails on
+some `personal-voice-thai-oneoffs` runs: the skill's profile sometimes omits the one-offs it excluded.
+
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 

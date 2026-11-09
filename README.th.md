@@ -77,7 +77,7 @@ humanize standup update นี้ genre B เก็บตัวเลขทุ�
 | `skills/document-review/` | `SKILL.md` |
 | `skills/personal-voice/` | `SKILL.md` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 24 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
+| `evals/` | 27 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
 | `tests/` | เช็กฟรีที่ CI รันทุก push: grader self-test, hook เช็ก version, ทุก § และ cue ต้องหาเจอ, `scan.py` จับ tell ที่ใส่ไว้ได้ |
 
 ## Eval
@@ -87,13 +87,15 @@ humanize standup update นี้ genre B เก็บตัวเลขทุ�
 
 - 18 เคสของ `humanize` ทั้งไทยและอังกฤษ หลายเคสเป็น regression guard ที่ Claude เปล่า ๆ ก็ผ่าน
   หน้าที่ของมันคือจับตอนที่ siang แพ้
-- 6 เคสของอีกสาม skill ผลรอบแรก รอบเดียวต่อฝั่ง: `document-review` 1.00 เทียบ 0.57 (Δ +0.43),
-  `personal-voice` Δ +0.22 และ +0.33 ในสองเคส, `technical-writing` Δ +0.14 ในเคสที่ยากที่สุด และ 0.00 ในสองเคสที่ง่ายกว่า
-  ถือเป็นสัญญาณแรก ยังไม่ใช่ผลที่สรุปได้
+- 9 เคสของอีกสี่ skill รันเคสละ 3 รอบต่อฝั่ง `document-review` 1.00 เทียบ 0.62 (Δ +0.38) และ
+  `personal-voice` 1.00 เทียบ 0.78 กับ 0.96 เทียบ 0.70 (Δ +0.22 และ +0.26) ผลคงที่ ส่วนที่เหลือเล็กหรือเป็นศูนย์:
+  `technical-writing` Δ +0.10 ในเคสที่ยากที่สุด และ 0.00 ในสองเคสที่ง่ายกว่า, `thai-pua-repair` Δ +0.08 ในเคส PDF
+  บีบอัด และ 0.00 ในอีกสองเคส Claude เปล่า ๆ ทำสิ่งที่สอง skill นั้นขอได้เกือบหมด ที่ skill เพิ่มให้คือของที่ model เปล่าทิ้ง
+  (claim ที่ยังไม่ได้ตรวจ, glyph ที่แปลงไม่ได้)
 
 เช็กฟรีโดยไม่เรียก API: `bash tests/test-graders.sh` ส่วนรันจริง (เสียเงิน) คือ
 `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(เปลี่ยน tag เป็น `technical-writing`, `document-review` หรือ `personal-voice`)
+(เปลี่ยน tag เป็น `technical-writing`, `document-review`, `personal-voice` หรือ `thai-pua-repair`)
 
 ## เครดิตและ license
 
