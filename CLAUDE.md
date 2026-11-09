@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-- Validate before committing: `claude plugin validate .`
+- Validate before committing: `claude plugin validate .` and `bash tests/test-graders.sh`.
+- Bump `version` in `.claude-plugin/plugin.json` on any skill change: `claude plugin update` copies
+  nothing while the version is unchanged.
 - Skill files may contain Thai: Thai writing is the subject matter.
 - New rules adapted from another project: paraphrase the rule, write a fresh example, never copy
   a source's examples or quoted third-party passages, and add the source to

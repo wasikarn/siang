@@ -12,12 +12,13 @@ specific is kept (`contains`).
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
+Free check, no API call: `bash tests/test-graders.sh` proves every prompt invokes
+`siang:humanize` and every regex grader compiles as a JS RegExp and matches its scaffolded fixture
+(so a `not_contains` grader can fail and a `contains` grader can pass).
+
 ## Known gap
 
 - **Invented facts in rewrites.** The Grit Gate's fabrication boundary (no new fact, number,
   cause, name or result) has no grader. A one-word haiku judge could not check it in either
   phrasing: written "PASS unless", it passed every planted invention; written "Score 1 only if",
   it failed correct replies 3/3. Presence of the source's specifics is checked by regex instead.
-- **No loader self-test.** Nothing here proves each regex grader matches its scaffolded fixture
-  (method-harness had one in `tests/evals/test-eval-cases.sh`). After editing a grader or a
-  fixture, run the case once and check the grader can both pass and fail.
