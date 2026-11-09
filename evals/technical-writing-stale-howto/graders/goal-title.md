@@ -1,6 +1,6 @@
 ---
 type: regex
-pattern: '^# Rotat(e|ing)'
+pattern: '^# Rotat(e|ing)\b'
 match: contains
 flags: m
 target: {source: file, path: docs/rotate-key.md}
