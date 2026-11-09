@@ -15,7 +15,7 @@ for f in skill:
         if n in defs: dup.append(f"§{n} defined in {defs[n]} and {f}")
         defs.setdefault(n, f)
 cues = set(re.findall(r'(?m)^\| *(\d+) *\|', open('skills/humanize/cue-sheet.md').read()))
-files = skill + sorted(glob.glob('skills/humanize/scripts/*.py')) + ['README.md', 'CLAUDE.md'] + sorted(glob.glob('evals/*/prompt.md') + glob.glob('evals/*/graders/*.md'))
+files = skill + sorted(glob.glob('skills/humanize/scripts/*.py')) + ['README.md', 'README.en.md', 'CLAUDE.md'] + sorted(glob.glob('evals/*/prompt.md') + glob.glob('evals/*/graders/*.md'))
 bad = list(dup)
 for f in files:
     for i, line in enumerate(open(f), 1):

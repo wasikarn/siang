@@ -1,126 +1,140 @@
 # siang (เสียง)
 
-**Claude Code skills for dev and tech writing that reads like a person wrote it.**
+**skill สำหรับ Claude Code ที่ช่วยให้งานเขียนสาย dev อ่านแล้วเหมือนคนเขียนจริง**
 
-[ภาษาไทย](README.th.md)
+[English](README.en.md)
 
-> Text from a model has a smell.
+> ข้อความจาก AI มีกลิ่น
 
-A standup that opens with "I'm excited to share", a PR description with three bullets of equal
-length, a Thai notice that ends every sentence in ครับ and leans on "ซึ่ง" and "โดย". Readers
-notice within a line, and then they stop trusting the rest.
+standup ที่เปิดว่า "ยินดีที่จะแจ้งให้ทราบ" คำอธิบาย PR ที่มีสามข้อยาวเท่ากันเป๊ะ ประกาศภาษาไทยที่ลงท้ายครับ
+ทุกประโยค แถมใช้ "ซึ่ง" กับ "โดย" เต็มไปหมด คนอ่านรู้ตั้งแต่บรรทัดแรก แล้วก็เลิกเชื่อส่วนที่เหลือ
 
-siang is a Claude Code plugin that removes that smell in English, Thai, and Thai-English
-code-switching, and covers the nearby jobs: writing a doc a reader can follow, auditing a record
-against its standard, and keeping your own voice. เสียง means "voice".
+siang เป็น plugin ของ Claude Code ที่เอากลิ่นนี้ออกทั้งภาษาอังกฤษ ภาษาไทย และไทยปนอังกฤษ
+และยังช่วยอีกสามงานที่ใกล้กัน คือเขียนเอกสารให้คนอ่านทำตามได้ ตรวจเอกสารเทียบมาตรฐาน และเขียนด้วยเสียงของคุณเอง
+เสียง แปลว่า voice
 
-## Who it's for
+## เหมาะกับใคร
 
-- Developers who let a model draft chat, standups, PR and commit text, UI strings, ADRs or
-  READMEs, in English or Thai.
-- Teams whose Thai output from a model reads like a translation.
-- Anyone who has pasted a draft and thought "this sounds like AI".
+- developer ที่ให้ AI ร่าง chat, standup, PR, commit, ข้อความใน UI, ADR หรือ README ทั้งไทยและอังกฤษ
+- ทีมที่ได้ output ภาษาไทยจาก AI แล้วอ่านเหมือนงานแปล
+- ใครที่เคยวาง draft แล้วคิดว่า "นี่มันเสียง AI"
 
-## Install
+## ติดตั้ง
 
 ```bash
 claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## The five skills
+## ห้า skill
 
-| Skill | Use it when | What it does |
+| Skill | ใช้เมื่อ | ทำอะไร |
 |---|---|---|
-| `siang:humanize` | a draft reads like a model wrote it | names every AI tell against a cue sheet, rewrites, then re-reads for what is left |
-| `siang:technical-writing` | you need a how-to, tutorial, reference page, runbook or README | picks one Diátaxis quadrant per doc, takes facts from the code and from commands it runs, marks anything unchecked `TODO: verify` |
-| `siang:document-review` | a record must match a standard (SOP, runbook, policy, spec) | lists the claims, checks each for precision, logic, traceability and compliance, returns a graded ledger and a verdict |
-| `siang:thai-pua-repair` | text extracted from a Thai PDF shows private-use glyphs or broken tone marks | maps the 27 Windows UPC-font glyphs (U+F700..U+F71A) back to standard Thai, reports any it cannot map, and, on request, rewrites the PDF's ToUnicode maps so the file itself copies and searches correctly (`pua_pdf.py`, needs pikepdf) |
-| `siang:personal-voice` | you want drafts in your own voice | measures your samples, keeps a feature only if two samples show it, drafts from your facts, checks the draft against the profile |
+| `siang:humanize` | draft อ่านแล้วเหมือน AI เขียน | ไล่หา AI tell ทุกจุดจาก cue sheet แล้วเขียนใหม่ จากนั้นอ่านซ้ำหาส่วนที่ยังเหลือ |
+| `siang:technical-writing` | ต้องการ how-to, tutorial, หน้า reference, runbook หรือ README | เลือก Diátaxis หนึ่งแบบต่อเอกสาร เอาข้อเท็จจริงจากโค้ดและคำสั่งที่รันเอง ส่วนที่ยังไม่ได้ตรวจใส่ `TODO: verify` |
+| `siang:document-review` | เอกสารต้องตรงตามมาตรฐาน (SOP, runbook, policy, spec) | แยก claim ออกมา ตรวจ precision, logic, traceability และ compliance ของแต่ละ claim ได้ ledger ที่จัดเกรดกับ verdict |
+| `siang:thai-pua-repair` | ข้อความที่ extract จาก PDF ไทยมีอักขระ private-use หรือวรรณยุกต์เพี้ยน | แปลง glyph 27 ตัวของฟอนต์ UPC บน Windows (U+F700..U+F71A) กลับเป็นอักษรไทยมาตรฐาน รายงานตัวที่แปลงไม่ได้ และเมื่อสั่งจะแก้ ToUnicode map ในไฟล์ PDF เอง ให้ copy และค้นหาได้ถูก (`pua_pdf.py` ต้องมี pikepdf) |
+| `siang:personal-voice` | อยากได้ draft ด้วยเสียงของตัวเอง | วัดจากตัวอย่างของคุณ เก็บเฉพาะลักษณะที่เจอในตัวอย่างอย่างน้อยสองชิ้น เขียนจากข้อเท็จจริงของคุณ แล้วเทียบ draft กับ profile |
 
-Run one with a slash command (`/siang:humanize`) or just ask. Example prompts:
-
-```
-humanize this standup update, genre B, keep every number
-```
+เรียกด้วย slash command (`/siang:humanize`) หรือสั่งเป็นประโยคก็ได้ ตัวอย่าง prompt:
 
 ```
-use siang:technical-writing to rewrite docs/deploy.md for an on-call engineer
+humanize standup update นี้ genre B เก็บตัวเลขทุกตัว
 ```
 
 ```
-use siang:document-review on sop-restore.md against standard.md, review only
+ใช้ siang:technical-writing เขียน docs/deploy.md ใหม่ให้ on-call engineer
 ```
 
 ```
-use siang:personal-voice: samples/ are my messages, rewrite draft.md like me
+ใช้ siang:document-review ตรวจ sop-restore.md เทียบกับ standard.md แค่รีวิว ไม่ต้องแก้
 ```
 
-## How `humanize` works
+```
+ใช้ siang:personal-voice: samples/ คือข้อความของฉัน เขียน draft.md ใหม่ให้เหมือนฉัน
+```
 
-It runs a fixed loop:
+## `humanize` ทำงานยังไง
 
-1. Pick the genre (A chat, B standup/PR/commit, C UI/error copy, D prose/blog/ADR) and the language.
-2. Plan the grit: the concrete specifics from the source that the rewrite must keep.
-3. Name every AI tell against a 33-row universal cue sheet, plus the Thai-only patterns for any
-   Thai. `scripts/scan.py` runs first and lists the tells a pattern can catch (em dashes, AI
-   vocabulary, chat closers, Thai spelling and date formats) with line and section; the model
-   judges each hit and reads for the rest.
-4. Draft, ask "what still reads AI?", then write the final.
+วนตามลำดับนี้
 
-Two rules hold throughout: no invented facts (an unverifiable claim is dropped or hedged, never
-made up), and on a file only the prose changes; code blocks, commands, frontmatter and quotes
-stay byte-identical.
+1. เลือก genre (A chat, B standup/PR/commit, C ข้อความ UI/error, D บทความ/blog/ADR) และภาษา
+2. วางแผน grit คือรายละเอียดเฉพาะจากต้นฉบับที่ฉบับเขียนใหม่ต้องเก็บไว้
+3. ไล่หา AI tell ทุกจุดจาก cue sheet สากล 33 แถว บวก pattern เฉพาะภาษาไทยถ้ามีข้อความไทย
+   `scripts/scan.py` รันก่อนและแสดง tell ที่ pattern จับได้ (em dash, คำสาย AI, ประโยคปิดแบบ chat,
+   การสะกดและรูปแบบวันที่ภาษาไทย) พร้อมเลขบรรทัดและเลข § แล้วโมเดลตัดสินทีละจุดและอ่านหาที่เหลือ
+4. เขียน draft ถามตัวเองว่า "ตรงไหนยังเหมือน AI" แล้วเขียนฉบับสุดท้าย
 
-## Layout
+มีกฎสองข้อที่ใช้ตลอด คือไม่แต่งข้อเท็จจริงเพิ่ม (claim ที่ตรวจไม่ได้ตัดทิ้งหรือลดน้ำหนัก ไม่เดาให้) และถ้าเป็นไฟล์
+จะแก้เฉพาะร้อยแก้ว code block, คำสั่ง, frontmatter และข้อความอ้างอิงต้องเหมือนเดิมทุก byte
 
-| Path | Contents |
+## โครงสร้าง repo
+
+| path | เนื้อหา |
 |---|---|
-| `skills/humanize/` | `SKILL.md`, cue sheet, universal and Thai patterns, Thai sentence structure, examples, sources, `scripts/scan.py` |
+| `skills/humanize/` | `SKILL.md`, cue sheet, pattern สากลและไทย, โครงสร้างประโยคไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
 | `skills/technical-writing/` | `SKILL.md` |
 | `skills/document-review/` | `SKILL.md` |
 | `skills/personal-voice/` | `SKILL.md` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 27 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
-| `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells, `pua_fix.py` maps every known glyph |
+| `evals/` | 36 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
+| `tests/` | เช็กฟรีที่ CI รันทุก push: grader self-test, hook เช็ก version, ทุก § และ cue ต้องหาเจอ, `scan.py` จับ tell ที่ใส่ไว้ได้, `pua_fix.py` แปลง glyph ที่รู้จักได้ครบ, `pua_pdf.py` ซ่อม PDF จริงได้ตั้งแต่ต้นจนจบ |
 
-## Evals
+## Eval
 
-Each case runs twice, with siang and without it, and the number to read is the difference (Δ),
-not the total: plain Claude already scores high on many cases.
+แต่ละเคสรันสองฝั่ง คือมี siang กับไม่มี siang ตัวเลขที่ควรดูคือส่วนต่าง (Δ) ไม่ใช่คะแนนรวม
+เพราะ Claude เปล่า ๆ ก็ได้คะแนนสูงในหลายเคส
 
-- 18 cases cover `humanize`, English and Thai. Several are regression guards that plain Claude
-  also passes; their job is to catch siang losing to it.
-- 9 cases cover the other four skills, 3 runs per arm each. `document-review` 1.00 vs 0.62
-  (Δ +0.38) and `personal-voice` 1.00 vs 0.78 and 1.00 vs 0.70 (Δ +0.22 and +0.30) hold up. The rest is small
-  or zero: `technical-writing` Δ +0.10 on its hardest case and 0.00 on two easier ones, `thai-pua-repair`
-  Δ +0.08 on its compressed-PDF case and 0.00 on two others. Plain Claude already does most of what those two
-  skills ask; their gain is a few things it drops (an unverified claim, a glyph it cannot map).
+- 18 เคสของ `humanize` ทั้งไทยและอังกฤษ หลายเคสเป็น regression guard ที่ Claude เปล่า ๆ ก็ผ่าน
+  หน้าที่ของมันคือจับตอนที่ siang แพ้ แต่ที่ดีขึ้นจริงมีไม่มาก Δ เฉลี่ย +0.04 ทั้ง 18 เคส ในทั้งสองชุดด้านล่าง
+  ชุดละ 3 รอบต่อฝั่ง
+  - Opus 5.5 (2026-11-09, siang 0.1.16, prompt ใน repo): ฝั่ง siang ผ่านครบทั้ง 54 รอบ แต่ Claude เปล่า ๆ
+    ก็เกือบผ่านหมด ค่าใช้จ่ายต่อรอบของฝั่ง siang ราว 2.1 เท่าของฝั่งเปล่า ($0.216 เทียบกับ $0.102)
+  - Sonnet 5.5 กับ prompt กลาง ๆ ที่สั่งแค่ให้เขียนใหม่ให้เหมือนคนเขียน: siang ไม่ได้ผ่านทุกเคส ยังทวนคำลูกค้ากลับ
+    (echo-back) ใน th-cs-echo-planted (0.67 เท่ากับฝั่งเปล่า) และยังเหลือ `VM 3 ใบ` ใน th-grammar-planted (0.53
+    เทียบกับฝั่งเปล่า 0.60) ส่วนที่ดีขึ้นกระจุกอยู่ที่วันที่และเวลาภาษาไทย น้ำเสียงของ standup ไทย การไม่แตะข้อความ
+    chat ไทยที่ดีอยู่แล้ว และ tell ในภาษาอังกฤษที่ละเอียด ค่าใช้จ่ายต่อรอบของฝั่ง siang ราว 1.7 เท่า ($0.081 เทียบกับ $0.048)
 
-Free check, no API call: `bash tests/test-graders.sh`. A paid run is
+  ตัวเลขทั้งสองชุดมาจาก session ทดสอบแยกต่างหาก ใน repo มีแค่เคส ไม่มี log ของรอบนั้น prompt กลาง ๆ เก็บไว้ใน
+  scratch copy และ prompt ใน repo ยังระบุชื่อ skill อยู่ รันซ้ำจึงได้ตัวเลขของ Sonnet ไม่ตรงเป๊ะ
+- 13 เคสของอีกสี่ skill รันเคสละ 3 รอบต่อฝั่ง: 9 เคสที่ผู้เขียน skill เขียนเอง และ 4 เคส held-out ให้ agent ที่ไม่เคยเห็น
+  ขั้นตอนของ skill เป็นคนเขียน ผลออกมาหลายแบบ และส่วนใหญ่ต่างกันไม่มาก
+  - `document-review`: Δ +0.38 ในเคสของผู้เขียนเอง แต่เคสนั้นให้คะแนนจากรูปแบบ output ของ skill (เกรด, verdict,
+    "unverifiable") ส่วนสองเคส held-out ที่ให้คะแนนแค่ว่าเจอข้อผิดจริงไหม Δ เป็น 0.00 Claude เปล่า ๆ เจอข้อผิดชุดเดียวกัน
+    ควรมองว่า skill ให้รูปแบบรีวิวที่สม่ำเสมอ ไม่ใช่เจอข้อผิดเก่งกว่า
+  - `personal-voice`: Δ +0.22 และ +0.30 ในเคสของผู้เขียนเอง, +0.17 และ +0.08 ในเคส held-out (ตัดลักษณะที่เห็นแค่
+    ตัวอย่างเดียวได้ แต่บางครั้งก็ยังหลุดมา)
+  - `technical-writing` Δ +0.10 ในเคสที่ยากที่สุด และ 0.00 ในสองเคสที่ง่ายกว่า, `thai-pua-repair` Δ +0.08 ในเคส PDF
+    บีบอัด และ 0.00 ในอีกสองเคส ที่สอง skill นี้ช่วยได้คือเก็บของที่ Claude เปล่า ๆ ทำหล่น (claim ที่ยังไม่ได้ตรวจ,
+    glyph ที่แปลงไม่ได้)
+- 5 เคส `trigger` เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ทั้งห้าถูกเรียกทุกรอบ
+
+เช็กฟรีโดยไม่เรียก API: `bash tests/test-graders.sh` ส่วนรันจริง (เสียเงิน) คือ
 `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(swap the tag for `technical-writing`, `document-review`, `personal-voice` or `thai-pua-repair`).
+(เปลี่ยน tag เป็น `technical-writing`, `document-review`, `personal-voice` หรือ `thai-pua-repair` และถ้าไม่ได้รันใน
+terminal แบบ interactive ให้เติม `--trust-plugin`)
 
-## Credits
+## เครดิตและ license
 
-siang started as the `tech-humanize` skill in
-[wasikarn/method-harness](https://github.com/wasikarn/method-harness). Its knowledge base draws on:
+siang เริ่มจาก skill `tech-humanize` ใน [wasikarn/method-harness](https://github.com/wasikarn/method-harness)
+ความรู้ที่ใช้มาจากแหล่งเหล่านี้
 
-- [blader/humanizer](https://github.com/blader/humanizer) (MIT, Copyright (c) 2025 Siqi Chen): the
-  30 universal patterns: their titles, order and structure. The wording and examples, copied until
-  2026-11-09, are now siang's own, paraphrased from the sources: as of that date no run of six or
-  more words matches them, apart from the pattern titles, section labels, the tell phrases and word lists a rule quotes, and source names.
-- [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing),
-  run by WikiProject AI Cleanup: the catalog that both humanizer and siang start from.
-- [chakrit/kien-thai](https://github.com/chakrit/kien-thai) (MIT, Copyright (c) 2026 Chakrit
-  Wichian): Thai discourse frames, AI tells, register and style rules.
-- [Boom-Vitt/claude-thai-skills](https://github.com/Boom-Vitt/claude-thai-skills) (MIT, Copyright
-  (c) 2026 Vittawat (Boom-Vitt)): Thai translation, customer-facing register, caption and
-  typography guidance.
+- [blader/humanizer](https://github.com/blader/humanizer) (MIT, Copyright (c) 2025 Siqi Chen): ชื่อ ลำดับ และโครงของ
+  pattern สากล §1-§30 (จาก v2.7.0) กับ §59-§61 และการ scan ซ้ำในขั้นที่ 6 (จาก v3.1.0)
+- [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) ดูแลโดย
+  WikiProject AI Cleanup: รายการ tell ต้นทางที่ทั้ง humanizer และ siang ใช้ตั้งต้น (license CC BY-SA 4.0 และ commit
+  ก่อน `27feec4` ยังมีข้อความที่ยกมาจากหน้านี้ ดูใน notices)
+- [chakrit/kien-thai](https://github.com/chakrit/kien-thai) (MIT, Copyright (c) 2026 Chakrit Wichian): กรอบการเล่าเรื่อง
+  (discourse frame) ภาษาไทย AI tell ระดับภาษา และกฎสไตล์
+- [Boom-Vitt/claude-thai-skills](https://github.com/Boom-Vitt/claude-thai-skills) (MIT, Copyright (c) 2026 Vittawat
+  (Boom-Vitt)): สรรพนาม (§55) วันที่และเวลา (§56) การขอโทษและการรับปาก (§57) อักขระที่มองไม่เห็น (§58) และระดับภาษา
+  สำหรับตอบลูกค้า
 
-Which file adapts what, and the full license texts: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-Thank you to all three authors for publishing their work under MIT.
+ถ้อยคำของกฎและตัวอย่างเป็นของ siang เองตั้งแต่ 2026-11-09 ก่อนหน้านั้นคัดลอกข้อความจาก humanizer มาหลายส่วน
+วันที่ 2026-11-09 ตรวจด้วย script ชั่วคราวเทียบกับทั้งสี่แหล่งนี้แล้ว ไม่เจอช่วงที่ซ้ำกันตั้งแต่หกคำขึ้นไป ยกเว้นชื่อ pattern
+ชื่อหัวข้อ วลี tell และรายการคำที่กฎยกมา และชื่อแหล่ง ส่วน script ตัวนั้นไม่ได้อยู่ใน repo
 
-## License
+ไฟล์ไหนดัดแปลงอะไรมา และ license ฉบับเต็ม ดูได้ที่ [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+ขอบคุณผู้เขียนทั้งสามที่เผยแพร่งานภายใต้ MIT
 
-MIT, see [LICENSE](LICENSE).
+license ของ repo นี้คือ MIT ดู [LICENSE](LICENSE)

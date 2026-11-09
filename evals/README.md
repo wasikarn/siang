@@ -1,6 +1,6 @@
 # Evals
 
-Ten cases for `siang:humanize` in `claude plugin eval`'s native layout (tag `humanize`):
+Eighteen cases for `siang:humanize` in `claude plugin eval`'s native layout (tag `humanize`). Ten of them:
 eight planted cases (English prose, English Slack update with only subtle tells §9/§28/§30/§59-§61,
 Thai standup, Thai UI copy, Thai customer-chat reply, Thai maintenance notice for §56 dates and
 numbers, Thai release note for §31 spelling, Thai blog post for §33/§45/§47/§49/§51 structure), a clean human-written control
@@ -37,7 +37,7 @@ the skill a stale how-to next to the script it documents. Regex graders check th
 is gone, the dry-run command and its real output are present, the steps are numbered, the title names the
 goal and `KEYSTORE_URL` survives. `technical-writing-unverified-claim` checks a how-to for `bin/rotate-key` where
 the skill must flag what it could not verify (`TODO: verify`) instead of asserting it. Both prompts name
-`siang:technical-writing`; the fifteen humanize cases name `siang:humanize`.
+`siang:technical-writing`; the eighteen humanize cases name `siang:humanize`.
 
 One case covers `siang:document-review` (tag `document-review`): `document-review-planted-sop` hands the skill an SOP
 with five planted defects (broken cross-reference, a file used before it is created, a missing required section,

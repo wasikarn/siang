@@ -43,7 +43,8 @@ SOFTWARE.
   (§58), and marked additions to §38-§40 and the cue sheet.
 - Files read: `skills/thai-translate/SKILL.md`, `skills/thai-customer-service/SKILL.md`,
   `skills/thai-social-caption/SKILL.md`, `skills/thai-text-processing/SKILL.md`,
-  `skills/thai-date-format/SKILL.md`, `AGENTS.md`.
+  `skills/thai-date-format/SKILL.md`, `skills/thai-resume/SKILL.md`, `skills/thai-id-validate/SKILL.md`,
+  `AGENTS.md`.
 
 ```
 MIT License
@@ -72,12 +73,15 @@ SOFTWARE.
 ## blader/humanizer
 
 - Project: https://github.com/blader/humanizer (v2.7.0, commit a2ace14, reached method-harness on
-  2026-06-10; checked against HEAD 0ef9fe5bc3572734fd3ae6c448fe00a30cd5dcf0)
-- Used in: the 30 universal patterns (`skills/humanize/patterns-universal.md`, `cue-sheet.md`):
-  pattern titles, order and structure. Its rule text, before/after examples and the worked example
-  in `examples.md` were copied until 2026-11-09, when they were rewritten in siang's own words: as
-  of that date no run of six or more words matches humanizer outside the §1-§30 titles, section
-  labels, the tell phrases and word lists a rule quotes, and source names. This credit was missing until then.
+  2026-06-10; checked against HEAD 0ef9fe5bc3572734fd3ae6c448fe00a30cd5dcf0; §59-§61 follow its v3.1.0)
+- Used in: universal patterns §1-§30 (`skills/humanize/patterns-universal.md`, `cue-sheet.md`):
+  pattern titles, order and structure, from v2.7.0. §59-§61 and the step-6 re-scan and dropped-fact
+  check in `SKILL.md` follow v3.1.0. Its rule text, before/after examples and the worked example
+  in `examples.md` were copied until 2026-11-09, when they were rewritten in siang's own words. A
+  scratch script run on 2026-11-09 against the four upstream sources (humanizer, kien-thai,
+  claude-thai-skills and the Wikipedia page) found no shared run of six or more words outside the
+  §1-§30 titles, section labels, the tell phrases and word lists a rule quotes, and source names;
+  the script is not in this repository. This credit was missing until then.
 
 ```
 MIT License
