@@ -110,3 +110,10 @@ through blader/humanizer. Wikipedia text is CC BY-SA 4.0
 (https://creativecommons.org/licenses/by-sa/4.0/). Example passages quoted from that
 page were replaced with fresh ones on 2026-11-09, so no CC BY-SA text remains in this MIT
 repository; §7's word list still credits the page as its source.
+
+**Git history.** Commits before `27feec4` (2026-11-09) still contain short example passages quoted
+from that page, and the humanizer text described above. Those passages are © Wikipedia contributors,
+https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing, licensed CC BY-SA 4.0
+(https://creativecommons.org/licenses/by-sa/4.0/); they stay under that license wherever the old
+commits are used, and are not covered by siang's MIT license. The humanizer text in those commits is
+covered by its MIT notice above.
