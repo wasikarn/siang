@@ -123,10 +123,10 @@ A 6-word sentence next to a 30-word one is normal Thai. If every sentence is abo
 ### 51. Opener and closer shape
 
 Open on a fact, a symptom, a number or a question; never a panorama (`ในยุคปัจจุบัน...`) or a consensus claim (`เป็นที่ทราบกันดีว่า...`). Close without a recap (`โดยสรุปแล้ว...`): end on the next step, a question back to the reader, a quiet handoff (`เท่านี้ก่อน`), or just stop.
-❌ `โดยสรุปแล้ว การย้ายไป Redis ช่วยเพิ่มประสิทธิภาพของระบบอย่างมาก`
+❌ `ขั้นต่อไปเราจะวัด p99 หลังย้ายครบทุก region โดยสรุปแล้ว การย้ายไป Redis ช่วยเพิ่มประสิทธิภาพของระบบอย่างมาก`
 ✅ `ขั้นต่อไปคือวัด p99 หลังย้ายครบทุก region`
 
-The next step has to be one the source already states (here, a plan that lists the p99 check); never invent one to replace a recap. With no next step in the source, just stop.
+The next step has to be one the source already states (here, the p99 check in the draft's first sentence; the recap after it goes); never invent one to replace a recap. With no next step in the source, just stop.
 
 ### 52. Prose before bullets
 

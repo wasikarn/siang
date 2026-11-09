@@ -163,7 +163,7 @@ Given the draft `ผมได้ merge PR #64 เข้า develop แล้ว 
 
 | Register | Rewrite | Why |
 |----------|---------|-----|
-| **A** (chat) | `"PR #64 merge แล้วครับ 🎉"` | terse, emoji, topic first; the source writes as `ผม`, so `ครับ` |
+| **A** (chat) | `"PR #64 merge เข้า develop แล้วครับ measurement redesign เสร็จ 🎉"` | terse, emoji, topic first, every fact kept; the source writes as `ผม`, so `ครับ` |
 | **B** (standup) | `"✅ PR #64 measurement redesign merged เข้า develop"` | status + PR + scope |
 | **C** (UI) | `"merge สำเร็จ: PR #64 → develop"` | status word first, same fact |
 | **D** (blog) | `"PR #64 merge เข้า develop แล้ว measurement redesign ก็เสร็จแล้ว"` | full sentence, `ก็` pacing, no added detail |

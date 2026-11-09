@@ -521,8 +521,8 @@ Tell them apart:
 ❌ `"ในยุคปัจจุบัน AI กำลังเปลี่ยนแปลงโลกอย่างมาก ซึ่งส่งผลกระทบต่ออุตสาหกรรมต่าง ๆ"`
    — formal connector spam, generic claim
 
-✅ `"AI เขียนโค้ดเก่งขึ้นทุกปี ผมยังนึกถึง agent ที่เขียนผ่านมาทั้งคืน แต่ครึ่ง dev community ก็ยังบอกว่ามันนับไม่ได้"`
-   — opinion, image, mixed rhythm. The aside and the image are the author's own (from their notes or when asked), never invented to liven up a rewrite.
+✅ `"AI เปลี่ยนวิธีทำงานของหลายอุตสาหกรรมไปเยอะแล้ว"`
+   — no panorama opener, one plain claim, same facts. A personal aside or a concrete image (the tells above) goes in only when the author supplies it; never invent one to liven up a rewrite.
 
 **Register drift** (Adapted from chakrit/kien-thai (MIT)): pick the casual or the formal column for a whole passage and stay there; a switch mid-paragraph reads as AI (a heading break is fine). Pairs: `ยังไง`/`อย่างไร`, `เยอะ`/`มาก`, `ทำไม`/`เพราะเหตุใด`, `ตอนนี้`/`ขณะนี้`, `แบบไหน`/`แบบใด`, `อยากรู้`/`ต้องการทราบ`.
 ❌ `ตั้งค่ายังไงให้ worker รับโหลดได้เยอะ และควรเลือก instance แบบใด`
@@ -689,7 +689,8 @@ For a person or brand replying to a customer (support chat, incident notice, sta
 - Empathy first, then the fix, short. Never defensive (`ก็แจ้งไว้แล้ว`, `ตรงนี้ทางเราไม่เกี่ยวนะคะ`).
 - A refusal gives the policy reason and one alternative. A canned reply that doesn't answer the customer's actual question is a tell. Don't open with a bare thanks to a customer who is still angry. Every reply ends with the next step: what happens, or what the customer can do.
 
-❌ `ขออภัยอย่างสูงในความไม่สะดวกค่ะ ทีมงานจะแก้ไขให้ภายใน 5 นาทีค่ะ` (for a slow OTP)
+Customer: `OTP ไม่มาเลยค่ะ รอนานแล้ว` (the team has not confirmed a fix time)
+❌ `ขออภัยอย่างสูงในความไม่สะดวกค่ะ ทีมงานจะแก้ไขให้ภายใน 5 นาทีค่ะ`
 ✅ `ขออภัยค่ะ ตอนนี้ OTP ส่งช้ากว่าปกติค่ะ ทีมงานกำลังตรวจสอบอยู่ ได้ข้อมูลแล้วจะแจ้งในแชทนี้นะคะ`
 
 ### 58. Hidden Characters and Marks
