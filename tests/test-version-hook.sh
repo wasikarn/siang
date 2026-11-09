@@ -2,7 +2,7 @@
 # Checks git-hooks/pre-commit in a throwaway repo: a skills/ change without a version bump is
 # refused; with a bump, or with no skills/ change, it passes. Run: bash tests/test-version-hook.sh
 set -euo pipefail
-hook="$(cd "$(dirname "$0")/.." && pwd)/git-hooks/pre-commit"
+hook="${HOOK:-$(cd "$(dirname "$0")/.." && pwd)/git-hooks/pre-commit}"
 work=$(mktemp -d)
 trap 'python3 -c "import shutil,sys; shutil.rmtree(sys.argv[1])" "$work"' EXIT
 cd "$work"
@@ -24,4 +24,7 @@ check 0 "skills change with a bump passes"
 setver 0.1.0; echo a > skills/x/SKILL.md; git add .claude-plugin skills  # back to HEAD's content
 echo r2 > README.md; git add README.md
 check 0 "non-skills change passes without a bump"
+nogit=$(mktemp -d); trap 'python3 -c "import shutil,sys; [shutil.rmtree(p) for p in sys.argv[1:]]" "$work" "$nogit"' EXIT
+cd "$nogit"; export GIT_CEILING_DIRECTORIES="$nogit"  # last case: no repo above, so git diff fails
+check 1 "a git failure refuses the commit instead of passing"
 exit "$fail"

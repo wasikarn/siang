@@ -20,7 +20,8 @@ jobs:
           if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
             echo "no base commit to compare against"; exit 0
           fi
-          git diff --name-only "$BEFORE" HEAD | grep -q '^skills/' || { echo "skills/ unchanged"; exit 0; }
+          changed=$(git diff --name-only "$BEFORE" HEAD)  # an unreadable base fails the step here, not silently below
+          grep -q '^skills/' <<< "$changed" || { echo "skills/ unchanged"; exit 0; }
           ver() { python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])'; }
           old=$(git show "$BEFORE:.claude-plugin/plugin.json" | ver)
           new=$(ver < .claude-plugin/plugin.json)

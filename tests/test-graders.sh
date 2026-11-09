@@ -23,6 +23,16 @@ const all = fs.readdirSync(ws, {recursive: true}).map(f => path.join(ws, f))
 let bad = 0;
 for (const g of fs.readdirSync(gdir).sort()) {
   const fm = (fs.readFileSync(path.join(gdir, g), 'utf8').match(/^---\n([\s\S]*?)\n---/) || [])[1] || '';
+  if (/^type: tool_used$/m.test(fm)) {
+    // A skill-fired grader must accept siang's skill and reject another plugin's skill of the same name.
+    const im = fm.match(/^input_match: '((?:[^']|'')*)'$/m);
+    if (im) {
+      const re = new RegExp(im[1].replace(/''/g, "'"));
+      if (!re.test(JSON.stringify({skill: 'siang:humanize'}))) { console.log(`FAIL ${c}/${g}: input_match misses siang:humanize`); bad = 1; }
+      if (re.test(JSON.stringify({skill: 'other:humanize'}))) { console.log(`FAIL ${c}/${g}: input_match accepts another plugin's humanize`); bad = 1; }
+    }
+    continue;
+  }
   if (!/^type: regex$/m.test(fm)) continue;
   const m = fm.match(/^pattern: '((?:[^']|'')*)'$/m);
   if (!m) { console.log(`FAIL ${c}/${g}: pattern is not a single-quoted scalar`); bad = 1; continue; }

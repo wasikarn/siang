@@ -3,7 +3,8 @@
 # `claude plugin update` copies nothing while the version is unchanged, so the edit would never
 # reach an installed copy. Enable once per clone: git config core.hooksPath git-hooks
 set -euo pipefail
-git diff --cached --name-only | grep -q '^skills/' || exit 0
+staged=$(git diff --cached --name-only)  # a git failure stops the commit instead of reading as "no skills/ change"
+grep -q '^skills/' <<< "$staged" || exit 0
 ver() { python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])'; }
 new=$(git show :.claude-plugin/plugin.json | ver)
 old=$(git show HEAD:.claude-plugin/plugin.json 2>/dev/null | ver || echo none)
