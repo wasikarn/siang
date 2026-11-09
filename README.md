@@ -4,7 +4,7 @@ A Claude Code plugin that humanizes dev and tech writing in English, Thai, and T
 code-switching, so a chat message, standup, PR description, UI string, or ADR reads like a
 person wrote it, not a model.
 
-เสียง means "voice". The plugin has one skill, `siang:humanize`.
+เสียง means "voice". The plugin has two skills: `siang:humanize` and `siang:technical-writing`.
 
 ## Install
 
