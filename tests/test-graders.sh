@@ -13,7 +13,7 @@ fail=0
 for d in "$root"/evals/*/; do
   c=$(basename "$d")
   [ -f "$d/case.yaml" ] || continue
-  skill=$(grep -o 'skill: "siang:[a-z-]*"' "$d/prompt.md" | head -1 | sed 's/skill: "\(.*\)"/\1/' || true) # fallback: empty means no skill named, reported below
+  skill=$(grep -o '\(skill: \|expects skill \)"siang:[a-z-]*"' "$d/prompt.md" | head -1 | sed 's/.*"\(siang:[a-z-]*\)"/\1/' || true) # fallback: empty means no skill named, reported below
   [ -n "$skill" ] || { echo "FAIL $c: prompt.md does not invoke a siang skill"; fail=1; continue; }
   mkdir -p "$work/$c"
   (cd "$work/$c" && bash "$d/scaffold.sh" >/dev/null)

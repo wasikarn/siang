@@ -82,6 +82,12 @@ Three-run check of the nine non-humanize cases (2026-11-09, 3 runs per arm, with
 some `personal-voice-thai-oneoffs` runs because the profile omitted the one-offs it excluded. 0.1.20 made step 3 require a
 one-offs line, and a rerun of both `personal-voice` cases (3 runs per arm) scored 1.00 vs 0.78 (+0.22) and 1.00 vs 0.70 (+0.30).
 
+Five `trigger-*` cases (tag `trigger`) test whether each skill fires from the task alone: the prompt never names the skill
+(its expected name sits in the case `description`, because prompt frontmatter rejects unknown keys, and `tests/test-graders.sh`
+reads it from there), and a `tool_used: Skill` grader checks the call. Run with `--ablation none`, 3 runs each: `humanize`,
+`technical-writing`, `document-review`, `personal-voice` and `thai-pua-repair` all fired 3 of 3. The descriptions alone are
+enough, so a SessionStart hook that injects skill text is not needed.
+
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
