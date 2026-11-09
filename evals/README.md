@@ -10,7 +10,7 @@ Each case is `prompt.md` (invokes the skill by `skill: "siang:humanize"`), `case
 `tool_used: Skill`; the regex graders assert a planted tell is absent (`not_contains`) or a source
 specific is kept (`contains`).
 
-Run from the repo root: `claude plugin eval . --scaffold --tag humanize --runs 1 --no-publish` (each run is a paid API call).
+Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
 ## Known gap
 
