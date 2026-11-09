@@ -36,3 +36,9 @@ jobs:
 
       - name: Version hook test
         run: bash tests/test-version-hook.sh
+
+      - name: Section references resolve
+        run: bash tests/test-section-refs.sh
+
+      - name: scan.py finds planted tells
+        run: bash tests/test-scan.sh

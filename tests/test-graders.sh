@@ -2,7 +2,8 @@
 # Checks every eval case without a paid run: prompt.md invokes siang:humanize, every regex grader
 # compiles as a JS RegExp (the eval runtime's engine), and matches its scaffolded fixture. A
 # not_contains grader that misses the fixture can never fail; a contains grader that misses it can
-# never pass. Run from anywhere: bash tests/test-graders.sh
+# never pass. A contains grader marked '# fixture: absent' checks a corrected form instead, so it must
+# miss the fixture. Run from anywhere: bash tests/test-graders.sh
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
 work=$(mktemp -d)
@@ -43,6 +44,12 @@ for (const g of fs.readdirSync(gdir).sort()) {
   catch (e) { console.log(`FAIL ${c}/${g}: ${e.message}`); bad = 1; continue; }
   const file = (fm.match(/path: ([^}\s]+)/) || [])[1];
   const sample = file ? fs.readFileSync(path.join(ws, file), 'utf8') : all;
+  if (/^# fixture: absent$/m.test(fm)) {
+    // A contains grader for a corrected form (BE year, standard spelling): copying the source must fail it.
+    if (!/^match: contains$/m.test(fm)) { console.log(`FAIL ${c}/${g}: '# fixture: absent' only fits a contains grader`); bad = 1; }
+    else if (re.test(sample)) { console.log(`FAIL ${c}/${g}: pattern matches the fixture, so returning the source unchanged passes`); bad = 1; }
+    continue;
+  }
   if (!re.test(sample)) { console.log(`FAIL ${c}/${g}: pattern does not match the scaffolded fixture, so it cannot discriminate`); bad = 1; }
 }
 process.exit(bad);

@@ -199,13 +199,13 @@ When citing for real (T3), use a format the reader can verify onward:
 | Type | Format | Example |
 |------|--------|---------|
 | Paper | `Author et al. (Year) [link/doi]` | `"<Author> et al. (<Year>) arxiv:<id>"` |
-| Blog | `Title — Author, Date` | `"Postgres hypertables — Timescale, 2024-11"` |
+| Blog | `Title, Author, Date` | `"Postgres hypertables, Timescale, 2024-11"` |
 | RFC/Standard | `RFC NNNN / ISO NNNN` | `"RFC 7231 (HTTP semantics)"` |
 | Internal doc | `path:section` | `"docs/anpr/sse-stream.md#auth"` |
 | Log/metric | `dashboard URL + timestamp` | `"grafana/tat-anpr?from=2026-06-04T15:11Z"` |
 
 ❌ `"จาก research 2024 พบว่า..."` — ไม่มี source ที่ verify ได้
-✅ `"<Author> et al. (<Year>), arxiv:<id> — Codex 55% บน HumanEval"` (เฉพาะเมื่อเปิดอ่าน paper จริงแล้ว)
+✅ `"<Author> et al. (<Year>), arxiv:<id>: Codex 55% บน HumanEval"` (เฉพาะเมื่อเปิดอ่าน paper จริงแล้ว)
 
 ### 32.4 Thai Hedge Vocabulary (v2.2)
 
@@ -235,7 +235,7 @@ In an internal Thai doc use this pattern:
 |------|--------|---------|
 | Jira | `TP-XXX` (verify ใน Jira ก่อน) | `"ดู TP-549"` |
 | PR | `repo#PR_NUMBER` (verify ใน GitHub) | `"acme-api#64"` |
-| Commit | short SHA + message | `"a1b2c3d — fix rate-limiter"` |
+| Commit | short SHA + message | `"a1b2c3d: fix rate-limiter"` |
 | Doc path | `path:line` | `"docs/anpr/measurement.md#L42"` |
 | Slack/Chat | channel + date (link) | `"#anpr-dev 2026-06-02"` |
 
@@ -251,7 +251,7 @@ Tell "ไม่รู้" (do not know) apart from "รู้แต่ไม่�
 | **Unknown** | ไม่เคยเจอ case นี้ | `"ผมไม่เคยเจอเคสนี้"` |
 | **Unverified** | เคยได้ยิน แต่ยังไม่ได้ verify | `"ผมเคยอ่านว่า... แต่ยังไม่ได้ verify"` |
 | **Hedged estimate** | มี data บางส่วน | `"จาก data ที่เห็น น่าจะประมาณ X"` |
-| **Verified** | ตรวจแล้ว | `"Wang et al. 2024 — 55%"` (พร้อม cite) |
+| **Verified** | ตรวจแล้ว | `"Wang et al. 2024: 55%"` (พร้อม cite) |
 
 ❌ `"คิดว่าน่าจะประมาณ 55% ครับ ถ้า verify ก็คงจะใช่"` — 4 hedges, ไม่ระบุชัด
 ✅ `"ประมาณ 55% ครับ แต่ยังไม่ได้ verify"` — 1 frame, ชัด
@@ -262,7 +262,7 @@ Never name-drop a brand/company/paper for authority when it cannot be verified:
 
 ❌ `"Google, Microsoft, และ MIT ต่างก็ศึกษา..."` — 3 names ไม่มี paper
 ❌ `"ตามที่ Stanford 2023 study พบ..."` — paper ที่จำไม่ได้
-✅ `"<author> <year> (arxiv:<id>) — Codex 55% บน HumanEval"`
+✅ `"<author> <year> (arxiv:<id>): Codex 55% บน HumanEval"`
 
 **If you name-drop, you need:**
 1. A paper/URL/link
