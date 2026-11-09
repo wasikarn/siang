@@ -63,6 +63,11 @@ skill (Δ 0.00). Plain Claude repairs a short sample from context, so this case 
 uplift; the skill's value (a checked 27-row table, a report of what it could not map, a whole 143-page extract in one
 pass) shows at a scale this fixture does not reach.
 
+`thai-pua-repair-pdf-file` covers the PDF branch: a hand-built one-page PDF whose ToUnicode map holds a consecutive PUA range,
+a range that must split once mapped, and the unmappable U+F71B; the task is to write a repaired `out.pdf` and re-extract
+its text. First run: 1.00 with and without the skill (Δ 0.00). The fixture's stream is uncompressed, so a plain model edits
+it by hand; real PDFs compress it, which this case does not test. `tests/test-pua-pdf.sh` is the stronger check for the script.
+
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
