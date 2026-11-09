@@ -18,3 +18,6 @@ Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-
   cause, name or result) has no grader. A one-word haiku judge could not check it in either
   phrasing: written "PASS unless", it passed every planted invention; written "Score 1 only if",
   it failed correct replies 3/3. Presence of the source's specifics is checked by regex instead.
+- **No loader self-test.** Nothing here proves each regex grader matches its scaffolded fixture
+  (method-harness had one in `tests/evals/test-eval-cases.sh`). After editing a grader or a
+  fixture, run the case once and check the grader can both pass and fail.
