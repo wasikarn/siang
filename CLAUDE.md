@@ -5,6 +5,8 @@
   nothing while the version is unchanged.
   `git-hooks/pre-commit` refuses a `skills/` commit without a bump; enable it once per clone with
   `git config core.hooksPath git-hooks` (relative path). Its test: `bash tests/test-version-hook.sh`.
+  `.github/workflows/check.yml` runs the same version check plus both tests on every push and PR,
+  so a clone without the hook is still caught (after the push, not before).
 - Skill files may contain Thai: Thai writing is the subject matter.
 - New rules adapted from another project: paraphrase the rule, write a fresh example, never copy
   a source's examples or quoted third-party passages, and add the source to

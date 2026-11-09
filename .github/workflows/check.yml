@@ -1,0 +1,37 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Version bumped when skills/ changed
+        # The local pre-commit hook only runs where core.hooksPath is set; this catches every other clone.
+        env:
+          BEFORE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "no base commit to compare against"; exit 0
+          fi
+          git diff --name-only "$BEFORE" HEAD | grep -q '^skills/' || { echo "skills/ unchanged"; exit 0; }
+          ver() { python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])'; }
+          old=$(git show "$BEFORE:.claude-plugin/plugin.json" | ver)
+          new=$(ver < .claude-plugin/plugin.json)
+          if [ "$old" = "$new" ]; then
+            echo "::error file=.claude-plugin/plugin.json::skills/ changed but version is still $old; claude plugin update will copy nothing"
+            exit 1
+          fi
+          echo "version $old -> $new"
+
+      - name: Grader self-test
+        run: bash tests/test-graders.sh
+
+      - name: Version hook test
+        run: bash tests/test-version-hook.sh
