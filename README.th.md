@@ -26,13 +26,14 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## สี่ skill
+## ห้า skill
 
 | Skill | ใช้เมื่อ | ทำอะไร |
 |---|---|---|
 | `siang:humanize` | draft อ่านแล้วเหมือน AI เขียน | ไล่หา AI tell ทุกจุดจาก cue sheet แล้วเขียนใหม่ จากนั้นอ่านซ้ำหาส่วนที่ยังเหลือ |
 | `siang:technical-writing` | ต้องการ how-to, tutorial, หน้า reference, runbook หรือ README | เลือก Diátaxis หนึ่งแบบต่อเอกสาร เอาข้อเท็จจริงจากโค้ดและคำสั่งที่รันเอง ส่วนที่ยังไม่ได้ตรวจใส่ `TODO: verify` |
 | `siang:document-review` | เอกสารต้องตรงตามมาตรฐาน (SOP, runbook, policy, spec) | แยก claim ออกมา ตรวจความแม่นยำ ตรรกะ การสืบย้อน และความสอดคล้อง ได้ ledger ที่จัดเกรดกับ verdict |
+| `siang:thai-pua-repair` | ข้อความที่ extract จาก PDF ไทยมีอักขระ private-use หรือวรรณยุกต์เพี้ยน | แปลง glyph ของฟอนต์ UPC บน Windows 27 ตัว (U+F700..U+F71A) กลับเป็นอักษรไทยมาตรฐาน รายงานตัวที่แปลงไม่ได้ และไม่แก้ไฟล์ PDF เอง |
 | `siang:personal-voice` | อยากได้ draft ด้วยเสียงของตัวเอง | วัดจากตัวอย่างของคุณ เก็บลักษณะที่ปรากฏอย่างน้อยสองตัวอย่าง เขียนจากข้อเท็จจริงของคุณ แล้วเทียบ draft กับ profile |
 
 เรียกด้วย slash command (`/siang:humanize`) หรือสั่งเป็นประโยคก็ได้ ตัวอย่าง prompt:
@@ -75,6 +76,7 @@ humanize standup update นี้ genre B เก็บตัวเลขทุ�
 | `skills/technical-writing/` | `SKILL.md` |
 | `skills/document-review/` | `SKILL.md` |
 | `skills/personal-voice/` | `SKILL.md` |
+| `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py` |
 | `evals/` | 24 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
 | `tests/` | เช็กฟรีที่ CI รันทุก push: grader self-test, hook เช็ก version, ทุก § และ cue ต้องหาเจอ, `scan.py` จับ tell ที่ใส่ไว้ได้ |
 

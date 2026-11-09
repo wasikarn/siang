@@ -28,13 +28,14 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## The four skills
+## The five skills
 
 | Skill | Use it when | What it does |
 |---|---|---|
 | `siang:humanize` | a draft reads like a model wrote it | names every AI tell against a cue sheet, rewrites, then re-reads for what is left |
 | `siang:technical-writing` | you need a how-to, tutorial, reference page, runbook or README | picks one Diátaxis quadrant per doc, takes facts from the code and from commands it runs, marks anything unchecked `TODO: verify` |
 | `siang:document-review` | a record must match a standard (SOP, runbook, policy, spec) | lists the claims, checks each for precision, logic, traceability and compliance, returns a graded ledger and a verdict |
+| `siang:thai-pua-repair` | text extracted from a Thai PDF shows private-use glyphs or broken tone marks | maps the 27 Windows UPC-font glyphs (U+F700..U+F71A) back to standard Thai, reports any it cannot map, and leaves the PDF file itself unchanged |
 | `siang:personal-voice` | you want drafts in your own voice | measures your samples, keeps a feature only if two samples show it, drafts from your facts, checks the draft against the profile |
 
 Run one with a slash command (`/siang:humanize`) or just ask. Example prompts:
@@ -79,8 +80,9 @@ stay byte-identical.
 | `skills/technical-writing/` | `SKILL.md` |
 | `skills/document-review/` | `SKILL.md` |
 | `skills/personal-voice/` | `SKILL.md` |
+| `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py` |
 | `evals/` | 24 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
-| `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells |
+| `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells, `pua_fix.py` maps every known glyph |
 
 ## Evals
 

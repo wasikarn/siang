@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# skills/thai-pua-repair/scripts/pua_fix.py maps every known Windows Thai private-use glyph, reports
+# the ones it cannot map instead of guessing, and keeps ordinary Thai text byte-identical.
+# Run from anywhere: bash tests/test-pua.sh
+set -euo pipefail
+root=$(cd "$(dirname "$0")/.." && pwd)
+fix="$root/skills/thai-pua-repair/scripts/pua_fix.py"
+fail=0
+ok()  { echo "PASS $1"; }
+bad() { echo "FAIL $1"; fail=1; }
+
+# Words from real Thai PDFs: PUA tone mark after the consonant must come back as the standard mark.
+got=$(printf 'ไม\xef\x9c\x8a ให\xef\x9c\x8b ปัจจัย' | python3 "$fix" 2>/dev/null)
+[ "$got" = "$(printf 'ไม\xe0\xb9\x88 ให\xe0\xb9\x89 ปัจจัย')" ] && ok "tone marks F70A/F70B become ่ ้" || bad "tone marks F70A/F70B become ่ ้ (got: $got)"
+
+# All 27 mapped rows, checked against the HarfBuzz/OpenJDK table values.
+python3 - "$fix" <<'PY' || fail=1
+import importlib.util, sys
+spec = importlib.util.spec_from_file_location("pua_fix", sys.argv[1]); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+expect = {0xF700:0x0E10,0xF701:0x0E34,0xF702:0x0E35,0xF703:0x0E36,0xF704:0x0E37,0xF705:0x0E48,0xF706:0x0E49,0xF707:0x0E4A,
+ 0xF708:0x0E4B,0xF709:0x0E4C,0xF70A:0x0E48,0xF70B:0x0E49,0xF70C:0x0E4A,0xF70D:0x0E4B,0xF70E:0x0E4C,0xF70F:0x0E0D,0xF710:0x0E31,
+ 0xF711:0x0E4D,0xF712:0x0E47,0xF713:0x0E48,0xF714:0x0E49,0xF715:0x0E4A,0xF716:0x0E4B,0xF717:0x0E4C,0xF718:0x0E38,0xF719:0x0E39,0xF71A:0x0E3A}
+bad = [hex(k) for k, v in expect.items() if m.fix(chr(k)) != chr(v)]
+print("PASS all 27 rows map" if not bad and len(m.MAP) == 27 else "FAIL rows: %s, table size %d" % (bad, len(m.MAP)))
+sys.exit(1 if bad or len(m.MAP) != 27 else 0)
+PY
+
+# U+F71B has no known mapping: stays in the text, is reported, exit 2.
+set +e
+printf 'a\xef\x9c\x9bb' | python3 "$fix" >/dev/null 2>"${TMPDIR:-/tmp}/pua-err.$$"; code=$?
+set -e
+[ "$code" = 2 ] && grep -q 'U+F71B x1' "${TMPDIR:-/tmp}/pua-err.$$" && ok "unmapped U+F71B reported, exit 2" || bad "unmapped U+F71B reported, exit 2 (exit $code)"
+python3 -c "import os,sys; os.remove(sys.argv[1])" "${TMPDIR:-/tmp}/pua-err.$$"
+
+# Ordinary Thai passes through untouched; --check exits 0 clean and 1 when the bug is present.
+plain=$(printf 'สวัสดีครับ' | python3 "$fix" 2>/dev/null)
+[ "$plain" = "สวัสดีครับ" ] && ok "plain Thai unchanged" || bad "plain Thai unchanged"
+printf 'สวัสดี' | python3 "$fix" --check 2>/dev/null && ok "--check clean exits 0" || bad "--check clean exits 0"
+set +e; printf 'ไม\xef\x9c\x8a' | python3 "$fix" --check >/dev/null 2>&1; code=$?; set -e
+[ "$code" = 1 ] && ok "--check finds the bug, exit 1" || bad "--check finds the bug, exit 1 (exit $code)"
+
+[ "$fail" -eq 0 ] || exit 1
