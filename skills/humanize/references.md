@@ -8,6 +8,15 @@
 
 This skill extends [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup, with 12 Thai-specific top-level patterns (§31-§42 in `patterns-thai.md`: terminology & calque, anti-fabrication, connectives, register matrix, code-switching tells, AI-leaked closers) and a Thai-register foundation (§0).
 
+### Sources adapted (MIT)
+
+- **[chakrit/kien-thai](https://github.com/chakrit/kien-thai)**, MIT, Copyright (c) 2026 Chakrit Wichian. The seven discourse frames and supporting structure rules (`patterns-thai-structure.md` §43–§52), surface grammar slips (§53), headings (§54), and the additions marked "Adapted from chakrit/kien-thai" in §31, §32.4, §33, §37, §38, §39.4, §40, §58 and cue rows #7, #25, #27. Rules are paraphrased; every example is new. kien-thai's own exemplar passages from third-party writers were not copied.
+- **[Boom-Vitt/claude-thai-skills](https://github.com/Boom-Vitt/claude-thai-skills)**, MIT, Copyright (c) 2026 Vittawat (Boom-Vitt). Pronouns (§55), dates and times (§56), apology and promises (§57), hidden characters (§58), and the additions marked "Adapted from Boom-Vitt/claude-thai-skills" in §38, §39.1, §40 and cue row #4. Drawn from its `thai-translate`, `thai-customer-service`, `thai-social-caption`, `thai-text-processing` and `thai-date-format` skills. Rules are paraphrased; every example is new.
+
+Full license texts: `THIRD_PARTY_NOTICES.md` at the plugin root.
+
+### Sibling, not a source
+
 [github.com/blader/humanizer](https://github.com/blader/humanizer) (MIT) is a sibling project, not a source — independently confirmed to derive from the same Wikipedia essay, catalog 33 English-only patterns across the same 5 content/language/style/communication/filler buckets §1-§30 use here, and carry no non-English coverage. The convergence is both projects mirroring Wikipedia's own essay structure, not one copying the other.
 
 ### Thai-specific references

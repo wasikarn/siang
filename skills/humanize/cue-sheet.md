@@ -7,10 +7,10 @@ Scan for these 30 universal tells (all languages). Thai-only tells (§31–§42)
 | 1 | Significance/legacy puffery | testament, pivotal moment, evolving landscape / ถือเป็นก้าวสำคัญ, สะท้อนถึงความสำคัญ | Cut the importance claim; state the fact |
 | 2 | Notability / media name-drops | independent coverage, active social media presence | Keep only sourced, specific claims |
 | 3 | -ing pseudo-depth tails | highlighting, ensuring, reflecting, fostering / ซึ่งสะท้อนถึง, เพื่อส่งเสริม | Delete the trailing clause or make it a real fact |
-| 4 | Promo / ad language | vibrant, nestled, in the heart of, breathtaking / งดงามตระการตา, ตั้งอยู่ใจกลาง | Neutral tone; concrete detail |
+| 4 | Promo / ad language | vibrant, nestled, in the heart of, breathtaking, production-ready, battle-tested, supercharge your workflow / งดงามตระการตา, ตั้งอยู่ใจกลาง, พร้อมใช้งานระดับ production, ผ่านการพิสูจน์แล้ว | Neutral tone; concrete detail |
 | 5 | Vague attribution / weasel / vague association | experts argue, observers cited, reports say; linked to, associated with, connected to / ผู้เชี่ยวชาญบางท่าน, รายงานระบุ, มีความเชื่อมโยงกับ | Name the source, or state the actual relation, or cut |
 | 6 | "Challenges & future" formula | Despite challenges, Future Outlook / ท่ามกลางความท้าทาย, อนาคตของ | Replace with specific facts/dates |
-| 7 | AI-vocab words | delve, crucial, tapestry, underscore, intricate, landscape, robust, deep dive, meticulous / อันที่จริง, ภูมิทัศน์, เน้นย้ำ | Plain synonyms |
+| 7 | AI-vocab words | delve, crucial, tapestry, underscore, intricate, landscape, robust, deep dive, meticulous / อันที่จริง, ภูมิทัศน์, เน้นย้ำ, อย่างมหาศาล, อย่างน่าทึ่ง (a single `อย่างมาก` is fine; stacking is the tell) | Plain synonyms |
 | 8 | Copula avoidance | serves as, stands as, boasts, features / ทำหน้าที่เป็น, ถือเป็น | Use is/are · คือ/เป็น |
 | 9 | Negative parallelism / tailing negation | not only…but, it's not just…it's / ไม่ใช่แค่…แต่ยัง, ไม่ต้องเดา | One real positive clause |
 | 10 | Rule of three | forced triads "X, Y, and Z" / สองพอ สามเกิน | Two if there are two; cut the forced third |
@@ -28,9 +28,9 @@ Scan for these 30 universal tells (all languages). Thai-only tells (§31–§42)
 | 22 | Sycophancy | Great question!, You're absolutely right / คำถามดีมากค่ะ | Drop |
 | 23 | Filler phrases | in order to, due to the fact that, at this point in time / เนื่องจากข้อเท็จจริงที่ว่า, ณ จุดเวลานี้ | Shorten |
 | 24 | Excessive hedging | could potentially possibly / อาจจะเป็นไปได้ว่าน่าจะ | One hedge max |
-| 25 | Generic positive conclusion | future looks bright, journey toward excellence | Concrete next fact, or cut |
+| 25 | Generic positive conclusion | future looks bright, journey toward excellence / โดยสรุปแล้ว, กล่าวโดยสรุป | Concrete next fact, or cut |
 | 26 | Hyphenated-pair overuse | data-driven, high-quality, end-to-end | Keep hyphen when attributive; drop in predicate |
-| 27 | Authority tropes | the real question is, at its core, fundamentally / คำถามที่แท้จริงคือ, ในแก่นสำคัญ | Make the actual point |
+| 27 | Authority tropes | the real question is, at its core, fundamentally / คำถามที่แท้จริงคือ, ในแก่นสำคัญ, เป็นที่ทราบกันดีว่า, ปฏิเสธไม่ได้ว่า | Make the actual point |
 | 28 | Signposting | let's dive in, here's what you need to know | Just say it |
 | 29 | Fragmented headers / thematic breaks | heading + one-line restating it; `---` between every section | Delete the warm-up line and the rules |
 | 30 | Diff-anchored writing | "this was added to replace…" | Describe the thing as it is |

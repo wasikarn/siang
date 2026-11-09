@@ -83,7 +83,7 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 > สวัสดีค่ะ ดิฉันขอเรียนให้ทราบว่าวันนี้ระบบอาจจะมีความไม่เสถียรเล็กน้อย อันเนื่องมาจากการปรับปรุงระบบ backend หวังว่าจะไม่เป็นการรบกวนค่ะ ยินดีให้ความช่วยเหลือหากมีข้อสงสัยค่ะ
 
 **Red flags:**
-- `"ดิฉัน"` (formal 3rd person, AI in chat)
+- `"ดิฉัน"` (formal 1st person, too stiff for chat)
 - `"ขอเรียนให้ทราบ"` (formal opener)
 - `"อันเนื่องมาจาก"` (translation of "due to the fact that")
 - `"ความไม่เสถียรเล็กน้อย"` (vague understatement)
@@ -106,7 +106,7 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 > สวัสดีครับ วันนี้ดิฉันได้ทำการปรับปรุง API endpoint ในส่วนของ measurement redesign รวมถึง merge PR #64 เข้าสู่ develop branch นอกจากนี้ยังได้ review code ของเพื่อนร่วมทีมอีก 2 ท่าน พร้อมทั้งอัปเดต documentation ให้ทันสมัย
 
 **Red flags:**
-- `"ดิฉัน"` (3rd person, AI)
+- `"ดิฉัน"` (formal 1st person, too stiff for a standup)
 - `"ได้ทำการปรับปรุง"` (nominalization)
 - `"นอกจากนี้ยัง"` (formal connector spam)
 - `"เพื่อนร่วมทีมอีก 2 ท่าน"` (vague; no PR, no name)
