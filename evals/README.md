@@ -96,6 +96,10 @@ facts) rather than on the skills' own vocabulary. 3 runs per arm: `holdout-docum
 `holdout-document-review-change-record` 1.00 vs 1.00 (Δ 0.00 on both), `holdout-personal-voice-chatty` 1.00 vs 0.88 (+0.13),
 `holdout-personal-voice-formal` 0.96 vs 0.88 (+0.08; the sign-off phrase is missed on some with-arm runs). So the +0.38 on
 `document-review-planted-sop` came from grading the skill's own output format, not from finding more defects. Known
+After 0.1.21 (step 5 now requires every profile habit, closers included, to be found in the draft as a quoted fragment),
+the two `personal-voice` cases reran at 3 runs per arm: `holdout-personal-voice-formal` 1.00 vs 0.83 (+0.17, the sign-off
+now survives in every with-arm run) and `holdout-personal-voice-chatty` 0.96 vs 0.88 (+0.08; one with-arm run copied the
+bullet list that only one sample has, so the one-off exclusion still slips occasionally). Known
 looseness in these graders: a bare number (14, 21, 12, 18, 45, 300) counts as a hit even in an unrelated finding, and
 `review.md` starts with a "no issues found" line so a run that never writes it fails the all-clear grader.
 
