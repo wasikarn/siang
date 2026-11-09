@@ -48,6 +48,14 @@ terse chat messages and a polished draft to rewrite in that voice, plus a `voice
 scored 1.00 with the skill and 0.78 without (Δ +0.22). Both arms fix the draft; the Δ comes from the profile, where
 only the skill reports measured features (a sentence-length median) and separates habits from one-offs by sample.
 
+Two harder cases follow. `technical-writing-hidden-facts` asks for one doc for two readers (a first-time how-to and a flag
+and exit-code reference) over a script with a hidden `jq` prerequisite, a lock that exits 3 and a stale draft claiming
+encryption at rest; first run 1.00 with the skill, 0.86 without (Δ +0.14): a plain model keeps the unsourced claim.
+`personal-voice-thai-oneoffs` gives three Thai chat samples where one has an emoji and another `!!!`; first run 0.89
+with, 0.67 without (Δ +0.22): a plain model copies the one-off emoji. The skill's profile still omits a sentence-length
+median on samples this short, which the `profile-measured` grader keeps visible.
+
+
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
 Free check, no API call: `bash tests/test-graders.sh` proves every prompt invokes
