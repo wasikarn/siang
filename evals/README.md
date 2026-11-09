@@ -20,6 +20,8 @@ the Thai structure rules only for long prose. After step 3 loaded them for any T
 sentence and step 6 added a read for trailing conditions, siang scored 1.00 on that case and on a third
 blind case (an on-call handoff, three trailing conditions); plain Claude also reorders them there.
 
+A neutral-prompt check (2026-11-09) reran all 18 humanize cases on Sonnet 5.5 with prompts that only ask to rewrite the text so it reads like a person wrote it (no genre letter, no loop steps), 3 runs per arm. The skill fired in all 54 with-arm runs. Mean Δ was +0.04, the same as Opus with the original prompts. The gain sits in th-notice +0.33 (plain Claude writes western times), th-standup +0.22 (particles, the calque ดัน), th-chat-clean +0.13 (plain Claude over-polishes a clean chat) and en-subtle +0.11 (the strawman stays); th-grammar-planted is −0.07, and both arms keep the echo-back in th-cs-echo-planted and `VM 3 ใบ`. A with-arm run costs about 1.7x a plain one on Sonnet and 2.1x on Opus. The neutral prompts lived in a scratch copy; the repo's prompts still name the skill.
+
 Each case is `prompt.md` (invokes the skill by `skill: "siang:humanize"`), `case.yaml` (a
 `scaffold_script` that writes the fixture), and `graders/`. `skill-fired.md` is
 `tool_used: Skill`. Each prompt also says what to do if the Skill tool reports the skill as unknown:
@@ -87,6 +89,15 @@ Five `trigger-*` cases (tag `trigger`) test whether each skill fires from the ta
 reads it from there), and a `tool_used: Skill` grader checks the call. Run with `--ablation none`, 3 runs each: `humanize`,
 `technical-writing`, `document-review`, `personal-voice` and `thai-pua-repair` all fired 3 of 3. The descriptions alone are
 enough, so a SessionStart hook that injects skill text is not needed.
+
+Four `holdout-document-review-*` and `holdout-personal-voice-*` cases were written by an agent that never saw the skills'
+steps, and graded on outcomes (is each planted defect found; does the draft show the person's visible habits and keep the
+facts) rather than on the skills' own vocabulary. 3 runs per arm: `holdout-document-review-calibration-sop` 1.00 vs 1.00 and
+`holdout-document-review-change-record` 1.00 vs 1.00 (Δ 0.00 on both), `holdout-personal-voice-chatty` 1.00 vs 0.88 (+0.13),
+`holdout-personal-voice-formal` 0.96 vs 0.88 (+0.08; the sign-off phrase is missed on some with-arm runs). So the +0.38 on
+`document-review-planted-sop` came from grading the skill's own output format, not from finding more defects. Known
+looseness in these graders: a bare number (14, 21, 12, 18, 45, 300) counts as a hit even in an unrelated finding, and
+`review.md` starts with a "no issues found" line so a run that never writes it fails the all-clear grader.
 
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
