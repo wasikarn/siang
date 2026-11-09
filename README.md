@@ -92,7 +92,7 @@ not the total: plain Claude already scores high on many cases.
 - 18 cases cover `humanize`, English and Thai. Several are regression guards that plain Claude
   also passes; their job is to catch siang losing to it.
 - 9 cases cover the other four skills, 3 runs per arm each. `document-review` 1.00 vs 0.62
-  (Δ +0.38) and `personal-voice` 1.00 vs 0.78 and 0.96 vs 0.70 (Δ +0.22 and +0.26) hold up. The rest is small
+  (Δ +0.38) and `personal-voice` 1.00 vs 0.78 and 1.00 vs 0.70 (Δ +0.22 and +0.30) hold up. The rest is small
   or zero: `technical-writing` Δ +0.10 on its hardest case and 0.00 on two easier ones, `thai-pua-repair`
   Δ +0.08 on its compressed-PDF case and 0.00 on two others. Plain Claude already does most of what those two
   skills ask; their gain is a few things it drops (an unverified claim, a glyph it cannot map).

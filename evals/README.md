@@ -78,8 +78,9 @@ Three-run check of the nine non-humanize cases (2026-11-09, 3 runs per arm, with
 (+0.26); `technical-writing-hidden-facts` 1.00 vs 0.90 (+0.10); `thai-pua-repair-pdf-compressed` 1.00 vs 0.92 (+0.08);
 `technical-writing-stale-howto`, `technical-writing-unverified-claim`, `thai-pua-repair-extracted-text` and
 `thai-pua-repair-pdf-file` all 1.00 vs 1.00 (Δ 0.00). The single-run Δs above were noisy where they were small (the
-`technical-writing-unverified-claim` guard shows no gap over three runs). The `profile-lists-oneoffs` grader still fails on
-some `personal-voice-thai-oneoffs` runs: the skill's profile sometimes omits the one-offs it excluded.
+`technical-writing-unverified-claim` guard shows no gap over three runs). The `profile-lists-oneoffs` grader failed on
+some `personal-voice-thai-oneoffs` runs because the profile omitted the one-offs it excluded. 0.1.20 made step 3 require a
+one-offs line, and a rerun of both `personal-voice` cases (3 runs per arm) scored 1.00 vs 0.78 (+0.22) and 1.00 vs 0.70 (+0.30).
 
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
