@@ -10,7 +10,7 @@ standup ที่เปิดว่า "ยินดีที่จะแจ้�
 ทุกประโยค แถมใช้ "ซึ่ง" กับ "โดย" เต็มไปหมด คนอ่านรู้ตั้งแต่บรรทัดแรก แล้วก็เลิกเชื่อส่วนที่เหลือ
 
 siang เป็น plugin ของ Claude Code ที่เอากลิ่นนี้ออกทั้งภาษาอังกฤษ ภาษาไทย และไทยปนอังกฤษ
-และยังช่วยอีกสี่งานที่ใกล้กัน คือเขียนเอกสารให้คนอ่านทำตามได้ ตรวจเอกสารเทียบมาตรฐาน เขียนด้วยเสียงของคุณเอง และซ่อมข้อความที่ดึงจาก PDF ไทยแล้วเพี้ยน
+และยังช่วยอีกสามงานที่ใกล้กัน คือเขียนเอกสารให้คนอ่านทำตามได้ เขียนด้วยเสียงของคุณเอง และซ่อมข้อความที่ดึงจาก PDF ไทยแล้วเพี้ยน
 เสียง แปลว่า voice
 
 ## เหมาะกับใคร
@@ -26,13 +26,12 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## ห้า skill
+## สี่ skill
 
 | Skill | ใช้เมื่อ | ทำอะไร |
 |---|---|---|
 | `siang:humanize` | draft อ่านแล้วเหมือน AI เขียน | ไล่หา AI tell ทุกจุดจาก cue sheet แล้วเขียนใหม่ จากนั้นอ่านซ้ำหาส่วนที่ยังเหลือ |
 | `siang:technical-writing` | ต้องการ how-to, tutorial, หน้า reference, runbook หรือ README | เลือก Diátaxis หนึ่งแบบต่อเอกสาร เอาข้อเท็จจริงจากโค้ดและคำสั่งที่รันเอง ส่วนที่ยังไม่ได้ตรวจใส่ `TODO: verify` |
-| `siang:document-review` | เอกสารต้องตรงตามมาตรฐาน (SOP, runbook, policy, spec) | ไล่ตรวจทุกข้อกำหนด ตัวเลข วันที่ และการอ้างอิงใน precision, logic, traceability และ compliance ได้ ledger ที่จัดเกรดกับ verdict |
 | `siang:thai-pua-repair` | ข้อความที่ extract จาก PDF ไทยมีอักขระ private-use หรือวรรณยุกต์เพี้ยน | แปลง glyph 27 ตัวของฟอนต์ UPC บน Windows (U+F700..U+F71A) กลับเป็นอักษรไทยมาตรฐาน รายงานตัวที่แปลงไม่ได้ และเมื่อสั่งจะแก้ ToUnicode map ในไฟล์ PDF เอง ให้ copy และค้นหาได้ถูก (`pua_pdf.py` ต้องมี pikepdf) |
 | `siang:personal-voice` | อยากได้ draft ด้วยเสียงของตัวเอง | วัดจากตัวอย่างของคุณ เก็บเฉพาะลักษณะที่เจอในตัวอย่างอย่างน้อยสองชิ้น เขียนจากข้อเท็จจริงของคุณ แล้วเทียบ draft กับ profile |
 
@@ -44,10 +43,6 @@ humanize standup update นี้ genre B เก็บตัวเลขทุ�
 
 ```
 ใช้ siang:technical-writing เขียน docs/deploy.md ใหม่ให้ on-call engineer
-```
-
-```
-ใช้ siang:document-review ตรวจ sop-restore.md เทียบกับ standard.md แค่รีวิว ไม่ต้องแก้
 ```
 
 ```
@@ -74,7 +69,6 @@ humanize standup update นี้ genre B เก็บตัวเลขทุ�
 |---|---|
 | `skills/humanize/` | `SKILL.md`, cue sheet, pattern สากลและไทย, โครงสร้างประโยคไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
 | `skills/technical-writing/` | `SKILL.md` |
-| `skills/document-review/` | `SKILL.md` |
 | `skills/personal-voice/` | `SKILL.md` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `evals/` | 36 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
@@ -99,21 +93,17 @@ humanize standup update นี้ genre B เก็บตัวเลขทุ�
   ผลของทั้งสองชุด (คะแนน ค่าใช้จ่าย และผลของ grader ทุกตัว) เก็บไว้ใน [`docs/eval-runs/`](docs/eval-runs/) prompt
   ของรอบ Sonnet อยู่ใน JSON นั้น แต่ prompt ใน repo ยังระบุชื่อ skill อยู่ รันซ้ำจึงได้ตัวเลขของ Sonnet ไม่ตรงเป๊ะ
   หลังแก้ตาม deep-audit (0.1.24) รันเคสภาษาไทยทั้ง 14 เคสใหม่เฉพาะฝั่ง siang ได้ 1.00 ครบ 42 รอบ
-- 13 เคสของอีกสี่ skill รันเคสละ 3 รอบต่อฝั่ง: 9 เคสที่ผู้เขียน skill เขียนเอง และ 4 เคส held-out ให้ agent ที่ไม่เคยเห็น
-  ขั้นตอนของ skill เป็นคนเขียน ผลออกมาหลายแบบ และส่วนใหญ่ต่างกันไม่มาก
-  - `document-review`: Δ +0.38 ในเคสของผู้เขียนเอง แต่เคสนั้นให้คะแนนจากรูปแบบ output ของ skill (เกรด, verdict,
-    "unverifiable") ส่วนสองเคส held-out ที่ให้คะแนนแค่ว่าเจอข้อผิดจริงไหม Δ เป็น 0.00 Claude เปล่า ๆ เจอข้อผิดชุดเดียวกัน
-    ควรมองว่า skill ให้รูปแบบรีวิวที่สม่ำเสมอ ไม่ใช่เจอข้อผิดเก่งกว่า
-  - `personal-voice`: Δ +0.22 และ +0.30 ในเคสของผู้เขียนเอง, +0.17 และ +0.08 ในเคส held-out (ตัดลักษณะที่เห็นแค่
-    ตัวอย่างเดียวได้ แต่บางครั้งก็ยังหลุดมา)
-  - `technical-writing` Δ +0.10 ในเคสที่ยากที่สุด และ 0.00 ในสองเคสที่ง่ายกว่า, `thai-pua-repair` Δ +0.08 ในเคส PDF
-    บีบอัด และ 0.00 ในอีกสองเคส ที่สอง skill นี้ช่วยได้คือเก็บของที่ Claude เปล่า ๆ ทำหล่น (claim ที่ยังไม่ได้ตรวจ,
-    glyph ที่แปลงไม่ได้)
-- 5 เคส `trigger` เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ทั้งห้าถูกเรียกทุกรอบ
+- เคส held-out ของอีกสาม skill (เขียนโดย agent ที่ไม่เคยเห็นขั้นตอนของ skill) รันครั้งสุดท้ายหลังล็อก grader
+  5 รอบต่อฝั่ง ตามกฎที่ตั้งไว้ก่อนรัน (ดู `evals/README.md`): `personal-voice` Δ เฉลี่ย +0.08 (คะแนน 0.95),
+  `technical-writing` Δ +0.08 (0.98) และ `thai-pua-repair` Δ +0.12 (1.00) ผ่านเกณฑ์ แต่ Δ ของสอง skill แรกเฉียดเกณฑ์ +0.05
+  และมีความคลาดเคลื่อนระดับเดียวกัน
+- `document-review` ไม่ผ่านเกณฑ์ (Δ เฉลี่ย −0.02 บนเคส held-out สองเคส Claude เปล่า ๆ เจอข้อผิดชุดเดียวกัน)
+  จึงถูกลบออกจาก skill ใน 0.1.26 และเก็บ checklist ไว้เป็นเอกสารที่ `docs/document-review-checklist.md`
+- 4 เคส `trigger` เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ (เคสที่ห้าของ `document-review` ถูกลบพร้อมตัว skill)
 
 เช็กฟรีโดยไม่เรียก API: `bash tests/test-graders.sh` ส่วนรันจริง (เสียเงิน) คือ
 `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(เปลี่ยน tag เป็น `technical-writing`, `document-review`, `personal-voice` หรือ `thai-pua-repair` และถ้าไม่ได้รันใน
+(เปลี่ยน tag เป็น `technical-writing`, `personal-voice` หรือ `thai-pua-repair` และถ้าไม่ได้รันใน
 terminal แบบ interactive ให้เติม `--trust-plugin`)
 
 ## เครดิตและ license

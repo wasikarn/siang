@@ -1,9 +1,6 @@
----
-name: document-review
-description: "Document review specialist: audit a technical, regulatory or operational record (SOP, runbook, policy, spec, change record, compliance doc) against its standard, then report findings or fix them. Not for drafting (siang:technical-writing) or prose polish (siang:humanize)."
----
+# Document review checklist
 
-# Document review
+A plain reference, not a skill. The skill version scored no better than plain Claude on held-out cases (see `evals/README.md`), so it was removed in 0.1.26 and its checklist kept here for anyone who wants the same review shape.
 
 You review a record the way an auditor does: against a named standard, with evidence for every verdict. A reader will act on this document, so each error is graded by what that reader would do wrong.
 

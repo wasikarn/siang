@@ -141,6 +141,22 @@ hex of the hash of every file under those eight directories, sorted by path, as
 voids it and the run starts again. Known loose graders, left as they are: `no-dest-flag` fails a migration note
 that names `--dest`, `no-email-claim` fails any use of "hourly", one branch of `output-dir-prereq` is loose.
 
+## Result of the acceptance run (graders frozen at `d1cb35dbc7742f68`, commit 0de01c8)
+
+Held-out cases, 5 runs per arm, 2026-11-10, $12.58 in all. With-skill score, without score, Δ:
+`holdout-document-review-calibration-sop` 0.97 / 1.00 / −0.03, `holdout-document-review-change-record` 1.00 / 1.00 / 0.00,
+`holdout-personal-voice-chatty` 0.93 / 0.88 / +0.05, `holdout-personal-voice-formal` 0.97 / 0.88 / +0.10,
+`holdout-technical-writing-cli-stale-readme` 1.00 / 0.83 / +0.17, `holdout-technical-writing-config-default-prereq`
+0.97 / 0.97 / 0.00, `holdout-thai-pua-repair-regulation` 1.00 / 0.87 / +0.13, `holdout-thai-pua-repair-rag-chunks`
+1.00 / 0.89 / +0.11. Against the rule above: `personal-voice` (0.95, mean Δ +0.075), `technical-writing` (0.985, +0.085)
+and `thai-pua-repair` (1.00, +0.12) pass, the first two narrowly and inside run-to-run noise; `document-review`
+(0.985, −0.015) fails on Δ. It was converted in 0.1.26: `skills/document-review/` and its four eval cases
+(`document-review-planted-sop`, the two `holdout-document-review-*`, `trigger-document-review`) were removed, and the
+checklist kept as `docs/document-review-checklist.md`. The frozen hash covers the files as they were at the run; the
+removed directories are in git history at 0de01c8. The cases and numbers for the removed skill above in this file are
+a record of what was measured, not of cases that still exist. humanize (mean Δ +0.04 over its 18 cases, measured by its
+own session) would fail the same Δ bar; that is for its owner to decide and nothing was changed.
+
 ## Known gap
 
 - **Invented facts in rewrites.** The Grit Gate's fabrication boundary (no new fact, number,
