@@ -20,6 +20,9 @@ claude plugin install siang@siang
 1. Pick the genre (A chat, B standup/PR/commit, C UI/error copy, D prose/blog/ADR) and the language.
 2. Plan the grit: the concrete specifics from the source the rewrite must keep.
 3. Name every AI tell against a 33-row universal cue sheet, plus the Thai-only patterns for any Thai.
+   `scripts/scan.py` runs first and lists the tells a pattern can catch (em dashes, AI vocabulary,
+   chat closers, Thai spelling and date formats) with line and section; the model judges each hit
+   and reads for the rest.
 4. Draft, ask "what still reads AI?", then write the final.
 
 Two rules hold throughout: no invented facts (an unverifiable claim is dropped or hedged, never
@@ -29,8 +32,11 @@ byte-identical.
 ## Layout
 
 - `skills/humanize/`: `SKILL.md` and its references (cue sheet, universal patterns, Thai patterns,
-  Thai sentence structure, examples, sources).
-- `evals/`: cases in `claude plugin eval`'s native layout (`evals/README.md`).
+  Thai sentence structure, examples, sources), plus `scripts/scan.py`.
+- `evals/`: ten cases in `claude plugin eval`'s native layout (`evals/README.md`). Read the
+  with/without-siang delta (Δ), not the total: plain Claude already scores high on several cases.
+- `tests/`: free checks that CI runs on every push: grader self-test, version-bump hook, every §
+  and cue reference resolves, and `scan.py` finds planted tells.
 
 ## Credits
 

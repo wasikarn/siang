@@ -1,0 +1,11 @@
+---
+name: humanize-th-structure-planted
+tags: [humanize, planted]
+runs: 1
+max_turns: 12
+timeout_seconds: 600
+allowed_tools: [Bash, Read, Edit, Write, Glob, Grep, Skill]
+---
+Use the `siang:humanize` skill (Skill tool, `skill: "siang:humanize"`) on `post.md`. It is a short internal engineering blog post in Thai for the company's developers (genre D, Thai with English tech terms). No writing sample is available.
+
+Work through the skill's loop (draft, "still AI" bullets, final) in your turn, then make your final message the final rewrite only, verbatim, with nothing before or after it.

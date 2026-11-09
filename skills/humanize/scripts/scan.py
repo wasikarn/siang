@@ -25,6 +25,8 @@ RULES = [
     ("§25", "generic conclusion", r"(?i)\b(in conclusion|the future looks bright)\b|โดยสรุปแล้ว|กล่าวโดยสรุป"),
     ("§27", "authority trope", r"(?i)\b(at its core|fundamentally)\b|เป็นที่ทราบกันดีว่า|ปฏิเสธไม่ได้ว่า"),
     ("§28", "signposting", r"(?i)\b(let'?s (dive|delve) in(to)?|here'?s the thing|here'?s what you need to know)\b"),
+    ("§59", "re-explaining what the reader knows", r"(?i)\b(as you know|for context|to recap)\b|อย่างที่ทราบกันดี"),
+    ("§61", "arguing with no one", r"(?i)\bsome (might|may|would) argue\b|บางคนอาจแย้งว่า"),
     ("§7", "Thai AI vocabulary", r"ภูมิทัศน์|เน้นย้ำ|อย่างมหาศาล|อย่างน่าทึ่ง"),
     ("§31", "non-standard spelling", r"อัพเดท|อัพเดต|แอพ|ลิงค์|อีเมล์|ดิจิตอล|เวอร์ชั่น|ฟีเชอร์|เซสชั่น"),
     ("§33", "connector cluster", r"อย่างไรก็ตาม|นอกจากนี้|ในขณะเดียวกัน|ทั้งนี้"),
