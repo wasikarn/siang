@@ -688,6 +688,8 @@ For a person or brand replying to a customer (support chat, incident notice, sta
 - `ขออภัย` when we caused it; `ขอแสดงความเสียใจ` when a third party did (bank, courier, cloud provider). Don't accept fault before the evidence.
 - A response time or refund the team can't confirm is fabrication (§32.1, T1). Say what you will check, not the result.
 - Empathy first, then the fix, short. Never defensive (`ก็แจ้งไว้แล้ว`, `ตรงนี้ทางเราไม่เกี่ยวนะคะ`).
+- Empathy means the fix or the status, not a stock line. `ไม่ต้องกังวลนะคะ` and `ไม่ต้องห่วงค่ะ` reassure without saying why: cut them and let the explanation do the calming.
+- Don't read the customer's message back to them (`รับทราบค่ะ คุณลูกค้าแจ้งว่า... ใช่ไหมคะ`); they know what they wrote. Answer first. Repeating an order or ticket number inside the answer is fine; it confirms which case you mean (§59).
 - A refusal gives the policy reason and one alternative. A canned reply that doesn't answer the customer's actual question is a tell. Don't open with a bare thanks to a customer who is still angry. Every reply ends with the next step: what happens, or what the customer can do.
 
 Customer: `OTP ไม่มาเลยค่ะ รอนานแล้ว` (the team has not confirmed a fix time)

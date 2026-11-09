@@ -67,4 +67,10 @@ Prose line — with a dash.
 fenced — dash
 ````
 MD
+expect "§59 Thai echo-back"            "§59"  <<< "รับทราบค่ะ คุณลูกค้าแจ้งว่าโอนแล้ว ใช่ไหมคะ"
+expect "§57 stock reassurance"         "§57"  <<< "ไม่ต้องกังวลนะคะ เดี๋ยวแอดมินเช็กให้"
+expect "§58 zero-width space"          "§58"  <<< "เปิด VPN​ก่อนนะ"
+expect "§40 particle slip"             "§40"  <<< "ส่งสลิปได้ไหมค่ะ"
+expect "§44 trailing เมื่อ"            "§44"  <<< "request ของ API จะช้าลงเกือบเท่าตัวเมื่อมีคนอัปโหลดรูปพร้อมกัน"
+expect "§44 leading condition ok"      "0 candidate(s)" <<< "พอมีคนอัปโหลดรูปพร้อมกันเยอะ request ก็ช้าลง"
 exit "$fail"

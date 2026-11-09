@@ -37,7 +37,12 @@ RULES = [
     ("§32.8", "formal address (fine in legal/bank letters)", r"ท่านผู้อ่าน|ท่านลูกค้า|ของท่าน|ข้าพเจ้า|กระผม"),
     ("§51", "panorama opener", r"ในยุคปัจจุบัน|ในโลกยุคใหม่"),
     ("§56", "western date/time (user-facing Thai only; internal ISO and colon times are correct)", r"\b\d{1,2}:\d{2}\s?(AM|PM|am|pm)\b|\b\d{1,2}/\d{1,2}/\d{4}\b"),
+    ("§44", "condition after the main clause? (check order)", r"จะ[^\n]{1,40}?[ก-๛A-Za-z0-9]เมื่อ"),
     ("§57", "apology size", r"ขออภัยอย่างสูง"),
+    ("§57", "stock reassurance", r"ไม่ต้อง(กังวล|ห่วง)"),
+    ("§59", "echo-back of the customer's message", r"แจ้ง(มา)?ว่า[^\n]{0,80}ใช่(ไหม|มั้ย)(คะ|ครับ)"),
+    ("§58", "zero-width character", r"[\u200b\u200c\u200d\ufeff]"),
+    ("§40", "particle slip (ค่ะ for คะ)", r"(นะ|ไหม|มั้ย|หรือเปล่า)ค่ะ"),
 ]
 COMPILED = [(s, label, re.compile(p)) for s, label, p in RULES]
 

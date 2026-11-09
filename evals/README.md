@@ -7,6 +7,12 @@ numbers, Thai release note for §31 spelling, Thai blog post for §33/§45/§47/
 that must survive lightly edited, and a file-input case that proves the prose-only constraint
 (frontmatter and code block byte-identical, graded on the file's contents).
 
+Five more Thai cases carry tag `v012` as regression guards: hidden characters (§58), calques, PR
+grammar (§44/§46/§53), a support reply that echoes the customer back (§57/§59), and a clean LINE
+chat control (§39.1). Plain Claude passes four of them too; their job is to catch siang losing to
+it, as it first did on the echo-back and grammar cases (0.67 and 0.93 against plain 0.83 and 1.00,
+2026-11-09) before the §57/§59 rules and the scan.py §44 cue.
+
 Each case is `prompt.md` (invokes the skill by `skill: "siang:humanize"`), `case.yaml` (a
 `scaffold_script` that writes the fixture), and `graders/`. `skill-fired.md` is
 `tool_used: Skill`. Each prompt also says what to do if the Skill tool reports the skill as unknown:
@@ -17,10 +23,12 @@ form instead (`3 กุมภาพันธ์ 2570`, `ลิงก์`), so th
 returning the source unchanged must fail it. The four newest cases use regex graders only, so
 their scores don't move with the LLM judge.
 
-One case covers `siang:technical-writing` (tag `technical-writing`): `technical-writing-stale-howto` hands
+Two cases cover `siang:technical-writing` (tag `technical-writing`). `technical-writing-stale-howto` hands
 the skill a stale how-to next to the script it documents. Regex graders check that the removed `--force` flag
 is gone, the dry-run command and its real output are present, the steps are numbered, the title names the
-goal and `KEYSTORE_URL` survives. Its prompt names `siang:technical-writing`; the other nine name `siang:humanize`.
+goal and `KEYSTORE_URL` survives. `technical-writing-unverified-claim` checks a how-to for `bin/rotate-key` where
+the skill must flag what it could not verify (`TODO: verify`) instead of asserting it. Both prompts name
+`siang:technical-writing`; the fifteen humanize cases name `siang:humanize`.
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 

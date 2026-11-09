@@ -34,6 +34,6 @@ Scan for these 33 universal tells (all languages). Thai-only tells: §31–§42 
 | 28 | Signposting / candor openers | let's dive in, here's what you need to know; stand-alone "Honestly?", "Here's the thing:", "Look," / พูดตรงๆ นะ | Just say it; an inline "honestly" is fine |
 | 29 | Fragmented headers / thematic breaks | heading + one-line restating it; `---` between every section | Delete the warm-up line and the rules |
 | 30 | Diff-anchored writing / method narration | "this was added to replace…"; "we ran each benchmark…"; "the table below is sorted…" | Describe the thing as it is; keep a needed method fact in one plain line |
-| 59 | Re-explaining what the reader already knows | as you know, for context, to recap (in a reply) / อย่างที่ทราบกันดี, ขอเล่าที่มาก่อน | Lead with the decision and the one new fact; the diagnosis goes in the ticket |
+| 59 | Re-explaining what the reader already knows | as you know, for context, to recap (in a reply) / อย่างที่ทราบกันดี, ขอเล่าที่มาก่อน, echo-back `แจ้งว่า... ใช่ไหมคะ` | Lead with the decision and the one new fact; the diagnosis goes in the ticket |
 | 60 | Punchline closers and fragment runs | "That's the win.", "Faster. Simpler. Cheaper." / นี่แหละคือจุดเปลี่ยน, จบ. | Merge into one claim or cut |
 | 61 | Arguing with no one | some might argue, and no, this isn't…, was never on the table / บางคนอาจแย้งว่า | Cut; keep only an objection that is attributed and answered |

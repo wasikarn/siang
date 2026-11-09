@@ -506,7 +506,7 @@ Last check before you hand the rewrite over: search it for em dashes (`—`). On
 
 **Phrases to watch:** as you know, for context, to recap, a quick refresher, let me start with some background, as mentioned earlier (in a short reply)
 
-**Thai cue:** "อย่างที่ทราบกันดี", "ขอเล่าที่มาก่อน", "เพื่อให้เห็นภาพ" opening a short reply → suspect
+**Thai cue:** "อย่างที่ทราบกันดี", "ขอเล่าที่มาก่อน", "เพื่อให้เห็นภาพ" opening a short reply → suspect. The same tell in a support reply is echo-back: `รับทราบค่ะ คุณลูกค้าแจ้งว่า... ใช่ไหมคะ` restates the customer's own message before the answer (cut it; keep an order or ticket number inside the answer).
 
 **Rule:** In a reply, lead with the decision or answer and the one fact the reader does not have yet. The full diagnosis goes in the ticket, the PR or the doc, and the reply links to it.
 
