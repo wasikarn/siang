@@ -24,6 +24,7 @@ Full license texts: `THIRD_PARTY_NOTICES.md` at the plugin root.
 ### Thai-specific references
 - Royal Society of Thailand (`ราชบัณฑิตยสภา`) transliteration: https://transliteration.orst.go.th/search
 - Royal Society of Thailand (`ราชบัณฑิตยสภา`) terminology: https://royalsociety.go.th/thai-translation-terminology/
+- Usage evidence for §31 spellings (Firefox, Google, Apple, Microsoft, ETDA, BOT, GitHub counts, 2026-11-09): `docs/research/thai-tech-terms-2026.md` in the plugin repo
 - Mozilla Thai Style Guide: https://mozilla-l10n.github.io/styleguides/th/  *(explicit "3 translation styles" framework: translate / transliterate / leave untranslated)*
 - Microsoft Thai Style Guide (UI string + terminology, TBX)
 - Google translation style: https://developers.google.com/style/translation
@@ -73,7 +74,7 @@ Canonical table lives in `patterns-thai.md` §31 — load it for the current, co
 | เซสชั่น (non-standard spelling) | เซสชัน |
 
 ### Typography rules (selected; full list in §0 + §14)
-- Tone and silent marks: Royal Society transliterations of English words carry no tone mark (`เซสชัน`, not `เซสชั่น`); the silent mark `์` (การันต์) appears only where a silent source letter is kept, as in `ซอฟต์แวร์`, `ฟิล์ม`.
+- Tone and silent marks: Royal Society transliterations of English words carry no tone mark (`เวอร์ชัน`, not `เวอร์ชั่น`); the silent mark `์` (การันต์) appears only where a silent source letter is kept, as in `ซอฟต์แวร์`, `ฟิล์ม`.
 - Hyphen: use `-` (ASCII U+002D), not en-dash `–`, in compounds (low priority, font-dependent)
 - Em dash `—`: never in Thai prose (see §14)
 - En dash `–`: number ranges only (40–60%, §31–32, `2–5 นาที`)

@@ -57,7 +57,9 @@ Customer/non-dev reads it? ─ yes ─> is there a clear Thai word? ─ yes ─>
 
 **Verify transliteration** at https://transliteration.orst.go.th/search (Royal Society of Thailand). Never transliterate ad hoc. When a dev term must appear in Thai script, use the official spelling (`แคช`, `เบราว์เซอร์`, `อัปโหลด`, `ฟังก์ชัน`, `โพรโทคอล`, `ไฟร์วอลล์`), not an improvised one (`อัพโหลด`, `ฟังชั่น`). The Royal Society also coins Thai words for many terms (`จุดบกพร่อง` for bug, `ลงบันทึกเข้า` for login, `กิ่ง` for branch); devs rarely write those, and UIs say what the product shows (`เข้าสู่ระบบ`), so prefer the word the reader actually meets.
 
-**Audience sets the English share.** Older, government or mass-market readers get less English and established ทับศัพท์ (`แอป`, `อีเมล`, `เว็บไซต์`); a dev channel keeps the English. Text written for Thai readers is never English-only. (Adapted from Boom-Vitt/claude-thai-skills (MIT); term spellings checked against the Royal Society computer and IT term list.)
+**Where usage beats the Royal Society spelling** (evidence: `docs/research/thai-tech-terms-2026.md`, Firefox, Google, Microsoft and GitHub counts, 2026-11-09). For five everyday words no product uses the official form, so siang deliberately follows usage: `ฟีเจอร์` (not ฟีเชอร์), `โค้ด` (not โคด), `บั๊ก` (not บัก), `แชท` (not แชต), `ซิงค์` (not ซิงก์). Elsewhere usage follows the Royal Society and so does siang: `อัปเดต` (not อัพเดท), `แอป` (not แอพ), `ลิงก์` (not ลิงค์), `อีเมล` (not อีเมล์), `ดิจิทัล` (not ดิจิตอล), `เวอร์ชัน` (not เวอร์ชั่น). When the text tells the reader what to tap, use the product's own UI string even when products disagree: sign-in is `เข้าสู่ระบบ` (Microsoft, banks), `ลงชื่อเข้าใช้` (Google) or `ลงชื่อเข้า` (Apple); prompt is `พรอมต์` (Google) or `พร้อมท์` (Microsoft).
+
+**Audience sets the English share.** Older, government or mass-market readers get less English and established ทับศัพท์ (`แอป`, `อีเมล`, `เว็บไซต์`); a dev channel keeps the English. Text written for Thai readers is never English-only. AI vocabulary is the exception to "less English": even government guidance keeps `AI`, `Generative AI` and `Prompt` in Latin script (ETDA, per the research note above). (Adapted from Boom-Vitt/claude-thai-skills (MIT); term spellings checked against the Royal Society computer and IT term list.)
 
 **Section heading / user-facing headings:** never mix in `(Declined)` as in `## การชำระเงินไม่สำเร็จ (Declined)`; move the English word into the body or translate it as "ถูกปฏิเสธ" instead.
 
@@ -67,11 +69,12 @@ Customer/non-dev reads it? ─ yes ─> is there a clear Thai word? ─ yes ─>
 |----|----------|-------------|
 | staging / develop / production | คงอังกฤษ | "ระบบทดสอบ" / (none) / "ระบบจริง" + อธิบาย |
 | merge | merge | รวมโค้ด |
-| deploy | deploy | นำขึ้นใช้งาน |
-| session | session (เก็บอังกฤษ) | เซสชัน (ทับศัพท์ตามราชบัณฑิตฯ ไม่มีไม้หันอากาศ) |
+| deploy | deploy | นำขึ้นใช้งาน (siang's choice; Microsoft uses การปรับใช้) |
+| session | session (เก็บอังกฤษ) | เซสชัน (ไม่มีไม้หันอากาศ; รูปที่ Microsoft และ Firefox ใช้ ราชบัณฑิตฯ ยังไม่มีคำนี้) |
 | error code | error code | ข้อความแจ้งข้อผิดพลาด |
 | declined (bank/payment) | declined (เก็บไว้ใน log เท่านั้น) | ถูกปฏิเสธ |
-| login / logout | login / logout | เข้าสู่ระบบ / ออกจากระบบ |
+| login / logout | login / logout | เข้าสู่ระบบ / ออกจากระบบ, or the product's own string |
+| AI / prompt / chatbot | English | AI คงอังกฤษ; prompt → พรอมต์ หรือตาม UI ของ product |
 | backup | backup | สำรองข้อมูล |
 | cache | cache | แคช (ถ้าต้องเขียนเป็นไทย) |
 | bug | bug | ข้อผิดพลาด (user-facing), บั๊ก (dev chat) |
@@ -91,7 +94,7 @@ When replacing a calque, pick a verb matching the real action — not a vague pl
 **Before (non-standard transliteration):**
 > เซสชั่นหมดอายุ
 
-**After (Royal Society spelling):**
+**After (standard spelling, no tone mark):**
 > เซสชันหมดอายุ
 
 **Before (drift-in-meaning — dev-tracker noun, not the deploy-vocab example above):**
