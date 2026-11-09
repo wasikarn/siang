@@ -68,6 +68,11 @@ a range that must split once mapped, and the unmappable U+F71B; the task is to w
 its text. First run: 1.00 with and without the skill (Δ 0.00). The fixture's stream is uncompressed, so a plain model edits
 it by hand; real PDFs compress it, which this case does not test. `tests/test-pua-pdf.sh` is the stronger check for the script.
 
+`thai-pua-repair-pdf-compressed` is the harder version: twelve fonts, each with its own FlateDecode-compressed ToUnicode
+stream, so the PDF cannot be edited by hand and every font map must be found. First run (one run per arm): 1.00 with the
+skill, 0.75 without (Δ +0.25). Both arms repaired the tone marks and the range that must split; the plain model lost the
+unmappable U+F71B on some lines (deleted or replaced), which the skill leaves in place and reports.
+
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
