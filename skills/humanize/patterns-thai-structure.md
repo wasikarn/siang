@@ -104,11 +104,11 @@ Use it for breath, not as a connector to sprinkle. Two limits from kien-thai: it
 **Why AI breaks it:** it pivots with the English formal connector, or lists problems and jumps straight into the fix with no turn at all.
 
 ❌ `อย่างไรก็ตาม การ cache ในหน่วยความจำมีข้อจำกัดเมื่อมีหลาย instance`
-✅ `แต่พอรันหลาย instance cache ในหน่วยความจำก็เริ่มมีปัญหา`
+✅ `แต่พอรันหลาย instance การ cache ในหน่วยความจำก็มีข้อจำกัด`
 
 Problem list → fix, in an ADR:
 ❌ `build ช้า flaky test เยอะ dev รอ CI นาน เราจึงเสนอให้แยก pipeline`
-✅ `build ช้า flaky test เยอะ dev รอ CI นาน ตรงนี้แหละที่เราอยากแยก pipeline`
+✅ `build ช้า flaky test เยอะ dev รอ CI นาน นี่แหละเหตุผลที่เราเสนอให้แยก pipeline`
 
 Heuristic: for every "however" in the English draft, ask whether `แต่` or a question does the job. Usually one in two can go.
 

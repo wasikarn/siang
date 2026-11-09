@@ -126,7 +126,7 @@ Same (a) drift-in-meaning failure as the `front-facing`/`API` cases above, in th
 
 (b) **Invented metrics / load numbers**: load, latency, threshold figures that were never run:
 > ❌ `burst test 500 req/min โควต้า 100/min → 400 queued ใน 1s`
-> ✅ `burst test staging ผ่าน ตัวเลข load จะใส่หลัง run จริง`
+> ✅ `burst test: ตัวเลข load ใส่หลัง run จริง`
 
 (c) **Fake SLA / dates / versions**: firmware versions, rollout dates, rollback times that look real:
 > ❌ `rely on camera firmware v2.1+ (2026-06-20 rollout)`
@@ -336,7 +336,7 @@ The ซึ่ง, โดย and ในขณะที่ rows: Adapted from chak
 **Rule:** repeating the same word is fine; do not "variety-hack" with odd synonyms.
 
 ❌ `"ระบบมีปัญหา (system issue) เพราะ platform ล่ม (down) และ infrastructure ล้มเหลว (failed)"`
-✅ `"ระบบล่ม สาเหตุน่าจะมาจาก infra"`
+✅ `"ระบบล่ม ต้นเหตุคือ infra"` (keep the source's certainty: it says infra failed, so no `น่าจะ`)
 
 **Thai variant:** `"ระบบล่ม" / "ระบบ down" / "platform เข้าไม่ได้"`: use 1-2 of them, not all 3 in one paragraph
 
@@ -347,7 +347,7 @@ The ซึ่ง, โดย and ในขณะที่ rows: Adapted from chak
 ❌ `"เมื่อวานทำงานหลายอย่าง รวมถึง TP-549 ที่ต้องแก้ measurement design และ merge PR #36 เข้า develop วันนี้เลย refocus ที่ TP-549"`
    — 3 clauses of background, topic last
 
-✅ `"TP-549 measurement design เริ่มแล้ว PR #36 merge แล้ว"`
+✅ `"TP-549: วันนี้กลับมาโฟกัส measurement design ส่วน PR #36 merge เข้า develop แล้ว"`
    — topic first, then detail
 
 **Standup order (v2.2):**
@@ -384,12 +384,14 @@ Tell them apart:
 ❌ `"เรามุ่งมั่นมอบประสบการณ์ที่ดีที่สุด"` (UI-aspirational)
 ✅ `"ชำระเงินไม่สำเร็จ ลองใหม่อีกครั้ง หรือเช็คยอดเงิน"` (UI-actual)
 
+**The specific status is the fact.** When the source names one (an English status such as `Declined`, an error code), the UI leads with it in Thai (`ถูกปฏิเสธ`). A vague cause (`สถานการณ์ที่ไม่คาดคิด`) or a team-effort line (`ทีมงานกำลังแก้ไข`) beside it is filler, not a fact for step 6 to keep, and it often contradicts the status: nobody on the team is fixing a bank decline.
+
 ### 37. Nominalization Avoidance
 
 **Problem:** AI turns verbs into nouns to "sound formal"; real people use the verb.
 
 ❌ `"การดำเนินการปรับปรุงประสิทธิภาพ"` — nominalization overload
-✅ `"ปรับให้เร็วขึ้น"` — verb-first
+✅ `"ปรับประสิทธิภาพ"` — verb-first (not `ปรับให้เร็วขึ้น`: performance can mean memory or cost too)
 
 **Common Thai nominalizations to watch:**
 - `"การดำเนินการ"` → `"ทำ"` / drop
@@ -421,7 +423,7 @@ Tell them apart:
 ✅ `"ข้อมูลซ้ำซ้อน"`
 
 ❌ `"Initialize ระบบใหม่"` — Thai "init/เริ่มต้น" ก็ได้
-✅ `"init ระบบ"`
+✅ `"init ระบบใหม่"`
 
 **Discourse-marker calques (English → Thai, not English-leak):**
 
@@ -499,7 +501,7 @@ Tell them apart:
 **Tells:**
 - 1-3 sentences per block
 - ≤25 words
-- One opener with `ค่ะ/ครับ` only
+- At most one `ค่ะ`/`ครับ` per block, usually closing the action line
 - Action verb + 1 alternative (`ลอง X หรือ Y`)
 - Status word first: `"ชำระเงินไม่สำเร็จ"`, `"บันทึกแล้ว"`, `"ยกเลิกเรียบร้อย"`
 - No "หวังว่า", "ขออภัย", "แจ้งให้ทราบ", "ยินดีให้ความช่วยเหลือ"
@@ -520,7 +522,7 @@ Tell them apart:
    — formal connector spam, generic claim
 
 ✅ `"AI เขียนโค้ดเก่งขึ้นทุกปี ผมยังนึกถึง agent ที่เขียนผ่านมาทั้งคืน แต่ครึ่ง dev community ก็ยังบอกว่ามันนับไม่ได้"`
-   — opinion, image, mixed rhythm
+   — opinion, image, mixed rhythm. The aside and the image are the author's own (from their notes or when asked), never invented to liven up a rewrite.
 
 **Register drift** (Adapted from chakrit/kien-thai (MIT)): pick the casual or the formal column for a whole passage and stay there; a switch mid-paragraph reads as AI (a heading break is fine). Pairs: `ยังไง`/`อย่างไร`, `เยอะ`/`มาก`, `ทำไม`/`เพราะเหตุใด`, `ตอนนี้`/`ขณะนี้`, `แบบไหน`/`แบบใด`, `อยากรู้`/`ต้องการทราบ`.
 ❌ `ตั้งค่ายังไงให้ worker รับโหลดได้เยอะ และควรเลือก instance แบบใด`
@@ -564,7 +566,7 @@ Tell them apart:
 | A (chat, male) | `ครับ` / no | `ครับ` / `นะครับ` | ไม่ลงท้ายทุกประโยค |
 | B (standup) | no | no | terse = AI detection < human |
 | B (PR/commit) | no | no | conventional commit format |
-| C (UI, formal) | `ค่ะ`/`ครับ` (1 opener) | no | ไม่ลงท้ายทุกประโยค |
+| C (UI, formal) | `ค่ะ`/`ครับ` (at most 1) | no | ไม่ลงท้ายทุกประโยค |
 | C (UI, casual app) | no | no | match brand voice |
 | D (essay) | no | no | particle ทื่อๆ = AI tell |
 | D (personal blog) | `ครับ`/`ค่ะ` in the greeting only | sign-off only | body none; `ผม`/`ดิฉัน` or `เรา`, follow the author's sample |
@@ -656,7 +658,7 @@ Thai has no neutral I/you, so a wrong pronoun reads machine-made even when every
 ❌ `ดิฉันได้ทำการ deploy แล้วค่ะ คุณลองเช็คได้เลยค่ะ` (to a teammate)
 ✅ `deploy แล้วนะ ลองเช็คได้เลย`
 ❌ `ทางบริษัทได้รับเรื่องแล้ว เราจะแจ้งทีมงานของเรา` (three "we" forms)
-✅ `ทีมงานรับเรื่องแล้วค่ะ ถ้ามีความคืบหน้าจะแจ้งในเธรดนี้`
+✅ `ทีมงานรับเรื่องแล้วค่ะ จะส่งต่อให้ทีมที่ดูแลนะคะ`
 
 ### 56. Dates, Times and Numbers
 

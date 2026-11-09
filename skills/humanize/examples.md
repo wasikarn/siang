@@ -143,8 +143,8 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 **Changes applied:**
 - Status word first (`ชำระเงินไม่สำเร็จ`)
 - `ธนาคารปฏิเสธรายการ` (active verb; drops the nominalized `การทำรายการ`)
-- Actionable next step: `ลองใหม่อีกครั้ง` / `เช็คยอดเงิน`; the contact channel stays a placeholder because the source gives none
-- One `ค่ะ` opener only (UI formal register)
+- Actionable next step: `ลองใหม่อีกครั้ง` / `เช็คยอดเงิน` are the usual actions for a bank decline, but the source names none, so confirm them with the product team; the contact channel stays a placeholder for the same reason
+- At most one `ค่ะ` (UI formal register)
 - No English parenthetical in the title (`## การชำระเงิน (Declined)` ❌)
 - ≤25 words
 - No "ขออภัย", "มุ่งมั่น", "พร้อมให้บริการ"
@@ -163,10 +163,10 @@ Given the draft `ผมได้ merge PR #64 เข้า develop แล้ว 
 
 | Register | Rewrite | Why |
 |----------|---------|-----|
-| **A** (chat) | `"merge แล้วค่ะ PR #64 🎉"` | terse, emoji, 1st-line topic |
+| **A** (chat) | `"PR #64 merge แล้วครับ 🎉"` | terse, emoji, topic first; the source writes as `ผม`, so `ครับ` |
 | **B** (standup) | `"✅ PR #64 measurement redesign merged เข้า develop"` | status + PR + scope |
-| **C** (UI) | `"บันทึกการเปลี่ยนแปลงเรียบร้อย"` | status-word-first, action-complete |
-| **D** (blog) | `"PR #64 merge เข้า develop แล้ว measurement redesign ก็เสร็จตามนั้น"` | full sentence, `ก็` pacing, no added detail |
+| **C** (UI) | `"merge สำเร็จ: PR #64 → develop"` | status word first, same fact |
+| **D** (blog) | `"PR #64 merge เข้า develop แล้ว measurement redesign ก็เสร็จแล้ว"` | full sentence, `ก็` pacing, no added detail |
 
 **Rule:** same fact, different register → different sentence shape, different particle, different length. Use the register the reader is in, not the one that "sounds good".
 

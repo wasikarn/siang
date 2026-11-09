@@ -1,7 +1,7 @@
 # Evals
 
-Five cases for `siang:humanize` in `claude plugin eval`'s native layout (tag `humanize`):
-three planted cases (English prose, Thai standup, Thai UI copy), a clean human-written control
+Six cases for `siang:humanize` in `claude plugin eval`'s native layout (tag `humanize`):
+four planted cases (English prose, Thai standup, Thai UI copy, Thai customer-chat reply), a clean human-written control
 that must survive lightly edited, and a file-input case that proves the prose-only constraint
 (frontmatter and code block byte-identical, graded on the file's contents).
 
