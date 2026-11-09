@@ -1,4 +1,4 @@
 schema_version: "1.1"
-name: tech-humanize-th-ui-planted
+name: humanize-en-prose-planted
 context:
   scaffold_script: scaffold.sh
