@@ -270,7 +270,7 @@ Never name-drop a brand/company/paper for authority when it cannot be verified:
 Very formal address (`ท่าน`, `ท่านผู้อ่าน`, `ข้าพเจ้า`, `กระผม`) in chat, standup or a dev doc reads stiff, an AI tell:
 
 ❌ `"หวังว่าจะเป็นประโยชน์ต่อท่านผู้อ่าน"` — ไม่มีใครเขียนแบบนี้ใน Slack
-✅ `"หวังว่าพอเป็นประโยชน์"` — natural register
+✅ drop the line: in Slack the message ends at its last fact (§40)
 
 **Rule:** match the address to the register. `ท่าน` is not royal language: it is the very formal address that legal notices, privacy and PDPA text, and bank or government letters use correctly, so it stays there. Chat, standup, UI and dev docs use `คุณ` (an instruction) or `เรา` (a concept), or drop the subject. Royal language (ราชาศัพท์) is a separate vocabulary (`ทรง` + verb, royal nouns) that belongs only in text about the royal family. (Corrected 2026-11-09 after chakrit/kien-thai and Boom-Vitt/claude-thai-skills, both MIT.)
 
@@ -281,7 +281,7 @@ When AI "context switches" from a verifiable claim → an unverifiable one → d
 ❌ `"Postgres trigger ใช้ `pg_notify` แล้ว Redis เคย benchmark 55% บน HumanEval"`
    — `pg_notify` is verifiable, "55% HumanEval" is not, **drop the whole clause**
 
-✅ `"Postgres trigger ใช้ `pg_notify` ตามที่คุยกับ P'X (Slack 2026-06-02)"`
+✅ `"Postgres trigger ใช้ `pg_notify`"`
    — all verifiable
 
 ### 32.10 Anti-Fabrication Cheat Sheet (v2.2)
@@ -453,7 +453,7 @@ Tell them apart:
 
 **Grammar calques from translation** (Adapted from Boom-Vitt/claude-thai-skills (MIT)): the "we are excited to" frame (`พวกเราตื่นเต้นที่จะ...`), articles turned into words (`หนึ่ง`, `อันนั้น` for "a"/"the"), English plural thinking on Thai nouns. Thai counts with a classifier (`3 เครื่อง`, §53) and announces with `มาแล้ว` / `เปิดให้ใช้แล้ว`.
 ❌ `พวกเราตื่นเต้นที่จะประกาศฟีเจอร์ใหม่หนึ่งตัว: dark mode`
-✅ `dark mode มาแล้ว เปิดได้ที่ ตั้งค่า > การแสดงผล`
+✅ `dark mode มาแล้ว`
 
 **Idiom and formula calques** (Adapted from Boom-Vitt/claude-thai-skills (MIT)): an English idiom translated word for word (`ทำลายน้ำแข็ง` for "break the ice", `ในตอนท้ายของวัน` for "at the end of the day") or an English condolence formula translated literally reads machine-made. Use the Thai formula (`ขอแสดงความเสียใจด้วย`) or say the point plainly (`สรุปคือ`).
 
@@ -487,7 +487,7 @@ Tell them apart:
 - Filter scope: dev own work
 
 ❌ `"วันนี้ดิฉันได้ทำการปรับปรุงระบบ API ค่ะ"` — formal, AI
-✅ `"ปรับ API แล้ว PR #64 merged"`
+✅ `"ปรับ API แล้ว"`
 
 **Release notes** (Adapted from chakrit/kien-thai (MIT)): no first person; lead with the change and an active verb; close on the version or date. The `พอ` opener (§44) suits chat and docs, not release notes.
 
@@ -651,7 +651,7 @@ Thai has no neutral I/you, so a wrong pronoun reads machine-made even when every
 - Once a passage addresses the reader, even implicitly, keep addressing them; don't slip to `ใคร`/`คน`/`ใครๆ` for the same person. (Adapted from chakrit/kien-thai (MIT).)
 
 ❌ `ดิฉันได้ทำการ deploy แล้วค่ะ คุณลองเช็คได้เลยค่ะ` (to a teammate)
-✅ `deploy แล้วนะ พี่โอ๊ตลองเช็คได้เลย`
+✅ `deploy แล้วนะ ลองเช็คได้เลย`
 ❌ `ทางบริษัทได้รับเรื่องแล้ว เราจะแจ้งทีมงานของเรา` (three "we" forms)
 ✅ `ทีมงานรับเรื่องแล้วค่ะ ถ้ามีความคืบหน้าจะแจ้งในเธรดนี้`
 
@@ -685,7 +685,7 @@ For a person or brand replying to a customer (support chat, incident notice, sta
 - A refusal gives the policy reason and one alternative. A canned reply that doesn't answer the customer's actual question is a tell. Don't open with a bare thanks to a customer who is still angry. Every reply ends with the next step: what happens, or what the customer can do.
 
 ❌ `ขออภัยอย่างสูงในความไม่สะดวกค่ะ ทีมงานจะแก้ไขให้ภายใน 5 นาทีค่ะ` (for a slow OTP)
-✅ `ขออภัยค่ะ ตอนนี้ OTP ส่งช้ากว่าปกติ ทีมงานกำลังเช็คกับผู้ให้บริการ SMS อยู่ ได้ข้อมูลแล้วจะแจ้งในแชทนี้ค่ะ`
+✅ `ขออภัยค่ะ ตอนนี้ OTP ส่งช้ากว่าปกติค่ะ ทีมงานกำลังตรวจสอบอยู่ ได้ข้อมูลแล้วจะแจ้งในแชทนี้นะคะ`
 
 ### 58. Hidden Characters and Marks
 

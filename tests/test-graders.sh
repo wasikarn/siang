@@ -26,7 +26,8 @@ for (const g of fs.readdirSync(gdir).sort()) {
   if (/^type: tool_used$/m.test(fm)) {
     // A skill-fired grader must accept siang's skill and reject another plugin's skill of the same name.
     const im = fm.match(/^input_match: '((?:[^']|'')*)'$/m);
-    if (im) {
+    if (!im) { console.log(`FAIL ${c}/${g}: tool_used grader has no single-quoted input_match, so it accepts any skill`); bad = 1; }
+    else {
       const re = new RegExp(im[1].replace(/''/g, "'"));
       if (!re.test(JSON.stringify({skill: 'siang:humanize'}))) { console.log(`FAIL ${c}/${g}: input_match misses siang:humanize`); bad = 1; }
       if (re.test(JSON.stringify({skill: 'other:humanize'}))) { console.log(`FAIL ${c}/${g}: input_match accepts another plugin's humanize`); bad = 1; }

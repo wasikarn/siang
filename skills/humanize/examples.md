@@ -65,7 +65,7 @@ commit to a point of view):
 > ❌ การทดสอบ canary สองวันให้ผลลัพธ์ที่น่าสนใจ error rate ไม่เปลี่ยน latency p50 เพิ่มขึ้น 4 ms ทีมบางส่วนพร้อม rollout ขณะที่บางส่วนต้องการรออีกหนึ่งสัปดาห์
 > ✅ canary รันมาสองวัน error rate นิ่ง แต่ p50 ขึ้น 4 ms ผมยังไม่แน่ใจว่า 4 ms นี้ยอมได้ไหม ในทีมบางคนอยากปล่อยเลย บางคนขอรออีกสัปดาห์
 
-The point of view ("ผมยังไม่แน่ใจ") has to come from the author. Ask for it; don't invent one.
+The point of view ("ผมยังไม่แน่ใจ") came from the author when asked. Don't invent one: ask, or offer it as a suggestion next to the rewrite.
 
 ---
 
@@ -112,7 +112,7 @@ How the register selection gate (SKILL.md §0) + per-register patterns apply.
 ```
 ✅ ทำเสร็จ
 - measurement redesign: ปรับ API endpoint แล้ว PR #64 merged เข้า develop
-- review PR ของเพื่อนในทีม 2 ตัว
+- review code ของเพื่อนในทีม 2 คน
 - อัปเดต documentation
 ```
 
@@ -166,7 +166,7 @@ Given the draft `ผมได้ merge PR #64 เข้า develop แล้ว 
 | **A** (chat) | `"merge แล้วค่ะ PR #64 🎉"` | terse, emoji, 1st-line topic |
 | **B** (standup) | `"✅ PR #64 measurement redesign merged เข้า develop"` | status + PR + scope |
 | **C** (UI) | `"บันทึกการเปลี่ยนแปลงเรียบร้อย"` | status-word-first, action-complete |
-| **D** (blog) | `"PR #64 merge เข้า develop เมื่อเช้า เป็นก้าวแรกของ measurement redesign ก้าวต่อไปคือ..."` | narrative, personal, longer |
+| **D** (blog) | `"PR #64 merge เข้า develop แล้ว measurement redesign ก็เสร็จตามนั้น"` | full sentence, `ก็` pacing, no added detail |
 
 **Rule:** same fact, different register → different sentence shape, different particle, different length. Use the register the reader is in, not the one that "sounds good".
 

@@ -17,7 +17,7 @@ Adapted from chakrit/kien-thai (MIT, Copyright (c) 2026 Chakrit Wichian): `skill
 **Why AI breaks it:** it keeps the English subject slot. A patient that is really the topic stays buried behind the verb.
 
 ❌ `ทีมได้ตัดสินใจย้าย session store ไปใช้ Redis หลังจากเจอปัญหา lock`
-✅ `session store เราย้ายไป Redis แล้ว หลังเจอปัญหา lock`
+✅ `session store เราตัดสินใจย้ายไป Redis หลังเจอปัญหา lock`
 
 ❌ `การที่ migration รันนานทำให้ deploy ช้า`
 ✅ `migration รันนาน deploy เลยช้าตาม`
