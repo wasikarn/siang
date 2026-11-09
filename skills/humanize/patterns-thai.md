@@ -132,11 +132,11 @@ Same (a) drift-in-meaning failure as the `front-facing`/`API` cases above, in th
 > ❌ `rely on camera firmware v2.1+ (2026-06-20 rollout)`
 > ✅ `camera firmware dependency รอ confirm จาก camera team`
 > ❌ `rollback ใช้เวลา 2-5 นาที`
-> ✅ `rollback ใช้เวลาเท่าไหร่ขึ้นกับ image size/network/registry, verify หลัง deploy ครั้งแรก`
+> ✅ `rollback จะใช้เวลาเท่าไหร่ขึ้นอยู่กับ image size/network/registry, verify หลัง deploy ครั้งแรก`
 
 **TBD is a positive pattern, not an admission of failure:**
 > ✅ `ไฟล์ที่แตะ รอ confirm จาก PR diff`
-> ✅ `integration test [N] เคส drafted รอ run จริง`
+> ✅ `ร่าง integration test ไว้ [N] เคสแล้ว รอ run จริง`
 > ✅ `Threshold/window size TBD จะใส่หลัง calibrate กับ traffic จริง`
 
 `[N]` above is a placeholder for the real count from the source — never copy a number out of this example verbatim, and never let a future edit read this line as literal data instead of shape.
@@ -240,7 +240,7 @@ In an internal Thai doc use this pattern:
 | Slack/Chat | channel + date (link) | `"#anpr-dev 2026-06-02"` |
 
 ❌ `"ตามที่คุยกันในทีม"` — ไม่มี link, verify ไม่ได้
-✅ `"Slack #anpr-dev 2026-06-02 — คุยกับ P'X เรื่อง rate-limiter threshold"`
+✅ `"Slack #anpr-dev 2026-06-02 (<link>): คุยกับ P'X เรื่อง rate-limiter threshold"`
 
 ### 32.6 Epistemic Frame — Self-Aware Uncertainty (v2.2)
 
@@ -254,7 +254,7 @@ Tell "ไม่รู้" (do not know) apart from "รู้แต่ไม่�
 | **Verified** | ตรวจแล้ว | `"Wang et al. 2024 — 55%"` (พร้อม cite) |
 
 ❌ `"คิดว่าน่าจะประมาณ 55% ครับ ถ้า verify ก็คงจะใช่"` — 4 hedges, ไม่ระบุชัด
-✅ `"ผมเคยอ่านว่า Codex 55% แต่ยังไม่ได้ verify"` — 1 frame, ชัด
+✅ `"ประมาณ 55% ครับ แต่ยังไม่ได้ verify"` — 1 frame, ชัด
 
 ### 32.7 Name-Dropping Discipline (v2.2)
 
@@ -473,7 +473,7 @@ Tell them apart:
 - 1-10 words per message
 - Abbreviations: `อ่อ`, `จ้า`, `จริงดิ`, `555+`, `เหรอ`, `คับ` (informal `ครับ`)
 
-❌ `"สวัสดีค่ะ ดิฉันหวังว่าข้อความนี้จะเป็นประโยชน์ค่ะ"` — formal, AI
+❌ `"สวัสดีค่ะ ดิฉันมีเรื่องจะขอเรียนสอบถามค่ะ"` — formal, AI
 ✅ `"สวัสดีค่ะ พอดีมีเรื่องอยากถาม"` — natural chat
 
 **Human signals to keep** (Adapted from Boom-Vitt/claude-thai-skills (MIT)): vowel stretching (`ได้แล้วววว`), 555 that grows with the joke, softeners (`น้า`, `เนอะ`, `ป่ะ`, `อ่ะ`). Leave them when the user's draft has them; adding them mechanically, one per line, is itself a tell. In written D they mostly drop.
