@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "siang",
+  "displayName": "Siang",
+  "version": "0.1.0",
+  "description": "Humanize dev and tech writing in English, Thai, and Thai-English code-switching so it reads like a person wrote it, not a model.",
+  "author": {
+    "name": "wasikarn"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/wasikarn/siang",
+  "repository": "https://github.com/wasikarn/siang",
+  "skills": [
+    "./skills/"
+  ],
+  "keywords": [
+    "writing",
+    "thai",
+    "humanize",
+    "ai-tells",
+    "style"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "siang",
+  "owner": {
+    "name": "wasikarn"
+  },
+  "description": "Siang: humanize dev and tech writing (English and Thai).",
+  "plugins": [
+    {
+      "name": "siang",
+      "source": "./",
+      "description": "Humanize dev and tech writing in English, Thai, and Thai-English code-switching so it reads like a person wrote it, not a model.",
+      "category": "productivity"
+    }
+  ]
+}
