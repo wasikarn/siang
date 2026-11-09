@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Refuses a commit that changes skills/ without changing "version" in .claude-plugin/plugin.json:
+# `claude plugin update` copies nothing while the version is unchanged, so the edit would never
+# reach an installed copy. Enable once per clone: git config core.hooksPath git-hooks
+set -euo pipefail
+git diff --cached --name-only | grep -q '^skills/' || exit 0
+ver() { python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])'; }
+new=$(git show :.claude-plugin/plugin.json | ver)
+old=$(git show HEAD:.claude-plugin/plugin.json 2>/dev/null | ver || echo none)
+if [ "$new" = "$old" ]; then
+  echo "pre-commit: skills/ changed but plugin.json version is still $old; bump it (e.g. a patch bump) and stage plugin.json." >&2
+  exit 1
+fi
