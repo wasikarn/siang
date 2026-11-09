@@ -602,7 +602,7 @@ Adapted from chakrit/kien-thai (MIT), `references/grammar.md` and `references/ai
 - **Classifier.** Counting a noun needs its own classifier; AI defaults to `ใบ` or drops it. Tech nouns: `เครื่อง` (server, device), `ตัว` (function, variable, instance, param), `อัน` (token, record, generic), `บรรทัด` (line), `รายการ` (entry, transaction), `หน้า` (page). Unsure → drop the count.
   ❌ `เพิ่ม server อีก 2 ตัว` ✅ `เพิ่ม server อีก 2 เครื่อง`
 - **Missing จะ.** English present covers future and modal; Thai marks it with `จะ`.
-  ❌ `ใช้ batch size เท่าไหร่ขึ้นกับ RAM ของ node` ✅ `จะใช้ batch size เท่าไหร่ขึ้นกับ RAM ของ node`
+  ❌ `ใช้ batch size เท่าไหร่ขึ้นกับ RAM ของ node` ✅ `จะใช้ batch size เท่าไหร่ขึ้นอยู่กับ RAM ของ node`
 - **Look-alike function words.** `จะ` (will) vs `จน` (until); `เหมาะ` needs `กับ`.
   ❌ `เหมาะงานที่ต้อง retry` ✅ `เหมาะกับงานที่ต้อง retry`
 - **Verb calque.** Idiomatic-physical English verbs (burst, drop, cap, throttle) rarely map to the literal Thai verb.
@@ -632,7 +632,7 @@ Thai has no neutral I/you, so a wrong pronoun reads machine-made even when every
 ❌ `ดิฉันได้ทำการ deploy แล้วค่ะ คุณลองเช็คได้เลยค่ะ` (to a teammate)
 ✅ `deploy แล้วนะ พี่โอ๊ตลองเช็คได้เลย`
 ❌ `ทางบริษัทได้รับเรื่องแล้ว เราจะแจ้งทีมงานของเรา` (three "we" forms)
-✅ `ทีมงานได้รับเรื่องแล้ว มีความคืบหน้าจะแจ้งในเธรดนี้`
+✅ `ทีมงานรับเรื่องแล้วค่ะ ถ้ามีความคืบหน้าจะแจ้งในเธรดนี้`
 
 ### 56. Dates and Times
 
@@ -660,7 +660,7 @@ For a person or brand replying to a customer (support chat, incident notice, sta
 - Empathy first, then the fix, short. Never defensive (`ก็แจ้งไว้แล้ว`, `ไม่ใช่ความผิดของระบบ`).
 
 ❌ `ขออภัยอย่างสูงในความไม่สะดวกค่ะ ทีมงานจะแก้ไขให้ภายใน 5 นาทีค่ะ` (for a slow OTP)
-✅ `ขออภัยค่ะ ตอนนี้ OTP ส่งช้ากว่าปกติ ทีมงานกำลังเช็คกับผู้ให้บริการ SMS อยู่ ได้ความแล้วจะแจ้งในแชทนี้ค่ะ`
+✅ `ขออภัยค่ะ ตอนนี้ OTP ส่งช้ากว่าปกติ ทีมงานกำลังเช็คกับผู้ให้บริการ SMS อยู่ ได้ข้อมูลแล้วจะแจ้งในแชทนี้ค่ะ`
 
 ### 58. Hidden Characters and Marks
 
