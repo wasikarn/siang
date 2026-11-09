@@ -10,8 +10,11 @@ that must survive lightly edited, and a file-input case that proves the prose-on
 Five more Thai cases carry tag `v012` as regression guards: hidden characters (§58), calques, PR
 grammar (§44/§46/§53), a support reply that echoes the customer back (§57/§59), and a clean LINE
 chat control (§39.1). Plain Claude passes four of them too; their job is to catch siang losing to
-it, as it first did on the echo-back and grammar cases (0.67 and 0.93 against plain 0.83 and 1.00,
-2026-11-09) before the §57/§59 rules and the scan.py §44 cue.
+it, as it did on the echo-back and grammar cases (0.67 and 0.93 against plain 0.83 and 1.00,
+2026-11-09). With the §57/§59 rules and the scan.py §44 cue, siang scored 1.00 on both over 3 runs.
+That is weak evidence: the rules were written from these two fixtures, and grammar moved from 1 miss
+in 3 to 0 in 3, within run-to-run noise. A held-out fixture with the same tells in other words would
+show whether the fix generalizes.
 
 Each case is `prompt.md` (invokes the skill by `skill: "siang:humanize"`), `case.yaml` (a
 `scaffold_script` that writes the fixture), and `graders/`. `skill-fired.md` is
