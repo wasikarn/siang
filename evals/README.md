@@ -17,10 +17,15 @@ form instead (`3 กุมภาพันธ์ 2570`, `ลิงก์`), so th
 returning the source unchanged must fail it. The four newest cases use regex graders only, so
 their scores don't move with the LLM judge.
 
+One case covers `siang:technical-writing` (tag `technical-writing`): `technical-writing-stale-howto` hands
+the skill a stale how-to next to the script it documents. Regex graders check that the removed `--force` flag
+is gone, the dry-run command and its real output are present, the steps are numbered, the title names the
+goal and `KEYSTORE_URL` survives. Its prompt names `siang:technical-writing`; the other nine name `siang:humanize`.
+
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
 Free check, no API call: `bash tests/test-graders.sh` proves every prompt invokes
-`siang:humanize` and every regex grader compiles as a JS RegExp and matches its scaffolded fixture
+the siang skill it names and every regex grader compiles as a JS RegExp and matches its scaffolded fixture
 (so a `not_contains` grader can fail and a `contains` grader can pass).
 
 ## Known gap

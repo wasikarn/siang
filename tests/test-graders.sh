@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Checks every eval case without a paid run: prompt.md invokes siang:humanize, every regex grader
+# Checks every eval case without a paid run: prompt.md invokes a siang skill, every regex grader
 # compiles as a JS RegExp (the eval runtime's engine), and matches its scaffolded fixture. A
 # not_contains grader that misses the fixture can never fail; a contains grader that misses it can
 # never pass. A contains grader marked '# fixture: absent' checks a corrected form instead, so it must
@@ -13,12 +13,14 @@ fail=0
 for d in "$root"/evals/*/; do
   c=$(basename "$d")
   [ -f "$d/case.yaml" ] || continue
-  grep -q 'skill: "siang:humanize"' "$d/prompt.md" || { echo "FAIL $c: prompt.md does not invoke siang:humanize"; fail=1; }
+  skill=$(grep -o 'skill: "siang:[a-z-]*"' "$d/prompt.md" | head -1 | sed 's/skill: "\(.*\)"/\1/' || true) # fallback: empty means no skill named, reported below
+  [ -n "$skill" ] || { echo "FAIL $c: prompt.md does not invoke a siang skill"; fail=1; continue; }
   mkdir -p "$work/$c"
   (cd "$work/$c" && bash "$d/scaffold.sh" >/dev/null)
-  node - "$d/graders" "$work/$c" "$c" <<'JS' || fail=1
+  node - "$d/graders" "$work/$c" "$c" "$skill" <<'JS' || fail=1
 const fs = require('fs'), path = require('path');
-const [gdir, ws, c] = process.argv.slice(2);
+const [gdir, ws, c, skill] = process.argv.slice(2);
+const bare = skill.split(':')[1];
 const all = fs.readdirSync(ws, {recursive: true}).map(f => path.join(ws, f))
   .filter(f => fs.statSync(f).isFile()).map(f => fs.readFileSync(f, 'utf8')).join('\n');
 let bad = 0;
@@ -30,8 +32,8 @@ for (const g of fs.readdirSync(gdir).sort()) {
     if (!im) { console.log(`FAIL ${c}/${g}: tool_used grader has no single-quoted input_match, so it accepts any skill`); bad = 1; }
     else {
       const re = new RegExp(im[1].replace(/''/g, "'"));
-      if (!re.test(JSON.stringify({skill: 'siang:humanize'}))) { console.log(`FAIL ${c}/${g}: input_match misses siang:humanize`); bad = 1; }
-      if (re.test(JSON.stringify({skill: 'other:humanize'}))) { console.log(`FAIL ${c}/${g}: input_match accepts another plugin's humanize`); bad = 1; }
+      if (!re.test(JSON.stringify({skill}))) { console.log(`FAIL ${c}/${g}: input_match misses ${skill}`); bad = 1; }
+      if (re.test(JSON.stringify({skill: `other:${bare}`}))) { console.log(`FAIL ${c}/${g}: input_match accepts another plugin's ${bare}`); bad = 1; }
     }
     continue;
   }
