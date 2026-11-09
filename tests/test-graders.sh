@@ -51,7 +51,8 @@ for (const g of fs.readdirSync(gdir).sort()) {
     if (passes(t) !== (kind === 'pass')) { console.log(`FAIL ${c}/${g}: must-${kind} sample judged wrong: ${t}`); bad = 1; }
   }
   const file = (fm.match(/path: ([^}\s]+)/) || [])[1];
-  const sample = file ? fs.readFileSync(path.join(ws, file), 'utf8') : all;
+  // A file the model must create (out.pdf) is absent from the fixture: read it as empty.
+  const sample = file ? (fs.existsSync(path.join(ws, file)) ? fs.readFileSync(path.join(ws, file), 'utf8') : '') : all;
   if (/^# fixture: absent$/m.test(fm)) {
     // A contains grader for a corrected form (BE year, standard spelling): copying the source must fail it.
     if (!/^match: contains$/m.test(fm)) { console.log(`FAIL ${c}/${g}: '# fixture: absent' only fits a contains grader`); bad = 1; }

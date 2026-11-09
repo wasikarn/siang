@@ -126,6 +126,21 @@ Free check, no API call: `bash tests/test-graders.sh` proves every prompt invoke
 the siang skill it names and every regex grader compiles as a JS RegExp and matches its scaffolded fixture
 (so a `not_contains` grader can fail and a `contains` grader can pass).
 
+## Acceptance rule (set before the run, graders frozen)
+
+A skill stays a skill only if, on its held-out cases (written by an agent that never saw the skill), all hold:
+the with-skill mean score is above 0.90; the mean Δ against the without arm is at least +0.05; no case loses to
+the without arm by more than 0.05. Cost is reported, not gated. Runs: 5 per arm, spend capped at $40. A skill that
+fails is deleted or converted (scripts and knowledge kept as plain tools or docs, `SKILL.md` removed); humanize is
+owned by another session and gets the same rule only with that session's agreement.
+
+Held-out cases: `holdout-document-review-*`, `holdout-personal-voice-*`, `holdout-technical-writing-*`,
+`holdout-thai-pua-repair-*` (two each). Graders and fixtures are frozen at sha256 `d1cb35dbc7742f68` (first 16
+hex of the hash of every file under those eight directories, sorted by path, as
+`find <dirs> -type f | sort | xargs shasum -a 256 | shasum -a 256`). Changing any of those files after the run
+voids it and the run starts again. Known loose graders, left as they are: `no-dest-flag` fails a migration note
+that names `--dest`, `no-email-claim` fails any use of "hourly", one branch of `output-dir-prereq` is loose.
+
 ## Known gap
 
 - **Invented facts in rewrites.** The Grit Gate's fabrication boundary (no new fact, number,
