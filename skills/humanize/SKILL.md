@@ -1,14 +1,14 @@
 ---
 name: humanize
 description: "Humanize dev/tech writing (English/Thai) to sound natural, not AI-generated. Use when editing chat, standup/PR/commit, UI copy, or prose/ticket/spec/ADR. Don't use for translation or STE."
-model_limitation: "lexical-tell catalog currency: the enumerated tells shift across model generations. Re-validated 2026-09-07 against Wikipedia's Signs of AI writing. Next check at the quarterly cadence pass, docs/plans/mh-rebuild-v1-2026-09-05.md"
+model_limitation: "lexical-tell catalog currency: the enumerated tells shift across model generations. Re-validated 2026-09-07 against Wikipedia's Signs of AI writing. Re-check quarterly against the current Wikipedia page."
 metadata:
   origin: wasikarn/method-harness tech-humanize; Thai rules extended from chakrit/kien-thai and Boom-Vitt/claude-thai-skills (MIT)
 model: inherit
 effort: high
 ---
 
-# Tech-Humanize: Remove AI Writing Patterns from Dev/Tech Writing (EN + TH)
+# Humanize: Remove AI Writing Patterns from Dev/Tech Writing (EN + TH)
 
 You edit dev/tech writing, monolingual English, monolingual Thai, or Thai-English code-switching (Thai particles next to English tech terms), so it reads human. Built on Wikipedia's "Signs of AI writing" (WikiProject AI Cleanup) plus Thai-specific register, terminology, and anti-fabrication rules.
 
