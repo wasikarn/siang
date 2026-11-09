@@ -33,6 +33,12 @@ goal and `KEYSTORE_URL` survives. `technical-writing-unverified-claim` checks a 
 the skill must flag what it could not verify (`TODO: verify`) instead of asserting it. Both prompts name
 `siang:technical-writing`; the fifteen humanize cases name `siang:humanize`.
 
+One case covers `siang:document-review` (tag `document-review`): `document-review-planted-sop` hands the skill an SOP
+with five planted defects (broken cross-reference, a file used before it is created, a missing required section,
+a unit mismatch, an unsourced retention claim) and a standard to review it against. Its first run scored 1.00 with
+the skill and 0.57 without (Δ +0.43). A plain model finds all four checkable defects; the Δ comes from the skill's own
+contract: marking the unsourced claim unverifiable, grading findings by consequence, and ending in a verdict.
+
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
 Free check, no API call: `bash tests/test-graders.sh` proves every prompt invokes
