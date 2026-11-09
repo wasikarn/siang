@@ -52,8 +52,9 @@ Two harder cases follow. `technical-writing-hidden-facts` asks for one doc for t
 and exit-code reference) over a script with a hidden `jq` prerequisite, a lock that exits 3 and a stale draft claiming
 encryption at rest; first run 1.00 with the skill, 0.86 without (Δ +0.14): a plain model keeps the unsourced claim.
 `personal-voice-thai-oneoffs` gives three Thai chat samples where one has an emoji and another `!!!`; first run 0.89
-with, 0.67 without (Δ +0.22): a plain model copies the one-off emoji. The skill's profile still omits a sentence-length
-median on samples this short, which the `profile-measured` grader keeps visible.
+with, 0.67 without (Δ +0.22): a plain model copies the one-off emoji. The first run showed the skill's profile omitting a
+sentence-length median on samples this short (`profile-measured`); 0.1.17 made the step-2 criterion explicit and a rerun
+scored 1.00 against 0.67 (Δ +0.33), one run, so it may be noise.
 
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).

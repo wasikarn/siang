@@ -18,7 +18,7 @@ You make a draft sound like one specific person. The voice comes from measuremen
    - formality and address (pronouns, particles, titles)
    - recurring words, hedges, intensifiers
    - language mixing (Thai-English ratio, which terms stay English)
-   Done when: every feature has a measured value and one quoted example from a sample.
+   Done when: every feature has a measured value (a median for each length, a count for each punctuation habit, even when samples are one clause long) and one quoted example from a sample.
 3. **Profile.** Keep a feature as a _habit_ when at least 2 samples show it; a feature seen once is a one-off and stays out. Show the profile in the reply; write it to a file only at a path the user names.
    Done when: every habit cites the samples that show it.
 4. **Draft.** Write the content first from the user's facts, then apply the habits. Voice changes how a thing is said, so an anecdote, opinion, number or name the user did not supply stays out.

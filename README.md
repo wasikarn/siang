@@ -90,7 +90,7 @@ not the total: plain Claude already scores high on many cases.
 - 18 cases cover `humanize`, English and Thai. Several are regression guards that plain Claude
   also passes; their job is to catch siang losing to it.
 - 6 cases cover the other three skills. First runs, one run per arm: `document-review` 1.00 vs
-  0.57 (Δ +0.43), `personal-voice` Δ +0.22 on two cases, `technical-writing` Δ +0.14 on its
+  0.57 (Δ +0.43), `personal-voice` Δ +0.22 and +0.33 on its two cases, `technical-writing` Δ +0.14 on its
   hardest case and 0.00 on two easier ones. Treat these as first signals, not settled results.
 
 Free check, no API call: `bash tests/test-graders.sh`. A paid run is
