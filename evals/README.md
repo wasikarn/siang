@@ -103,6 +103,14 @@ bullet list that only one sample has, so the one-off exclusion still slips occas
 looseness in these graders: a bare number (14, 21, 12, 18, 45, 300) counts as a hit even in an unrelated finding, and
 `review.md` starts with a "no issues found" line so a run that never writes it fails the all-clear grader.
 
+No-op pruning check (0.1.23): `technical-writing` and `document-review` dropped the steps plain Claude already does (the
+Diátaxis table, the style-rule list, the claim and requirement ID inventory), keeping `TODO: verify`, running each printed
+command, "unverifiable is never a pass", the ledger grades and the verdict. Six cases, with-arm only, 3 runs each, before and
+after: every case scored 1.00 after (the five that scored 1.00 before stayed at 1.00; `document-review-planted-sop` moved
+0.92 to 1.00, within noise), and cost did not fall: $3.20 before, $3.29 after for the six cases. A shorter SKILL.md did not
+make a run cheaper; the cost sits in the work, not in the skill text. The pruned versions stay because they score the
+same and are easier to maintain.
+
 
 Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
