@@ -384,7 +384,7 @@ Tell them apart:
 ❌ `"เรามุ่งมั่นมอบประสบการณ์ที่ดีที่สุด"` (UI-aspirational)
 ✅ `"ชำระเงินไม่สำเร็จ ลองใหม่อีกครั้ง หรือเช็คยอดเงิน"` (UI-actual)
 
-**The specific status is the fact.** When the source names one (an English status such as `Declined`, an error code), the UI leads with it in Thai (`ถูกปฏิเสธ`). A vague cause (`สถานการณ์ที่ไม่คาดคิด`) or a team-effort line (`ทีมงานกำลังแก้ไข`) beside it is filler, not a fact for step 6 to keep, and it often contradicts the status: nobody on the team is fixing a bank decline.
+**The specific status is the fact.** When the source names one (an English status such as `Declined`, an error code), the UI leads with it in Thai (`ถูกปฏิเสธ`). Cut a vague cause (`สถานการณ์ที่ไม่คาดคิด`) or a team-effort line (`ทีมงานกำลังแก้ไข`) only when it contradicts that status: nobody on the team is fixing a bank decline. When the line is true and changes what the user does, keep it: `ระบบขัดข้อง ทีมงานกำลังแก้ไข ลองใหม่ภายหลัง` for an outage. Unsure which one the source means? Keep it and ask.
 
 ### 37. Nominalization Avoidance
 
