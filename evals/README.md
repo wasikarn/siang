@@ -280,3 +280,11 @@ and its seven cases were removed (`personal-voice-terse-writer`, `personal-voice
 ## Second held-out round (2026-11-10, before the run)
 
 Eight new cases, `holdout3-*` (two each for `humanize`, `personal-voice`, `technical-writing`, `document-review`), written by agents that were told not to read `skills/` or any existing case for their skill. Graders and fixtures are frozen at sha256 `69b6e792354fd05d` (first 16 hex of `find evals/holdout3-* -type f | sort | xargs shasum -a 256 | shasum -a 256`, run from the repo root). Rule: with-skill mean above 0.90 and no case losing to the without arm by more than 0.05, 5 runs per arm. Nothing in these cases or the skills changes after the run starts; a miss is reported as it is.
+
+### Result of the second held-out round (2026-11-10, graders frozen at `69b6e792354fd05d`, commit 7916cd9)
+
+5 runs per arm, 8 cases, $12.45. With-skill / without / Δ: `holdout3-document-review-access-review-policy` 1.00 / 1.00 / 0.00, `holdout3-document-review-backup-runbook` 1.00 / 1.00 / 0.00, `holdout3-humanize-pr-rate-limiter` 1.00 / 1.00 / 0.00, `holdout3-humanize-th-incident-note` 1.00 / 1.00 / 0.00, `holdout3-personal-voice-semicolon-memo` 1.00 / 1.00 / 0.00, `holdout3-personal-voice-thai-chat` 1.00 / 1.00 / 0.00, `holdout3-technical-writing-snap-backup` 1.00 / 1.00 / 0.00, `holdout3-technical-writing-report-export` 0.90 / 0.97 / −0.07.
+
+Against the rule (with-skill mean above 0.90, no case losing by more than 0.05): `document-review` (1.00), `humanize` (1.00) and `personal-voice` (1.00) pass. `technical-writing` has a mean of 0.95 but loses by 0.07 on `report-export`, so it fails on that case. The only failing grader was `no-range-flags-in-command` (4 of 5 with-skill runs, 1 of 5 without). Its pattern `report\.py[^\n]*--(?:until|from)\b` matches any line that mentions `report.py` and then `--from` or `--until`, so a correct migration note such as "report.py no longer accepts --from or --until" would also fail it. That is a likely cause but is not confirmed: no sandbox was kept. The grader is left as it is, because changing it after the result would void the run.
+
+Seven of eight cases scored 1.00 in both arms, so these cases do not separate the skills from plain Claude; they show only that the skills do no harm there.
