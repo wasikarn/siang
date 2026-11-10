@@ -41,6 +41,7 @@ RULES = [
     ("§57", "apology size", r"ขออภัยอย่างสูง"),
     ("§57", "stock reassurance", r"ไม่ต้อง(กังวล|ห่วง)"),
     ("§59", "echo-back of the customer's message", r"แจ้ง(มา)?ว่า[^\n]{0,80}ใช่(ไหม|มั้ย)(คะ|ครับ)"),
+    ("§53", "Thai numeral before an English noun", r"(สอง|สาม|สี่|ห้า|หก|เจ็ด|แปด|เก้า|สิบ|หนึ่ง)[ ]+[A-Za-z]"),  # write 2 skill ตัว as "2 ตัว" or "skill 2 ตัว"
     ("§58", "zero-width character", r"[\u200b\u200c\u200d\ufeff]"),
     ("§40", "particle slip (ค่ะ for คะ)", r"((?<!ช)นะ|(?<!ผ้า)ไหม|มั้ย|หรือเปล่า)ค่ะ"),
 ]

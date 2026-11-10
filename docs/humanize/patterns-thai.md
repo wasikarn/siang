@@ -622,6 +622,7 @@ Adapted from chakrit/kien-thai (MIT), `references/grammar.md` and `references/ai
 
 - **Classifier.** Counting a noun needs its own classifier; AI defaults to `ใบ` or drops it. Tech nouns: `เครื่อง` (server, device), `ตัว` (function, variable, instance, param), `อัน` (token, record, generic), `บรรทัด` (line), `รายการ` (entry, transaction), `หน้า` (page). Unsure of the classifier → repeat the noun (`3 VM`, `3 instances`) or use the generic `ตัว`; never drop the count.
   ❌ `สร้าง VM ใหม่ 3 ใบ` ✅ `สร้าง VM ใหม่ 3 เครื่อง`
+- **Thai numeral before an English noun.** `สอง skill` or `อีกสี่ skill` reads as translated word for word. Use the Arabic numeral with the classifier, or put the noun first: `2 ตัว`, `skill 2 ตัว`, `skill อีก 4 ตัว`. `scan.py` flags the pattern; an ordinal (`ที่สอง`) is fine, so judge each hit.
 - **Missing จะ.** English present covers future and modal; Thai marks it with `จะ`.
   ❌ `ใช้ batch size เท่าไหร่ขึ้นกับ RAM ของ node` ✅ `จะใช้ batch size เท่าไหร่ขึ้นอยู่กับ RAM ของ node`
 - **Look-alike function words.** `จะ` (will) vs `จน` (until); `เหมาะ` needs `กับ`.

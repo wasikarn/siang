@@ -125,4 +125,12 @@ expect "§36"  "§36"  <<< "เรามุ่งมั่นพัฒนาร�
 expect "§32.8" "§32.8" <<< "ขอบคุณท่านลูกค้าทุกท่าน"
 expect "§51"  "§51"  <<< "ในยุคปัจจุบันทุกคนใช้แอป"
 expect "§19"  "§19 curly quote" <<< "He said “ship it”."
+expect "§53 numeral before English"  "§53 Thai numeral before an English noun" <<< "ระบบมีสอง skill ให้ใช้"
+expect "§53 numeral after another word" "§53 Thai numeral before an English noun" <<< "เคสของอีกสี่ skill รันซ้ำ"
+expect "§53 Arabic numeral is fine" "0 candidate(s)" <<< "ระบบมี 2 skill ให้ใช้ และ skill อีก 4 ตัว"
+# The repo's own READMEs must scan clean: they are Thai prose this tool is meant to check.
+for f in README.md README.en.md; do
+  out=$(python3 "$scan" "$root/$f")
+  if [[ "${out##*$'\n'}" == "0 candidate(s)"* ]]; then echo "PASS $f scans clean"; else echo "FAIL $f:"; echo "$out"; fail=1; fi
+done
 exit "$fail"
