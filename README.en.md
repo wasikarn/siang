@@ -29,10 +29,16 @@ claude plugin install siang@siang
 
 ## The two skills
 
-| Skill | Use it when | What it does |
-|---|---|---|
-| `siang:thai-pua-repair` | text extracted from a Thai PDF shows private-use glyphs or broken tone marks | maps the 27 Windows UPC-font glyphs (U+F700..U+F71A) back to standard Thai, reports any it cannot map, and, on request, rewrites the PDF's ToUnicode maps so the file itself copies and searches correctly (`pua_pdf.py`, needs pikepdf) |
-| `siang:personal-voice` | you want drafts in your own voice | measures your samples, keeps a feature only if two samples show it, drafts from your facts, checks the draft against the profile |
+**`siang:thai-pua-repair`**
+
+- Use it when: text extracted from a Thai PDF shows private-use glyphs or broken tone marks
+- What it does: maps the 27 Windows UPC-font glyphs (U+F700..U+F71A) back to standard Thai, reports any it cannot map, and, on request, rewrites the PDF's ToUnicode maps so the file itself copies and searches correctly (`pua_pdf.py`, needs pikepdf)
+
+**`siang:personal-voice`**
+
+- Use it when: you want drafts in your own voice
+- What it does: measures your samples, keeps a feature only if two samples show it, drafts from your facts, checks the draft against the profile
+
 
 Run one with a slash command (`/siang:personal-voice`) or just ask. Example prompts:
 ```
