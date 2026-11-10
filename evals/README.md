@@ -276,3 +276,7 @@ and its seven cases were removed (`personal-voice-terse-writer`, `personal-voice
   cause, name or result) has no grader. A one-word haiku judge could not check it in either
   phrasing: written "PASS unless", it passed every planted invention; written "Score 1 only if",
   it failed correct replies 3/3. Presence of the source's specifics is checked by regex instead.
+
+## Second held-out round (2026-11-10, before the run)
+
+Eight new cases, `holdout3-*` (two each for `humanize`, `personal-voice`, `technical-writing`, `document-review`), written by agents that were told not to read `skills/` or any existing case for their skill. Graders and fixtures are frozen at sha256 `69b6e792354fd05d` (first 16 hex of `find evals/holdout3-* -type f | sort | xargs shasum -a 256 | shasum -a 256`, run from the repo root). Rule: with-skill mean above 0.90 and no case losing to the without arm by more than 0.05, 5 runs per arm. Nothing in these cases or the skills changes after the run starts; a miss is reported as it is.
