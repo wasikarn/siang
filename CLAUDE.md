@@ -13,7 +13,7 @@
 - Skill files may contain Thai: Thai writing is the subject matter.
 - New rules adapted from another project: paraphrase the rule, write a fresh example, never copy
   a source's examples or quoted third-party passages, and add the source to
-  `docs/humanize/references.md` ("Sources adapted") and `THIRD_PARTY_NOTICES.md`.
+  `skills/humanize/references.md` ("Sources adapted") and `THIRD_PARTY_NOTICES.md`.
 - Section numbers: §1-§30 and §59-§61 universal (`patterns-universal.md`), §31-§42 and §53-§58 in
   `patterns-thai.md`, §43-§52 in `patterns-thai-structure.md`. The next free number is §62; take
   it in whichever file the rule belongs to, and never renumber.

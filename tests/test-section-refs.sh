@@ -7,15 +7,15 @@ root=$(cd "$(dirname "$0")/.." && pwd)
 python3 - "$root" <<'PY'
 import glob, os, re, sys
 root = sys.argv[1]; os.chdir(root)
-skill = sorted(glob.glob('docs/humanize/*.md'))
+skill = sorted(glob.glob('skills/humanize/*.md'))
 defs, dup = {}, []
 for f in skill:
     for m in re.finditer(r'(?m)^#{2,5} +§?(\d+(?:\.\d+)*)\.?\s', open(f).read()):
         n = m.group(1)
         if n in defs: dup.append(f"§{n} defined in {defs[n]} and {f}")
         defs.setdefault(n, f)
-cues = set(re.findall(r'(?m)^\| *(\d+) *\|', open('docs/humanize/cue-sheet.md').read()))
-files = skill + sorted(glob.glob('docs/humanize/scripts/*.py')) + ['README.md', 'README.en.md', 'CLAUDE.md'] + sorted(glob.glob('evals/*/prompt.md') + glob.glob('evals/*/graders/*.md'))
+cues = set(re.findall(r'(?m)^\| *(\d+) *\|', open('skills/humanize/cue-sheet.md').read()))
+files = skill + sorted(glob.glob('skills/humanize/scripts/*.py')) + ['README.md', 'README.en.md', 'CLAUDE.md'] + sorted(glob.glob('evals/*/prompt.md') + glob.glob('evals/*/graders/*.md'))
 bad = list(dup)
 for f in files:
     for i, line in enumerate(open(f), 1):

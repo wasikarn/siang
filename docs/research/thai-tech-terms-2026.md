@@ -1,4 +1,4 @@
-<!-- Research note, 2026-11-09. Primary sources only; every claim cites its source. Not loaded by the skill; §31 in docs/humanize/patterns-thai.md cites it. -->
+<!-- Research note, 2026-11-09. Primary sources only; every claim cites its source. Not loaded by the skill; §31 in skills/humanize/patterns-thai.md cites it. -->
 
 # Thai and English tech terms in use, 2026
 

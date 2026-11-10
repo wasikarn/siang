@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# docs/humanize/scripts/scan.py finds the planted tells in tests/fixtures/humanize, finds nothing in plain
+# skills/humanize/scripts/scan.py finds the planted tells in tests/fixtures/humanize, finds nothing in plain
 # prose, and skips frontmatter and code blocks. Run: bash tests/test-scan.sh
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
-scan="$root/docs/humanize/scripts/scan.py"
+scan="$root/skills/humanize/scripts/scan.py"
 work=$(mktemp -d)
 trap 'python3 -c "import shutil,sys; shutil.rmtree(sys.argv[1])" "$work"' EXIT
 fail=0

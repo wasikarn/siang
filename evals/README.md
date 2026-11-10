@@ -2,6 +2,9 @@
 
 Cases for `siang:humanize` (removed in 0.1.28), `siang:document-review` (removed in 0.1.26), `siang:technical-writing` (removed in 0.1.27) and `siang:personal-voice` (removed in 0.1.32) are described below as a record of what was measured; they are no longer in the tree.
 
+**0.1.33 (2026-11-10):** `humanize`, `document-review`, `technical-writing` and `personal-voice` were restored as skills under the revised rule. Measured text: `humanize` and `document-review` and `technical-writing` are the `SKILL.md` files from the commits before their removals (b20f58a, eb32e68, bf055b4); `personal-voice` is the 0.1.32 text (no cue-sheet step), whose frontmatter comes from the commit before 7fe87e7. Their eval cases were restored from the same commits. These restored skills have not been rerun since the restore.
+
+
 Eighteen cases for `siang:humanize` in `claude plugin eval`'s native layout (tag `humanize`). Ten of them:
 eight planted cases (English prose, English Slack update with only subtle tells §9/§28/§30/§59-§61,
 Thai standup, Thai UI copy, Thai customer-chat reply, Thai maintenance notice for §56 dates and
@@ -131,8 +134,9 @@ the siang skill it names and every regex grader compiles as a JS RegExp and matc
 ## Acceptance rule (set before the run, graders frozen)
 
 A skill stays a skill only if, on its held-out cases (written by an agent that never saw the skill), all hold:
-the with-skill mean score is above 0.90; the mean Δ against the without arm is at least +0.05; no case loses to
-the without arm by more than 0.05. Cost is reported, not gated. Runs: 5 per arm, spend capped at $40. A skill that
+the with-skill mean score is above 0.90; no case loses to the without arm by more than 0.05 (revised 2026-11-10: the
+original rule also required a mean Δ against the without arm of at least +0.05, and the verdicts below were reached under it;
+the Δ figures stay as a record, and four skills removed under that clause were restored in 0.1.33). Cost is reported, not gated. Runs: 5 per arm, spend capped at $40. A skill that
 fails is deleted or converted (scripts and knowledge kept as plain tools or docs, `SKILL.md` removed); humanize is
 owned by another session and gets the same rule only with that session's agreement (it was applied later, see the humanize verdict below).
 

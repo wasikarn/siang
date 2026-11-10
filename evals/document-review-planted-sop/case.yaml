@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: document-review-planted-sop
+context:
+  scaffold_script: scaffold.sh
