@@ -26,7 +26,7 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## สอง skill
+## Skill 2 ตัว
 
 **`siang:thai-pua-repair`**
 
