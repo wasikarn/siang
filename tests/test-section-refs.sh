@@ -15,7 +15,7 @@ for f in skill:
         if n in defs: dup.append(f"§{n} defined in {defs[n]} and {f}")
         defs.setdefault(n, f)
 cues = set(re.findall(r'(?m)^\| *(\d+) *\|', open('skills/humanize/cue-sheet.md').read()))
-files = skill + sorted(glob.glob('skills/humanize/scripts/*.py')) + ['README.md', 'README.en.md', 'CLAUDE.md'] + sorted(f for f in glob.glob('evals/*/prompt.md') + glob.glob('evals/*/graders/*.md') if 'document-review' not in f)  # document-review cases cite § of the audited runbook, not of humanize
+files = skill + sorted(glob.glob('skills/humanize/scripts/*.py')) + ['README.md', 'README.en.md', 'CLAUDE.md'] + sorted(f for f in glob.glob('evals/*/prompt.md') + glob.glob('evals/*/graders/*.md') if re.search(r'(?m)^tags:.*\bhumanize\b', open(os.path.join(os.path.dirname(os.path.dirname(f)) if '/graders/' in f else os.path.dirname(f), 'prompt.md')).read()))  # § numbers belong to humanize; other cases cite their own fixtures' sections
 bad = list(dup)
 for f in files:
     for i, line in enumerate(open(f), 1):
