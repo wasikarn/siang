@@ -208,6 +208,21 @@ quirk that must not be copied). Open: the two PDF cases only check that `out.pdf
 plus a hand-edited `check.txt` passes every grader; with regex-on-file, last-message and tool-use graders only, and the
 repaired streams compressed, that cannot be closed here.
 
+## Rerun on the shipped text (0.1.31, same frozen graders `e13671ec9adff4e5`)
+
+The two `holdout2-personal-voice-*` cases were run again on plugin 0.1.31, the text that ships (step 5 reads the cue sheet
+through `${CLAUDE_SKILL_DIR}`), 5 runs per arm, $2.30. The graders and fixtures hash was unchanged before the run.
+
+| case | with | without | Δ |
+|---|---|---|---|
+| `holdout2-personal-voice-terse-lower` | 0.975 | 0.85 | +0.125 |
+| `holdout2-personal-voice-thai-codeswitch` | 0.975 | 1.00 | −0.025 |
+
+With-skill mean 0.975, mean Δ +0.05, no case loses by more than 0.05: `personal-voice` still passes, at the threshold
+(+0.075 on 0.1.27). The gain is still one case (`terse-lower`, where `no-caps-emphasis` fails all 5 without-arm runs); on the
+code-switch case the with arm missed `english-tech-terms` once. Recorded spend is $31.59 of the $40 cap. Whether the cue sheet
+is read in these runs was not checked.
+
 ## Humanize on blind held-out cases (0.1.28)
 
 The humanize session was no longer running and the user confirmed that no other session worked on it, then told this session to apply the rule to it. An agent that never saw the skill wrote four

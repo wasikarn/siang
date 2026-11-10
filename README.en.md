@@ -88,7 +88,7 @@ not the total: plain Claude already scores high on many cases.
   at 1.00 in 42 of 42 runs.
 - Held-out cases for the other four skills (written by an agent that never saw the skills' steps) were run once
   more after the graders were frozen, 5 runs per arm, under a rule set before the run (see `evals/README.md`):
-  `thai-pua-repair` mean Δ +0.095 (score 1.00) and `personal-voice` Δ +0.075 (0.985) pass (measured on 0.1.27; step 5 was reworded afterwards, see `evals/README.md`). `personal-voice` was rerun on
+  `thai-pua-repair` mean Δ +0.095 (score 1.00) and `personal-voice` Δ +0.075 (0.985) pass (0.985 on 0.1.27; rerun on the shipped 0.1.31 text: 0.975, Δ +0.05, at the threshold; see `evals/README.md`). `personal-voice` was rerun on
   two new cases written by an agent that never saw the skill (the old two had been used to tune it in 0.1.21); its gain
   comes from one case, and on the other plain Claude scores the same.
 - `humanize` failed the rule on four new blind held-out cases (with-skill 0.94, mean Δ 0.00: 0.00, −0.03, +0.03, 0.00). It stopped
