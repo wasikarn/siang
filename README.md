@@ -10,7 +10,7 @@ standup ที่เปิดว่า "ยินดีที่จะแจ้�
 ทุกประโยค แถมใช้ "ซึ่ง" กับ "โดย" เต็มไปหมด คนอ่านรู้ตั้งแต่บรรทัดแรก แล้วก็เลิกเชื่อส่วนที่เหลือ
 
 siang เป็น plugin ของ Claude Code ที่เอากลิ่นนี้ออกทั้งภาษาอังกฤษ ภาษาไทย และไทยปนอังกฤษ
-และยังช่วยอีกสามงานที่ใกล้กัน คือเขียนเอกสารให้คนอ่านทำตามได้ เขียนด้วยเสียงของคุณเอง และซ่อมข้อความที่ดึงจาก PDF ไทยแล้วเพี้ยน
+และยังช่วยอีกสองงานที่ใกล้กัน คือเขียนด้วยเสียงของคุณเอง และซ่อมข้อความที่ดึงจาก PDF ไทยแล้วเพี้ยน
 เสียง แปลว่า voice
 
 ## เหมาะกับใคร
@@ -26,12 +26,11 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## สี่ skill
+## สาม skill
 
 | Skill | ใช้เมื่อ | ทำอะไร |
 |---|---|---|
 | `siang:humanize` | draft อ่านแล้วเหมือน AI เขียน | ไล่หา AI tell ทุกจุดจาก cue sheet แล้วเขียนใหม่ จากนั้นอ่านซ้ำหาส่วนที่ยังเหลือ |
-| `siang:technical-writing` | ต้องการ how-to, tutorial, หน้า reference, runbook หรือ README | เลือก Diátaxis หนึ่งแบบต่อเอกสาร เอาข้อเท็จจริงจากโค้ดและคำสั่งที่รันเอง ส่วนที่ยังไม่ได้ตรวจใส่ `TODO: verify` |
 | `siang:thai-pua-repair` | ข้อความที่ extract จาก PDF ไทยมีอักขระ private-use หรือวรรณยุกต์เพี้ยน | แปลง glyph 27 ตัวของฟอนต์ UPC บน Windows (U+F700..U+F71A) กลับเป็นอักษรไทยมาตรฐาน รายงานตัวที่แปลงไม่ได้ และเมื่อสั่งจะแก้ ToUnicode map ในไฟล์ PDF เอง ให้ copy และค้นหาได้ถูก (`pua_pdf.py` ต้องมี pikepdf) |
 | `siang:personal-voice` | อยากได้ draft ด้วยเสียงของตัวเอง | วัดจากตัวอย่างของคุณ เก็บเฉพาะลักษณะที่เจอในตัวอย่างอย่างน้อยสองชิ้น เขียนจากข้อเท็จจริงของคุณ แล้วเทียบ draft กับ profile |
 
@@ -41,9 +40,6 @@ claude plugin install siang@siang
 humanize standup update นี้ genre B เก็บตัวเลขทุกตัว
 ```
 
-```
-ใช้ siang:technical-writing เขียน docs/deploy.md ใหม่ให้ on-call engineer
-```
 
 ```
 ใช้ siang:personal-voice: samples/ คือข้อความของฉัน เขียน draft.md ใหม่ให้เหมือนฉัน
@@ -68,10 +64,9 @@ humanize standup update นี้ genre B เก็บตัวเลขทุ�
 | path | เนื้อหา |
 |---|---|
 | `skills/humanize/` | `SKILL.md`, cue sheet, pattern สากลและไทย, โครงสร้างประโยคไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
-| `skills/technical-writing/` | `SKILL.md` |
 | `skills/personal-voice/` | `SKILL.md` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 36 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
+| `evals/` | 32 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
 | `tests/` | เช็กฟรีที่ CI รันทุก push: grader self-test, hook เช็ก version, ทุก § และ cue ต้องหาเจอ, `scan.py` จับ tell ที่ใส่ไว้ได้, `pua_fix.py` แปลง glyph ที่รู้จักได้ครบ, `pua_pdf.py` ซ่อม PDF จริงได้ตั้งแต่ต้นจนจบ |
 
 ## Eval
@@ -93,17 +88,19 @@ humanize standup update นี้ genre B เก็บตัวเลขทุ�
   ผลของทั้งสองชุด (คะแนน ค่าใช้จ่าย และผลของ grader ทุกตัว) เก็บไว้ใน [`docs/eval-runs/`](docs/eval-runs/) prompt
   ของรอบ Sonnet อยู่ใน JSON นั้น แต่ prompt ใน repo ยังระบุชื่อ skill อยู่ รันซ้ำจึงได้ตัวเลขของ Sonnet ไม่ตรงเป๊ะ
   หลังแก้ตาม deep-audit (0.1.24) รันเคสภาษาไทยทั้ง 14 เคสใหม่เฉพาะฝั่ง siang ได้ 1.00 ครบ 42 รอบ
-- เคส held-out ของอีกสาม skill (เขียนโดย agent ที่ไม่เคยเห็นขั้นตอนของ skill) รันครั้งสุดท้ายหลังล็อก grader
-  5 รอบต่อฝั่ง ตามกฎที่ตั้งไว้ก่อนรัน (ดู `evals/README.md`): `personal-voice` Δ เฉลี่ย +0.08 (คะแนน 0.95),
-  `technical-writing` Δ +0.08 (0.98) และ `thai-pua-repair` Δ +0.12 (1.00) ผ่านเกณฑ์ แต่ Δ ของสอง skill แรกเฉียดเกณฑ์ +0.05
-  และมีความคลาดเคลื่อนระดับเดียวกัน
+- เคส held-out ของอีกสาม skill (เขียนโดย agent ที่ไม่เคยเห็นขั้นตอนของ skill) รัน 5 รอบต่อฝั่ง ตามกฎที่ตั้งไว้ก่อนรัน
+  (ดู `evals/README.md`): `thai-pua-repair` Δ เฉลี่ย +0.095 (คะแนน 1.00) และ `personal-voice` Δ +0.075 (0.985) ผ่านเกณฑ์
+  โดย `personal-voice` รันใหม่บนสองเคสที่ agent ซึ่งไม่เคยเห็น skill เขียนขึ้นใหม่ (เคสเดิมเคยถูกใช้ปรับ skill ใน 0.1.21)
+  ผลของมันมาจากเคสเดียว อีกเคสได้ 1.00 เท่ากับ Claude เปล่า
 - `document-review` ไม่ผ่านเกณฑ์ (Δ เฉลี่ย −0.02 บนเคส held-out สองเคส Claude เปล่า ๆ เจอข้อผิดชุดเดียวกัน)
   จึงถูกลบออกจาก skill ใน 0.1.26 และเก็บ checklist ไว้เป็นเอกสารที่ `docs/document-review-checklist.md`
-- 4 เคส `trigger` เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ (เคสที่ห้าของ `document-review` ถูกลบพร้อมตัว skill)
+- `technical-writing` ตกเกณฑ์หลังแก้ grader ที่ปฏิเสธคำตอบถูก 3 ตัวแล้วรันใหม่ (Δ เฉลี่ย +0.035 ต่ำกว่า +0.05)
+  จึงถูกลบออกจาก skill ใน 0.1.27 และเก็บแนวทางไว้เป็นเอกสารที่ `docs/technical-writing-guide.md`
+- 3 เคส `trigger` เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ (เคสของ `document-review` และ `technical-writing` ถูกลบพร้อมตัว skill)
 
 เช็กฟรีโดยไม่เรียก API: `bash tests/test-graders.sh` ส่วนรันจริง (เสียเงิน) คือ
 `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(เปลี่ยน tag เป็น `technical-writing`, `personal-voice` หรือ `thai-pua-repair` และถ้าไม่ได้รันใน
+(เปลี่ยน tag เป็น `personal-voice` หรือ `thai-pua-repair` และถ้าไม่ได้รันใน
 terminal แบบ interactive ให้เติม `--trust-plugin`)
 
 ## เครดิตและ license

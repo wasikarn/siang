@@ -11,7 +11,7 @@ length, a Thai notice that ends every sentence in ครับ and leans on "ซ
 notice within a line, and then they stop trusting the rest.
 
 siang is a Claude Code plugin that removes that smell in English, Thai, and Thai-English
-code-switching, and covers the nearby jobs: writing a doc a reader can follow, keeping your own voice, and repairing text extracted from a Thai PDF. เสียง means "voice".
+code-switching, and covers the nearby jobs: keeping your own voice, and repairing text extracted from a Thai PDF. เสียง means "voice".
 
 ## Who it's for
 
@@ -27,12 +27,11 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## The four skills
+## The three skills
 
 | Skill | Use it when | What it does |
 |---|---|---|
 | `siang:humanize` | a draft reads like a model wrote it | names every AI tell against a cue sheet, rewrites, then re-reads for what is left |
-| `siang:technical-writing` | you need a how-to, tutorial, reference page, runbook or README | picks one Diátaxis quadrant per doc, takes facts from the code and from commands it runs, marks anything unchecked `TODO: verify` |
 | `siang:thai-pua-repair` | text extracted from a Thai PDF shows private-use glyphs or broken tone marks | maps the 27 Windows UPC-font glyphs (U+F700..U+F71A) back to standard Thai, reports any it cannot map, and, on request, rewrites the PDF's ToUnicode maps so the file itself copies and searches correctly (`pua_pdf.py`, needs pikepdf) |
 | `siang:personal-voice` | you want drafts in your own voice | measures your samples, keeps a feature only if two samples show it, drafts from your facts, checks the draft against the profile |
 
@@ -40,10 +39,6 @@ Run one with a slash command (`/siang:humanize`) or just ask. Example prompts:
 
 ```
 humanize this standup update, genre B, keep every number
-```
-
-```
-use siang:technical-writing to rewrite docs/deploy.md for an on-call engineer
 ```
 
 ```
@@ -71,10 +66,9 @@ stay byte-identical.
 | Path | Contents |
 |---|---|
 | `skills/humanize/` | `SKILL.md`, cue sheet, universal and Thai patterns, Thai sentence structure, examples, sources, `scripts/scan.py` |
-| `skills/technical-writing/` | `SKILL.md` |
 | `skills/personal-voice/` | `SKILL.md` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 36 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
+| `evals/` | 32 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
 | `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells, `pua_fix.py` maps every known glyph, `pua_pdf.py` repairs a real PDF end to end |
 
 ## Evals
@@ -100,15 +94,19 @@ not the total: plain Claude already scores high on many cases.
   at 1.00 in 42 of 42 runs.
 - Held-out cases for the other three skills (written by an agent that never saw the skills' steps) were run once
   more after the graders were frozen, 5 runs per arm, under a rule set before the run (see `evals/README.md`):
-  `personal-voice` mean Δ +0.08 (score 0.95), `technical-writing` Δ +0.08 (0.98) and `thai-pua-repair` Δ +0.12 (1.00)
-  pass. The first two clear the +0.05 bar narrowly, within run-to-run noise.
+  `thai-pua-repair` mean Δ +0.095 (score 1.00) and `personal-voice` Δ +0.075 (0.985) pass. `personal-voice` was rerun on
+  two new cases written by an agent that never saw the skill (the old two had been used to tune it in 0.1.21); its gain
+  comes from one case, and on the other plain Claude scores the same.
 - `document-review` failed the rule (mean Δ −0.02 on its two held-out cases; plain Claude finds the same defects).
   It was removed as a skill in 0.1.26 and its checklist kept as a plain doc, `docs/document-review-checklist.md`.
-- 4 `trigger` cases check that each skill fires from the task alone, without being named: all fired in every run (a fifth, for `document-review`, went with that skill).
+- `technical-writing` fell below the bar once three graders that rejected correct answers were fixed and its held-out
+  cases rerun (mean Δ +0.035 against +0.05). It was removed as a skill in 0.1.27 and its guidance kept as
+  `docs/technical-writing-guide.md`.
+- 3 `trigger` cases check that each skill fires from the task alone, without being named: all fired in every run (the cases for `document-review` and `technical-writing` went with those skills).
 
 Free check, no API call: `bash tests/test-graders.sh`. A paid run is
 `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(swap the tag for `technical-writing`, `personal-voice` or `thai-pua-repair`; add
+(swap the tag for `personal-voice` or `thai-pua-repair`; add
 `--trust-plugin` outside an interactive terminal).
 
 ## Credits

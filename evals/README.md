@@ -1,5 +1,7 @@
 # Evals
 
+Cases for `siang:document-review` (removed in 0.1.26) and `siang:technical-writing` (removed in 0.1.27) are described below as a record of what was measured; they are no longer in the tree.
+
 Eighteen cases for `siang:humanize` in `claude plugin eval`'s native layout (tag `humanize`). Ten of them:
 eight planted cases (English prose, English Slack update with only subtle tells §9/§28/§30/§59-§61,
 Thai standup, Thai UI copy, Thai customer-chat reply, Thai maintenance notice for §56 dates and
@@ -85,7 +87,7 @@ Three-run check of the nine non-humanize cases (2026-11-09, 3 runs per arm, with
 some `personal-voice-thai-oneoffs` runs because the profile omitted the one-offs it excluded. 0.1.20 made step 3 require a
 one-offs line, and a rerun of both `personal-voice` cases (3 runs per arm) scored 1.00 vs 0.78 (+0.22) and 1.00 vs 0.70 (+0.30).
 
-Five `trigger-*` cases (tag `trigger`) test whether each skill fires from the task alone: the prompt never names the skill
+Five `trigger-*` cases at the time (three remain; tag `trigger`) test whether each skill fires from the task alone: the prompt never names the skill
 (its expected name sits in the case `description`, because prompt frontmatter rejects unknown keys, and `tests/test-graders.sh`
 reads it from there), and a `tool_used: Skill` grader checks the call. Run with `--ablation none`, 3 runs each: `humanize`,
 `technical-writing`, `document-review`, `personal-voice` and `thai-pua-repair` all fired 3 of 3. The descriptions alone are
@@ -156,6 +158,55 @@ checklist kept as `docs/document-review-checklist.md`. The frozen hash covers th
 removed directories are in git history at 0de01c8. The cases and numbers for the removed skill above in this file are
 a record of what was measured, not of cases that still exist. humanize (mean Δ +0.04 over its 18 cases, measured by its
 own session) would fail the same Δ bar; that is for its owner to decide and nothing was changed.
+
+## Re-check after the second deep-audit (0.1.27)
+
+Two independent checkers (Sol and Opus) found that `technical-writing`'s pass came from one grader, `no-keep-30`, which
+rejected a correct README line (`... --keep 30 ~/work`, a valid use of the script's flag): it failed all 5 without-arm
+runs of `holdout-technical-writing-cli-stale-readme`, and with it the Δ was +0.17 on that case. Two more graders
+(`no-encryption-claim`, `no-local-tz-claim`) rejected correct text, and `jsonl-shape` in
+`holdout-thai-pua-repair-rag-chunks` rejected a valid key order. All four were loosened with sample lines taken
+from the checkers' probes (the self-test is red on the old patterns, green on the new), and the three cases whose
+graders changed were rerun, 5 runs per arm, $5.23. The cases whose graders did not change (`holdout-thai-pua-repair-regulation`
+and the two `holdout-personal-voice-*`) were not rerun. That departs from the rule's wording (a changed frozen file voids the run and it starts again): only the affected cases were rerun, to bound the cost, and the verdicts above say so. `jsonl-shape` still allows at most one space after a colon, a looser-than-needed limit left as it was.
+
+| case | with | without | Δ |
+|---|---|---|---|
+| `holdout-technical-writing-cli-stale-readme` | 1.00 | 0.90 | +0.10 |
+| `holdout-technical-writing-config-default-prereq` | 0.97 | 1.00 | −0.03 |
+| `holdout-thai-pua-repair-rag-chunks` | 1.00 | 0.94 | +0.06 |
+
+`technical-writing`: with-skill 0.985, mean Δ +0.035, below the +0.05 bar, so it fails and was converted in 0.1.27
+(`skills/technical-writing/` and its six eval cases removed; guidance kept as `docs/technical-writing-guide.md`).
+`thai-pua-repair`: 1.00, mean Δ +0.095 (regulation +0.13, rag-chunks +0.06), still passes. Total spend across both runs
+$17.81 of the $40 cap. The one remaining swing in the config case is `no-email-claim`, a known loose grader that fails any
+use of "hourly" and cost the with-skill arm 0.03 once; it was not touched, because rerunning after each grader fix until a
+skill passes is the tuning the rule exists to prevent. The loosened graders were written after seeing the first result, so
+this second verdict is weaker evidence than the first; it removes a false pass rather than adding a new one.
+
+## Final run on fresh blind cases (graders frozen at `e13671ec9adff4e5`)
+
+Two things were still open: `personal-voice`'s held-out cases were not blind, and the rerun above was partial. So an agent
+that never saw the skill wrote two new personal-voice cases (`holdout2-personal-voice-terse-lower`,
+`holdout2-personal-voice-thai-codeswitch`; each has one habit shared by every sample and one one-off quirk the draft must not
+copy), the `jsonl-shape` whitespace limit was loosened, and all four cases below were frozen (sha256 first 16 hex
+`e13671ec9adff4e5` over `holdout2-personal-voice-*` and `holdout-thai-pua-repair-*`, same command as above) and run together,
+5 runs per arm, $6.14, total spend $23.95 of the $40 cap. The two older `holdout-personal-voice-*` cases stay in the tree as
+ordinary regression cases and no longer count towards the verdict.
+
+| case | with | without | Δ |
+|---|---|---|---|
+| `holdout2-personal-voice-terse-lower` | 0.97 | 0.82 | +0.15 |
+| `holdout2-personal-voice-thai-codeswitch` | 1.00 | 1.00 | 0.00 |
+| `holdout-thai-pua-repair-regulation` | 1.00 | 0.87 | +0.13 |
+| `holdout-thai-pua-repair-rag-chunks` | 1.00 | 0.94 | +0.06 |
+
+`personal-voice`: with-skill 0.985, mean Δ +0.075, no case loses: pass. `thai-pua-repair`: 1.00, mean Δ +0.095: pass. The
+personal-voice gain comes from one case; on the Thai code-switch case plain Claude scores the same. The terse-lower with-arm
+misses were the `signoff` and `no-caps-emphasis` graders, strict by design (they check a habit every sample shares and a
+quirk that must not be copied). Open: the two PDF cases only check that `out.pdf` exists (`%PDF-`), so `cp in.pdf out.pdf`
+plus a hand-edited `check.txt` passes every grader; with regex-on-file, last-message and tool-use graders only, and the
+repaired streams compressed, that cannot be closed here.
 
 ## Known gap
 
