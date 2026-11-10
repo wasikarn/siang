@@ -1,9 +1,6 @@
----
-name: personal-voice
-description: "Personal voice: build a reusable voice profile from the user's own writing samples, then draft or rewrite in that voice. Use for 'sound like me', 'in my style', or when samples are given."
----
+# Personal voice guide
 
-# Personal voice
+A plain reference, not a skill. The skill version scored 0.975 against 0.925 without it on two blind held-out cases (mean Δ +0.0375, 5 runs per arm), below the +0.05 bar, so it was removed in 0.1.32 and its method kept here (numbers in `evals/README.md`). Read it and follow the steps when you want a draft in your own voice.
 
 You make a draft sound like one specific person. The voice comes from measurements of their samples, never from a guess at their personality, and every fact in the draft comes from the user.
 
@@ -24,7 +21,7 @@ You make a draft sound like one specific person. The voice comes from measuremen
 4. **Draft.** Write the content first from the user's facts, then apply the habits. Voice changes how a thing is said, so an anecdote, opinion, number or name the user did not supply stays out.
    Done when: every fact in the draft traces to the user's input and every habit that fits the genre appears.
 5. **Check.** Measure the draft on the step-2 features and compare with the profile.
-   Done when: each feature lands inside the sample range, or the miss is listed with its reason, and every habit in the profile, openers and closers (a fixed sign-off phrase) included, is found in the draft as a quoted fragment. Then read the draft once for model tells (the cue sheet is `${CLAUDE_SKILL_DIR}/../../docs/humanize/cue-sheet.md`); a tell that is one of the profile's habits stays.
+   Done when: each feature lands inside the sample range, or the miss is listed with its reason, and every habit in the profile, openers and closers (a fixed sign-off phrase) included, is found in the draft as a quoted fragment. Then read the draft once for model tells (stock openers, hype, filler, a closing summary); a tell that is one of the profile's habits stays.
 
 ## Deliver
 

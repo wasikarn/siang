@@ -1,6 +1,6 @@
 # siang (เสียง)
 
-**Claude Code skills for writing in your own voice and repairing Thai PDF text, plus a reference kit for removing AI tells.**
+**A Claude Code skill that repairs Thai PDF text, plus reference docs for writing in your own voice and removing AI tells.**
 
 [ภาษาไทย](README.md)
 
@@ -10,8 +10,9 @@ A standup that opens with "I'm excited to share", a PR description with three bu
 length, a Thai notice that ends every sentence in ครับ and leans on "ซึ่ง" and "โดย". Readers
 notice within a line, and then they stop trusting the rest.
 
-siang is a Claude Code plugin with two skills: keeping your own voice, and repairing text extracted from a Thai PDF. Removing that smell in English, Thai and
-Thai-English code-switching is a reference kit in `docs/humanize/`, not a skill (the reason is in the next section). เสียง means "voice".
+siang is a Claude Code plugin with one skill: repairing text extracted from a Thai PDF. Writing in your own voice, and removing that smell in English, Thai and
+Thai-English code-switching, are plain reference docs (`docs/personal-voice-guide.md`, `docs/humanize/`), not skills: each failed the blind test
+(the reasons are below). เสียง means "voice".
 
 ## Who it's for
 
@@ -27,22 +28,16 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## The two skills
+## The skill
 
 **`siang:thai-pua-repair`**
 
 - Use it when: text extracted from a Thai PDF shows private-use glyphs or broken tone marks
 - What it does: maps the 27 Windows UPC-font glyphs (U+F700..U+F71A) back to standard Thai, reports any it cannot map, and, on request, rewrites the PDF's ToUnicode maps so the file itself copies and searches correctly (`pua_pdf.py`, needs pikepdf)
 
-**`siang:personal-voice`**
-
-- Use it when: you want drafts in your own voice
-- What it does: measures your samples, keeps a feature only if two samples show it, drafts from your facts, checks the draft against the profile
-
-
-Run one with a slash command (`/siang:personal-voice`) or just ask. Example prompts:
+Run it with a slash command (`/siang:thai-pua-repair`) or just ask. Example prompt:
 ```
-use siang:personal-voice: samples/ are my messages, rewrite draft.md like me
+use siang:thai-pua-repair: extract report.pdf and fix the Thai text
 ```
 
 ## The humanize reference kit (not a skill)
@@ -55,14 +50,20 @@ AI vocabulary, chat closers, Thai spelling and date formats) with line and secti
 It stopped being a skill in 0.1.28: on four held-out cases written by an agent that never saw the skill (5 runs per arm) its mean
 Δ was 0.00 against the +0.05 bar. The numbers are in `evals/README.md`.
 
+## Other reference docs (not skills)
+
+- `docs/personal-voice-guide.md`: build a voice profile from your own samples, then draft in it. It stopped being a skill in 0.1.32
+  (with-skill 0.975 against 0.925 without, mean Δ +0.0375 on two blind held-out cases, below +0.05).
+- `docs/technical-writing-guide.md` and `docs/document-review-checklist.md`: the former `technical-writing` and `document-review` skills.
+
 ## Layout
 
 | Path | Contents |
 |---|---|
 | `docs/humanize/` | the AI-tell reference kit (not a skill): `README.md` loop, cue sheet, universal and Thai patterns, Thai sentence structure, examples, sources, `scripts/scan.py` |
-| `skills/personal-voice/` | `SKILL.md` |
+| `docs/personal-voice-guide.md`, `docs/technical-writing-guide.md`, `docs/document-review-checklist.md` | the former skills, kept as plain docs |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 13 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
+| `evals/` | 6 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
 | `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells, `pua_fix.py` maps every known glyph, `pua_pdf.py` repairs a real PDF end to end |
 
 ## Evals
@@ -88,9 +89,10 @@ not the total: plain Claude already scores high on many cases.
   at 1.00 in 42 of 42 runs.
 - Held-out cases for the other four skills (written by an agent that never saw the skills' steps) were run once
   more after the graders were frozen, 5 runs per arm, under a rule set before the run (see `evals/README.md`):
-  `thai-pua-repair` mean Δ +0.095 (score 1.00) and `personal-voice` Δ +0.075 (0.985) pass (0.985 on 0.1.27; rerun on the shipped 0.1.31 text: 0.975, Δ +0.05, at the threshold; see `evals/README.md`). `personal-voice` was rerun on
-  two new cases written by an agent that never saw the skill (the old two had been used to tune it in 0.1.21); its gain
-  comes from one case, and on the other plain Claude scores the same.
+  `thai-pua-repair` mean Δ +0.095 (score 1.00) passes.
+- `personal-voice` passed on 0.1.27 (0.985, mean Δ +0.075) and at the threshold on 0.1.31 (0.975, +0.05), but its gain came from one case
+  and a traced run showed the model skipping the cue-sheet step. With that step removed (0.1.32) it scored 0.975 against 0.925, mean
+  Δ +0.0375, below the bar. It was removed as a skill in 0.1.32 and kept as `docs/personal-voice-guide.md`.
 - `humanize` failed the rule on four new blind held-out cases (with-skill 0.94, mean Δ 0.00: 0.00, −0.03, +0.03, 0.00). It stopped
   being a skill in 0.1.28 and lives on as `docs/humanize/`.
 - `document-review` failed the rule (mean Δ −0.02 on its two held-out cases; plain Claude finds the same defects).
@@ -98,12 +100,11 @@ not the total: plain Claude already scores high on many cases.
 - `technical-writing` fell below the bar once three graders that rejected correct answers were fixed and its held-out
   cases rerun (mean Δ +0.035 against +0.05). It was removed as a skill in 0.1.27 and its guidance kept as
   `docs/technical-writing-guide.md`.
-- 2 `trigger` cases check that each skill fires from the task alone, without being named: all fired in every run (the cases for `humanize`, `document-review` and `technical-writing` went with those skills).
+- 1 `trigger` case checks that `thai-pua-repair` fires from the task alone, without being named: it fired in every run (the trigger cases for the removed skills went with them).
 
 Free check, no API call: `bash tests/test-graders.sh`. A paid run is
-`claude plugin eval . --scaffold --tag personal-voice --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(swap the tag for `thai-pua-repair`; add
-`--trust-plugin` outside an interactive terminal).
+`claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
+(add `--trust-plugin` outside an interactive terminal).
 
 ## Credits
 

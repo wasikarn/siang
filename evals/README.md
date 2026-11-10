@@ -1,6 +1,6 @@
 # Evals
 
-Cases for `siang:humanize` (removed in 0.1.28), `siang:document-review` (removed in 0.1.26) and `siang:technical-writing` (removed in 0.1.27) are described below as a record of what was measured; they are no longer in the tree.
+Cases for `siang:humanize` (removed in 0.1.28), `siang:document-review` (removed in 0.1.26), `siang:technical-writing` (removed in 0.1.27) and `siang:personal-voice` (removed in 0.1.32) are described below as a record of what was measured; they are no longer in the tree.
 
 Eighteen cases for `siang:humanize` in `claude plugin eval`'s native layout (tag `humanize`). Ten of them:
 eight planted cases (English prose, English Slack update with only subtle tells §9/§28/§30/§59-§61,
@@ -246,6 +246,25 @@ verdict stands as run. Converted in 0.1.28: `skills/humanize/` moved to `docs/hu
 patterns, examples and `scripts/scan.py`; the only edits are `SKILL.md` references that now say `README.md`), its 18 cases and `trigger-humanize` removed, and the four held-out cases
 dropped from the tree with it (they are in the numbers above, not in git, since they were never committed). `tests/test-scan.sh` now
 reads planted fixtures from `tests/fixtures/humanize/`.
+
+## Personal-voice without the cue-sheet step (0.1.32): fail, converted
+
+The traced run above showed the model skipping step 5's cue-sheet read, so the step was removed (the read-for-tells instruction stays,
+with no file to open) and the same two blind cases were run again on 0.1.32, same frozen graders (`e13671ec9adff4e5`, hash checked before
+the run), 5 runs per arm, $2.29.
+
+| case | with | without | Δ |
+|---|---|---|---|
+| `holdout2-personal-voice-terse-lower` | 0.95 | 0.875 | +0.075 |
+| `holdout2-personal-voice-thai-codeswitch` | 1.00 | 1.00 | 0.00 |
+
+With-skill mean 0.975 (above 0.90), mean Δ +0.0375 against the +0.05 bar: fail. No case loses. The 0.1.31 run scored +0.05 on the
+same cases; the 0.0125 gap is within run-to-run noise, so the honest reading is that `personal-voice` sits at about +0.04 to +0.05,
+at or just under the bar, with its gain in one case. By the rule it does not earn its place. Converted in 0.1.32:
+`skills/personal-voice/SKILL.md` became `docs/personal-voice-guide.md` (frontmatter replaced by a not-a-skill note, the loop unchanged),
+and its seven cases were removed (`personal-voice-terse-writer`, `personal-voice-thai-oneoffs`, `holdout-personal-voice-chatty`,
+`holdout-personal-voice-formal`, `holdout2-personal-voice-terse-lower`, `holdout2-personal-voice-thai-codeswitch`,
+`trigger-personal-voice`; they are in git history). Recorded spend is $34.01 of the $40 cap. `thai-pua-repair` is the only skill left.
 
 ## Known gap
 

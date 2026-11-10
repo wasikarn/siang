@@ -1,4 +1,0 @@
-schema_version: "1.1"
-name: holdout2-personal-voice-thai-codeswitch
-context:
-  scaffold_script: scaffold.sh

@@ -1,6 +1,6 @@
 # siang (เสียง)
 
-**skill สำหรับ Claude Code: เขียนด้วยเสียงของคุณเอง ซ่อมข้อความจาก PDF ไทย และชุดอ้างอิงสำหรับเอากลิ่น AI ออกจากงานเขียน**
+**skill สำหรับ Claude Code ที่ซ่อมข้อความจาก PDF ไทย และเอกสารอ้างอิงสำหรับเขียนด้วยเสียงของคุณเองกับเอากลิ่น AI ออกจากงานเขียน**
 
 [English](README.en.md)
 
@@ -9,9 +9,9 @@
 standup ที่เปิดว่า "ยินดีที่จะแจ้งให้ทราบ" คำอธิบาย PR ที่มีสามข้อยาวเท่ากันเป๊ะ ประกาศภาษาไทยที่ลงท้ายครับ
 ทุกประโยค แถมใช้ "ซึ่ง" กับ "โดย" เต็มไปหมด คนอ่านรู้ตั้งแต่บรรทัดแรก แล้วก็เลิกเชื่อส่วนที่เหลือ
 
-siang เป็น plugin ของ Claude Code สองงาน คือเขียนด้วยเสียงของคุณเอง และซ่อมข้อความที่ดึงจาก PDF ไทยแล้วเพี้ยน
-ส่วนการเอากลิ่นนี้ออกทั้งภาษาอังกฤษ ภาษาไทย และไทยปนอังกฤษ เป็นชุดอ้างอิงใน `docs/humanize/` ไม่ใช่ skill (เหตุผลอยู่ท้ายหัวข้อถัดไป)
-เสียง แปลว่า voice
+siang เป็น plugin ของ Claude Code ที่มี skill เดียว คือซ่อมข้อความที่ดึงจาก PDF ไทยแล้วเพี้ยน
+ส่วนการเขียนด้วยเสียงของคุณเอง และการเอากลิ่นนี้ออกทั้งภาษาอังกฤษ ภาษาไทย และไทยปนอังกฤษ เป็นเอกสารอ้างอิงธรรมดา (`docs/personal-voice-guide.md`, `docs/humanize/`)
+ไม่ใช่ skill เพราะแต่ละอันตกการทดสอบแบบ blind (เหตุผลอยู่ด้านล่าง) เสียง แปลว่า voice
 
 ## เหมาะกับใคร
 
@@ -26,22 +26,16 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## Skill 2 ตัว
+## Skill ที่มี
 
 **`siang:thai-pua-repair`**
 
 - ใช้เมื่อ: ข้อความที่ extract จาก PDF ไทยมีอักขระ private-use หรือวรรณยุกต์เพี้ยน
 - ทำอะไร: แปลง glyph 27 ตัวของฟอนต์ UPC บน Windows (U+F700..U+F71A) กลับเป็นอักษรไทยมาตรฐาน รายงานตัวที่แปลงไม่ได้ และเมื่อสั่งจะแก้ ToUnicode map ในไฟล์ PDF เอง ให้ copy และค้นหาได้ถูก (`pua_pdf.py` ต้องมี pikepdf)
 
-**`siang:personal-voice`**
-
-- ใช้เมื่อ: อยากได้ draft ด้วยเสียงของตัวเอง
-- ทำอะไร: วัดจากตัวอย่างของคุณ เก็บเฉพาะลักษณะที่เจอในตัวอย่างอย่างน้อยสองชิ้น เขียนจากข้อเท็จจริงของคุณ แล้วเทียบ draft กับ profile
-
-
-เรียกด้วย slash command (`/siang:personal-voice`) หรือสั่งเป็นประโยคก็ได้ ตัวอย่าง prompt:
+เรียกด้วย slash command (`/siang:thai-pua-repair`) หรือสั่งเป็นประโยคก็ได้ ตัวอย่าง prompt:
 ```
-ใช้ siang:personal-voice: samples/ คือข้อความของฉัน เขียน draft.md ใหม่ให้เหมือนฉัน
+ใช้ siang:thai-pua-repair: extract report.pdf แล้วซ่อมข้อความไทย
 ```
 
 ## ชุดอ้างอิง humanize (ไม่ใช่ skill)
@@ -54,14 +48,20 @@ claude plugin install siang@siang
 มันถูกถอดจากการเป็น skill ใน 0.1.28 เพราะบนเคส held-out สี่เคสที่ agent ซึ่งไม่เคยเห็น skill เขียน (5 รอบต่อฝั่ง)
 Δ เฉลี่ยเป็น 0.00 ต่ำกว่าเกณฑ์ +0.05 ตัวเลขทั้งหมดอยู่ใน `evals/README.md`
 
+## เอกสารอ้างอิงอื่น (ไม่ใช่ skill)
+
+- `docs/personal-voice-guide.md`: สร้าง profile เสียงจากตัวอย่างของคุณเอง แล้วเขียน draft ตาม profile ถูกถอดจากการเป็น skill ใน 0.1.32
+  (with-skill 0.975 เทียบกับ 0.925 ถ้าไม่มี Δ เฉลี่ย +0.0375 บนเคส held-out แบบ blind สองเคส ต่ำกว่าเกณฑ์ +0.05)
+- `docs/technical-writing-guide.md` และ `docs/document-review-checklist.md`: สิ่งที่เคยเป็น skill `technical-writing` และ `document-review`
+
 ## โครงสร้าง repo
 
 | path | เนื้อหา |
 |---|---|
 | `docs/humanize/` | ชุดอ้างอิงเอากลิ่น AI ออก (ไม่ใช่ skill): `README.md` ลำดับขั้น, cue sheet, pattern สากลและไทย, โครงสร้างประโยคไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
-| `skills/personal-voice/` | `SKILL.md` |
+| `docs/personal-voice-guide.md`, `docs/technical-writing-guide.md`, `docs/document-review-checklist.md` | skill เดิมที่เก็บไว้เป็นเอกสารธรรมดา |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 13 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
+| `evals/` | 6 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
 | `tests/` | เช็กฟรีที่ CI รันทุก push: grader self-test, hook เช็ก version, ทุก § และ cue ต้องหาเจอ, `scan.py` จับ tell ที่ใส่ไว้ได้, `pua_fix.py` แปลง glyph ที่รู้จักได้ครบ, `pua_pdf.py` ซ่อม PDF จริงได้ตั้งแต่ต้นจนจบ |
 
 ## Eval
@@ -84,20 +84,21 @@ claude plugin install siang@siang
   ของรอบ Sonnet อยู่ใน JSON นั้น แต่ prompt ใน repo ยังระบุชื่อ skill อยู่ รันซ้ำจึงได้ตัวเลขของ Sonnet ไม่ตรงเป๊ะ
   หลังแก้ตาม deep-audit (0.1.24) รันเคสภาษาไทยทั้ง 14 เคสใหม่เฉพาะฝั่ง siang ได้ 1.00 ครบ 42 รอบ
 - เคส held-out ของ skill อีก 4 ตัว (เขียนโดย agent ที่ไม่เคยเห็นขั้นตอนของ skill) รัน 5 รอบต่อฝั่ง ตามกฎที่ตั้งไว้ก่อนรัน
-  (ดู `evals/README.md`): `thai-pua-repair` Δ เฉลี่ย +0.095 (คะแนน 1.00) และ `personal-voice` Δ +0.075 (0.985) ผ่านเกณฑ์ (0.985 บน 0.1.27 รันซ้ำบนข้อความที่ ship จริง 0.1.31 ได้ 0.975 Δ +0.05 ซึ่งพอดีเกณฑ์ ดู `evals/README.md`)
-  โดย `personal-voice` รันใหม่บนสองเคสที่ agent ซึ่งไม่เคยเห็น skill เขียนขึ้นใหม่ (เคสเดิมเคยถูกใช้ปรับ skill ใน 0.1.21)
-  ผลของมันมาจากเคสเดียว อีกเคสได้ 1.00 เท่ากับ Claude เปล่า
+  (ดู `evals/README.md`): `thai-pua-repair` Δ เฉลี่ย +0.095 (คะแนน 1.00) ผ่านเกณฑ์
+- `personal-voice` ผ่านบน 0.1.27 (0.985, Δ เฉลี่ย +0.075) และผ่านพอดีเกณฑ์บน 0.1.31 (0.975, +0.05) แต่ผลดีมาจากเคสเดียว
+  และ trace ของหนึ่งรอบแสดงว่าโมเดลข้ามขั้นอ่าน cue sheet พอเอาขั้นนั้นออก (0.1.32) ได้ 0.975 เทียบกับ 0.925 Δ เฉลี่ย +0.0375
+  ต่ำกว่าเกณฑ์ จึงถูกถอดจากการเป็น skill ใน 0.1.32 และเก็บเป็น `docs/personal-voice-guide.md`
 - `humanize` ไม่ผ่านเกณฑ์บนเคส held-out สี่เคสที่เขียนใหม่แบบ blind: with-skill 0.94 แต่ Δ เฉลี่ย 0.00 (0.00, −0.03, +0.03, 0.00)
   จึงถูกถอดจากการเป็น skill ใน 0.1.28 และเก็บเป็น `docs/humanize/`
 - `document-review` ไม่ผ่านเกณฑ์ (Δ เฉลี่ย −0.02 บนเคส held-out สองเคส Claude เปล่า ๆ เจอข้อผิดชุดเดียวกัน)
   จึงถูกลบออกจาก skill ใน 0.1.26 และเก็บ checklist ไว้เป็นเอกสารที่ `docs/document-review-checklist.md`
 - `technical-writing` ตกเกณฑ์หลังแก้ grader ที่ปฏิเสธคำตอบถูก 3 ตัวแล้วรันใหม่ (Δ เฉลี่ย +0.035 ต่ำกว่า +0.05)
   จึงถูกลบออกจาก skill ใน 0.1.27 และเก็บแนวทางไว้เป็นเอกสารที่ `docs/technical-writing-guide.md`
-- 2 เคส `trigger` เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ (เคสของ `humanize`, `document-review` และ `technical-writing` ถูกลบพร้อมตัว skill)
+- 1 เคส `trigger` เช็กว่า `thai-pua-repair` ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ (เคส trigger ของ skill ที่ถูกถอดไปพร้อมกัน)
 
 เช็กฟรีโดยไม่เรียก API: `bash tests/test-graders.sh` ส่วนรันจริง (เสียเงิน) คือ
-`claude plugin eval . --scaffold --tag personal-voice --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(เปลี่ยน tag เป็น `thai-pua-repair` และถ้าไม่ได้รันใน
+`claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
+(ถ้าไม่ได้รันใน
 terminal แบบ interactive ให้เติม `--trust-plugin`)
 
 ## เครดิตและ license

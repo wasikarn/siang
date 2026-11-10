@@ -4,12 +4,12 @@
   "owner": {
     "name": "wasikarn"
   },
-  "description": "Siang: your own writing voice and Thai PDF text repair.",
+  "description": "Siang: Thai PDF text repair, with writing-voice reference docs.",
   "plugins": [
     {
       "name": "siang",
       "source": "./",
-      "description": "Draft in your own voice from your samples, and repair Thai text extracted from PDFs; with a reference kit for removing AI writing tells in English and Thai.",
+      "description": "Repair Thai text extracted from PDFs; with reference docs for writing in your own voice and removing AI writing tells in English and Thai.",
       "category": "productivity"
     }
   ]

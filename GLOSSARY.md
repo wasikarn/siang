@@ -1,6 +1,6 @@
 # siang
 
-siang drafts text in a user's own voice and repairs Thai text extracted from PDFs, and keeps a reference kit (`docs/humanize/`) for removing AI writing tells in English and Thai. These are the terms its rules, evals and reviews use.
+siang repairs Thai text extracted from PDFs, and keeps reference docs (`docs/humanize/`, `docs/personal-voice-guide.md`) for removing AI writing tells and drafting in a user's own voice, in English and Thai. These are the terms its rules, evals and reviews use.
 
 ## Writing
 

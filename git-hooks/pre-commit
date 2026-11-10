@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Refuses a commit that changes skills/ or docs/humanize/ (personal-voice reads its cue sheet) without changing "version" in .claude-plugin/plugin.json:
+# Refuses a commit that changes skills/ without changing "version" in .claude-plugin/plugin.json:
 # `claude plugin update` copies nothing while the version is unchanged, so the edit would never
 # reach an installed copy. Enable once per clone: git config core.hooksPath git-hooks
 set -euo pipefail
 staged=$(git diff --cached --name-only)  # a git failure stops the commit instead of reading as "no skills/ change"
-[[ $'\n'"$staged" == *$'\n'skills/* || $'\n'"$staged" == *$'\n'docs/humanize/* ]] || exit 0  # pure bash: no pipe, no temp file to fail
+[[ $'\n'"$staged" == *$'\n'skills/* ]] || exit 0  # pure bash: no pipe, no temp file to fail
 ver() { python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])'; }
 new=$(git show :.claude-plugin/plugin.json | ver)
 old=$(git show HEAD:.claude-plugin/plugin.json 2>/dev/null | ver || echo none)
 if [ "$new" = "$old" ]; then
-  echo "pre-commit: skills/ or docs/humanize/ changed but plugin.json version is still $old; bump it (e.g. a patch bump) and stage plugin.json." >&2
+  echo "pre-commit: skills/ changed but plugin.json version is still $old; bump it (e.g. a patch bump) and stage plugin.json." >&2
   exit 1
 fi

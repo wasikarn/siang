@@ -24,9 +24,6 @@ check 0 "skills change with a bump passes"
 setver 0.1.0; echo a > skills/x/SKILL.md; git add .claude-plugin skills  # back to HEAD's content
 echo r2 > README.md; git add README.md
 check 0 "non-skills change passes without a bump"
-mkdir -p docs/humanize; echo c > docs/humanize/cue-sheet.md; git add docs  # a skill reads this file at run time
-check 1 "docs/humanize change without a bump is refused"
-git reset -q docs
 python3 -c 'import os; [open(f"skills/x/a-long-generated-file-name-{i:05d}.md","w").write("x") for i in range(3000)]'
 git add skills  # ~150 KB of names, past the 64 KB pipe buffer: a piped grep -q would SIGPIPE git diff
 check 1 "a large skills change without a bump is refused"
