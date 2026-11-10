@@ -122,7 +122,7 @@ make a run cheaper; the cost sits in the work, not in the skill text. The pruned
 same and are easier to maintain.
 
 
-Run from the repo root: `claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
+Run from the repo root: `claude plugin eval . --scaffold --tag personal-voice --allow-tools "Bash,Edit,Write" --runs 1 --no-publish` (add `--trust-plugin` outside an interactive terminal; without the tool grant the file case cannot write and scores 0.60) (each run is a paid API call).
 
 Free check, no API call: `bash tests/test-graders.sh` proves every prompt invokes
 the siang skill it names and every regex grader compiles as a JS RegExp and matches its scaffolded fixture
@@ -134,12 +134,12 @@ A skill stays a skill only if, on its held-out cases (written by an agent that n
 the with-skill mean score is above 0.90; the mean Δ against the without arm is at least +0.05; no case loses to
 the without arm by more than 0.05. Cost is reported, not gated. Runs: 5 per arm, spend capped at $40. A skill that
 fails is deleted or converted (scripts and knowledge kept as plain tools or docs, `SKILL.md` removed); humanize is
-owned by another session and gets the same rule only with that session's agreement.
+owned by another session and gets the same rule only with that session's agreement (it was applied later, see the humanize verdict below).
 
 Held-out cases: `holdout-document-review-*`, `holdout-personal-voice-*`, `holdout-technical-writing-*`,
 `holdout-thai-pua-repair-*` (two each). Graders and fixtures are frozen at sha256 `d1cb35dbc7742f68` (first 16
 hex of the hash of every file under those eight directories, sorted by path, as
-`find <dirs> -type f | sort | xargs shasum -a 256 | shasum -a 256`, run from the repo root with each directory written with its `evals/` prefix; from inside `evals/` the paths differ and so does the hash). Changing any of those files after the run
+`find <dirs> -type f | sort | xargs shasum -a 256 | shasum -a 256`, run from the repo root with each directory written with its `evals/` prefix; from inside `evals/` the paths differ and so does the hash). Changing any of those files, or the skill text under test, after the run
 voids it and the run starts again. Known loose graders, left as they are: `no-dest-flag` fails a migration note
 that names `--dest`, `no-email-claim` fails any use of "hourly", one branch of `output-dir-prereq` is loose.
 
@@ -201,7 +201,7 @@ ordinary regression cases and no longer count towards the verdict.
 | `holdout-thai-pua-repair-regulation` | 1.00 | 0.87 | +0.13 |
 | `holdout-thai-pua-repair-rag-chunks` | 1.00 | 0.94 | +0.06 |
 
-`personal-voice`: with-skill 0.985, mean Δ +0.075, no case loses: pass (measured on plugin 0.1.27; 0.1.28 then reworded step 5 to read `docs/humanize/cue-sheet.md` instead of calling `siang:humanize`, and 0.1.29 made that path plugin-relative; only a with-arm run of one case, `terse-lower`, was repeated after the rewording, so the shipped file's pass rests on the 0.1.27 run). `thai-pua-repair`: 1.00, mean Δ +0.095: pass. The
+`personal-voice`: with-skill 0.985, mean Δ +0.075, no case loses: pass (measured on plugin 0.1.27; 0.1.28 shortened the description and reworded step 5 to read `docs/humanize/cue-sheet.md` instead of calling `siang:humanize`, and 0.1.29 made that path plugin-relative; only a with-arm run of one case, `terse-lower`, was repeated after the rewording, so the shipped file's pass rests on the 0.1.27 run). `thai-pua-repair`: 1.00, mean Δ +0.095: pass. The
 personal-voice gain comes from one case; on the Thai code-switch case plain Claude scores the same. The terse-lower with-arm
 misses were the `signoff` and `no-caps-emphasis` graders, strict by design (they check a habit every sample shares and a
 quirk that must not be copied). Open: the two PDF cases only check that `out.pdf` exists (`%PDF-`), so `cp in.pdf out.pdf`

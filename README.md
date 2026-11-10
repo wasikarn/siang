@@ -43,7 +43,7 @@ claude plugin install siang@siang
 `docs/humanize/` เก็บสิ่งที่เคยเป็น skill `humanize`: ลำดับขั้นใน `README.md`, cue sheet สากล 33 แถว, pattern เฉพาะภาษาไทย,
 โครงสร้างประโยคไทย และ `scripts/scan.py` ที่ไล่หา tell ที่ pattern จับได้ (em dash, คำสาย AI, ประโยคปิดแบบ chat,
 การสะกดและรูปแบบวันที่ภาษาไทย) พร้อมเลขบรรทัดและเลข § ใช้อ่านเองหรือสั่งให้ Claude อ่านก็ได้
-`python3 docs/humanize/scripts/scan.py <ไฟล์>`
+`python3 docs/humanize/scripts/scan.py <ไฟล์>` (รันจาก clone ของ repo; ตัวที่ติดตั้งเก็บ kit ไว้ที่ `~/.claude/plugins/cache/siang/siang/<version>/docs/humanize/`)
 
 มันถูกถอดจากการเป็น skill ใน 0.1.28 เพราะบนเคส held-out สี่เคสที่ agent ซึ่งไม่เคยเห็น skill เขียน (5 รอบต่อฝั่ง)
 Δ เฉลี่ยเป็น 0.00 ต่ำกว่าเกณฑ์ +0.05 ตัวเลขทั้งหมดอยู่ใน `evals/README.md`
@@ -77,11 +77,11 @@ claude plugin install siang@siang
   ผลของทั้งสองชุด (คะแนน ค่าใช้จ่าย และผลของ grader ทุกตัว) เก็บไว้ใน [`docs/eval-runs/`](docs/eval-runs/) prompt
   ของรอบ Sonnet อยู่ใน JSON นั้น แต่ prompt ใน repo ยังระบุชื่อ skill อยู่ รันซ้ำจึงได้ตัวเลขของ Sonnet ไม่ตรงเป๊ะ
   หลังแก้ตาม deep-audit (0.1.24) รันเคสภาษาไทยทั้ง 14 เคสใหม่เฉพาะฝั่ง siang ได้ 1.00 ครบ 42 รอบ
-- เคส held-out ของอีกสาม skill (เขียนโดย agent ที่ไม่เคยเห็นขั้นตอนของ skill) รัน 5 รอบต่อฝั่ง ตามกฎที่ตั้งไว้ก่อนรัน
-  (ดู `evals/README.md`): `thai-pua-repair` Δ เฉลี่ย +0.095 (คะแนน 1.00) และ `personal-voice` Δ +0.075 (0.985) ผ่านเกณฑ์
+- เคส held-out ของอีกสี่ skill (เขียนโดย agent ที่ไม่เคยเห็นขั้นตอนของ skill) รัน 5 รอบต่อฝั่ง ตามกฎที่ตั้งไว้ก่อนรัน
+  (ดู `evals/README.md`): `thai-pua-repair` Δ เฉลี่ย +0.095 (คะแนน 1.00) และ `personal-voice` Δ +0.075 (0.985) ผ่านเกณฑ์ (วัดบน 0.1.27 หลังจากนั้น step 5 ถูกเขียนใหม่ ดู `evals/README.md`)
   โดย `personal-voice` รันใหม่บนสองเคสที่ agent ซึ่งไม่เคยเห็น skill เขียนขึ้นใหม่ (เคสเดิมเคยถูกใช้ปรับ skill ใน 0.1.21)
   ผลของมันมาจากเคสเดียว อีกเคสได้ 1.00 เท่ากับ Claude เปล่า
-- `humanize` ไม่ผ่านเกณฑ์บนเคส held-out สี่เคสที่เขียนใหม่แบบ blind: with-skill 0.94 แต่ Δ เฉลี่ย 0.00 (−0.03, 0.00, +0.03, 0.00)
+- `humanize` ไม่ผ่านเกณฑ์บนเคส held-out สี่เคสที่เขียนใหม่แบบ blind: with-skill 0.94 แต่ Δ เฉลี่ย 0.00 (0.00, −0.03, +0.03, 0.00)
   จึงถูกถอดจากการเป็น skill ใน 0.1.28 และเก็บเป็น `docs/humanize/`
 - `document-review` ไม่ผ่านเกณฑ์ (Δ เฉลี่ย −0.02 บนเคส held-out สองเคส Claude เปล่า ๆ เจอข้อผิดชุดเดียวกัน)
   จึงถูกลบออกจาก skill ใน 0.1.26 และเก็บ checklist ไว้เป็นเอกสารที่ `docs/document-review-checklist.md`

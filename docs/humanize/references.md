@@ -6,7 +6,7 @@
 
 ## Reference
 
-This skill extends [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup, by way of [blader/humanizer](https://github.com/blader/humanizer), with 28 Thai-specific top-level patterns (§31-§42 and §53-§58 in `patterns-thai.md`: terminology & calque, anti-fabrication, connectives, register matrix, code-switching tells, AI-leaked closers, grammar slips, headings, pronouns, dates, apologies, hidden characters; §43-§52 in `patterns-thai-structure.md`: sentence and paragraph structure) and a Thai-register foundation (§0).
+This kit extends [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup, by way of [blader/humanizer](https://github.com/blader/humanizer), with 28 Thai-specific top-level patterns (§31-§42 and §53-§58 in `patterns-thai.md`: terminology & calque, anti-fabrication, connectives, register matrix, code-switching tells, AI-leaked closers, grammar slips, headings, pronouns, dates, apologies, hidden characters; §43-§52 in `patterns-thai-structure.md`: sentence and paragraph structure) and a Thai-register foundation (§0).
 
 ### Sources adapted (MIT)
 

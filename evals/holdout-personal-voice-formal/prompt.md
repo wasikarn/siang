@@ -1,6 +1,6 @@
 ---
 name: holdout-personal-voice-formal
-tags: [holdout, personal-voice]
+tags: [regression, personal-voice]
 runs: 1
 max_turns: 15
 timeout_seconds: 600

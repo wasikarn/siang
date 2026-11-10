@@ -44,7 +44,7 @@ use siang:personal-voice: samples/ are my messages, rewrite draft.md like me
 `docs/humanize/` holds what used to be the `humanize` skill: the loop in `README.md`, a 33-row universal cue sheet, the Thai-only
 patterns, Thai sentence structure, worked examples, and `scripts/scan.py`, which lists the tells a pattern can catch (em dashes,
 AI vocabulary, chat closers, Thai spelling and date formats) with line and section. Read it yourself or point Claude at it:
-`python3 docs/humanize/scripts/scan.py <file>`.
+`python3 docs/humanize/scripts/scan.py <file>` from a clone of the repo (an installed copy keeps the kit under `~/.claude/plugins/cache/siang/siang/<version>/docs/humanize/`).
 
 It stopped being a skill in 0.1.28: on four held-out cases written by an agent that never saw the skill (5 runs per arm) its mean
 Δ was 0.00 against the +0.05 bar. The numbers are in `evals/README.md`.
@@ -80,12 +80,12 @@ not the total: plain Claude already scores high on many cases.
   Sonnet run's prompts are recorded there, but the repo's prompts still name the skill, so rerunning them will not
   reproduce the Sonnet figures exactly. After the deep-audit fixes (0.1.24), all 14 Thai cases reran with-arm only
   at 1.00 in 42 of 42 runs.
-- Held-out cases for the other three skills (written by an agent that never saw the skills' steps) were run once
+- Held-out cases for the other four skills (written by an agent that never saw the skills' steps) were run once
   more after the graders were frozen, 5 runs per arm, under a rule set before the run (see `evals/README.md`):
-  `thai-pua-repair` mean Δ +0.095 (score 1.00) and `personal-voice` Δ +0.075 (0.985) pass. `personal-voice` was rerun on
+  `thai-pua-repair` mean Δ +0.095 (score 1.00) and `personal-voice` Δ +0.075 (0.985) pass (measured on 0.1.27; step 5 was reworded afterwards, see `evals/README.md`). `personal-voice` was rerun on
   two new cases written by an agent that never saw the skill (the old two had been used to tune it in 0.1.21); its gain
   comes from one case, and on the other plain Claude scores the same.
-- `humanize` failed the rule on four new blind held-out cases (with-skill 0.94, mean Δ 0.00: −0.03, 0.00, +0.03, 0.00). It stopped
+- `humanize` failed the rule on four new blind held-out cases (with-skill 0.94, mean Δ 0.00: 0.00, −0.03, +0.03, 0.00). It stopped
   being a skill in 0.1.28 and lives on as `docs/humanize/`.
 - `document-review` failed the rule (mean Δ −0.02 on its two held-out cases; plain Claude finds the same defects).
   It was removed as a skill in 0.1.26 and its checklist kept as a plain doc, `docs/document-review-checklist.md`.
