@@ -1,6 +1,6 @@
 # Thai structural patterns (§43–§52): discourse frames
 
-Adapted from chakrit/kien-thai (MIT, Copyright (c) 2026 Chakrit Wichian): `skills/kien-thai/README.md` (Frames 1–7), `references/ai-tells.md`, `references/style-rules.md`, `references/grammar.md`. Rules paraphrased; all examples written fresh for dev/tech text.
+Adapted from chakrit/kien-thai (MIT, Copyright (c) 2026 Chakrit Wichian): `skills/kien-thai/SKILL.md` (Frames 1–7), `references/ai-tells.md`, `references/style-rules.md`, `references/grammar.md`. Rules paraphrased; all examples written fresh for dev/tech text.
 
 **Load when:** the draft is Thai and longer than one sentence (README.md step 3). The full frames fit genre D (blog, ADR, README, strategy, explainer) and genre B when a PR description runs to real paragraphs. In genre A (chat), C (UI strings, replies, errors) and short B (a standup, a one-line commit), which kien-thai itself excludes, apply only the sentence-order rule (§44: condition and time before the main clause) and leave the register frames alone. kien-thai register mapping: Explainer, News/reference and Personal blog all land in D; Marketing and Official/minutes are out of scope here.
 

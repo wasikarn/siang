@@ -87,7 +87,7 @@ Three-run check of the nine non-humanize cases (2026-11-09, 3 runs per arm, with
 some `personal-voice-thai-oneoffs` runs because the profile omitted the one-offs it excluded. 0.1.20 made step 3 require a
 one-offs line, and a rerun of both `personal-voice` cases (3 runs per arm) scored 1.00 vs 0.78 (+0.22) and 1.00 vs 0.70 (+0.30).
 
-Five `trigger-*` cases at the time (three remain; tag `trigger`) test whether each skill fires from the task alone: the prompt never names the skill
+Five `trigger-*` cases at the time (two remain; tag `trigger`) test whether each skill fires from the task alone: the prompt never names the skill
 (its expected name sits in the case `description`, because prompt frontmatter rejects unknown keys, and `tests/test-graders.sh`
 reads it from there), and a `tool_used: Skill` grader checks the call. Run with `--ablation none`, 3 runs each: `humanize`,
 `technical-writing`, `document-review`, `personal-voice` and `thai-pua-repair` all fired 3 of 3. The descriptions alone are
@@ -139,7 +139,7 @@ owned by another session and gets the same rule only with that session's agreeme
 Held-out cases: `holdout-document-review-*`, `holdout-personal-voice-*`, `holdout-technical-writing-*`,
 `holdout-thai-pua-repair-*` (two each). Graders and fixtures are frozen at sha256 `d1cb35dbc7742f68` (first 16
 hex of the hash of every file under those eight directories, sorted by path, as
-`find <dirs> -type f | sort | xargs shasum -a 256 | shasum -a 256`). Changing any of those files after the run
+`find <dirs> -type f | sort | xargs shasum -a 256 | shasum -a 256`, run from the repo root with each directory written with its `evals/` prefix; from inside `evals/` the paths differ and so does the hash). Changing any of those files after the run
 voids it and the run starts again. Known loose graders, left as they are: `no-dest-flag` fails a migration note
 that names `--dest`, `no-email-claim` fails any use of "hourly", one branch of `output-dir-prereq` is loose.
 
@@ -168,7 +168,7 @@ runs of `holdout-technical-writing-cli-stale-readme`, and with it the Δ was +0.
 `holdout-thai-pua-repair-rag-chunks` rejected a valid key order. All four were loosened with sample lines taken
 from the checkers' probes (the self-test is red on the old patterns, green on the new), and the three cases whose
 graders changed were rerun, 5 runs per arm, $5.23. The cases whose graders did not change (`holdout-thai-pua-repair-regulation`
-and the two `holdout-personal-voice-*`) were not rerun. That departs from the rule's wording (a changed frozen file voids the run and it starts again): only the affected cases were rerun, to bound the cost, and the verdicts above say so. `jsonl-shape` still allows at most one space after a colon, a looser-than-needed limit left as it was.
+and the two `holdout-personal-voice-*`) were not rerun. That departs from the rule's wording (a changed frozen file voids the run and it starts again): only the affected cases were rerun, to bound the cost, and the verdicts above say so. No new hash was recorded for the loosened graders before the rerun, so the `technical-writing` verdict rests on weaker evidence than a frozen run. `jsonl-shape` still allows at most one space after a colon, a looser-than-needed limit left as it was.
 
 | case | with | without | Δ |
 |---|---|---|---|
@@ -201,7 +201,7 @@ ordinary regression cases and no longer count towards the verdict.
 | `holdout-thai-pua-repair-regulation` | 1.00 | 0.87 | +0.13 |
 | `holdout-thai-pua-repair-rag-chunks` | 1.00 | 0.94 | +0.06 |
 
-`personal-voice`: with-skill 0.985, mean Δ +0.075, no case loses: pass. `thai-pua-repair`: 1.00, mean Δ +0.095: pass. The
+`personal-voice`: with-skill 0.985, mean Δ +0.075, no case loses: pass (measured on plugin 0.1.27; 0.1.28 then reworded step 5 to read `docs/humanize/cue-sheet.md` instead of calling `siang:humanize`, and 0.1.29 made that path plugin-relative; only a with-arm run of one case, `terse-lower`, was repeated after the rewording, so the shipped file's pass rests on the 0.1.27 run). `thai-pua-repair`: 1.00, mean Δ +0.095: pass. The
 personal-voice gain comes from one case; on the Thai code-switch case plain Claude scores the same. The terse-lower with-arm
 misses were the `signoff` and `no-caps-emphasis` graders, strict by design (they check a habit every sample shares and a
 quirk that must not be copied). Open: the two PDF cases only check that `out.pdf` exists (`%PDF-`), so `cp in.pdf out.pdf`
@@ -210,10 +210,10 @@ repaired streams compressed, that cannot be closed here.
 
 ## Humanize on blind held-out cases (0.1.28)
 
-The humanize session was no longer running, so the same rule was applied to it. An agent that never saw the skill wrote four
+The humanize session was no longer running and the user confirmed that no other session worked on it, then told this session to apply the rule to it. An agent that never saw the skill wrote four
 cases (`holdout2-humanize-en-pr`, `-en-adr`, `-th-chat`, `-th-release`; a model-sounding draft with concrete facts, rewritten
 in place, 8 regex graders each). Graders were frozen at sha256 `81f74ee5e3c5a238` (first 16 hex over the four directories, same command
-as above) and run once, 5 runs per arm, $5.34, total spend $29.29 of the $40 cap.
+as above) and run once, 5 runs per arm, $5.34, total spend $29.29 of the $40 cap. This hash cannot be reproduced: the four directories were never committed and are no longer on disk, so it is a record, not a check.
 
 | case | with | without | Δ |
 |---|---|---|---|
@@ -226,7 +226,7 @@ With-skill mean 0.9375 (above 0.90), mean Δ 0.00 against the +0.05 bar: fail. N
 session's own 18-case figure (mean Δ +0.04). Two graders failed in both arms alike (`krub-not-every-sentence` in `th-chat`,
 `no-hype-closer` in `th-release`, which bans any ครับ); they were strict by design and were not changed after the result, so the
 verdict stands as run. Converted in 0.1.28: `skills/humanize/` moved to `docs/humanize/` (the loop as `README.md`, the cue sheet,
-patterns, examples and `scripts/scan.py` unchanged), its 18 cases and `trigger-humanize` removed, and the four held-out cases
+patterns, examples and `scripts/scan.py`; the only edits are `SKILL.md` references that now say `README.md`), its 18 cases and `trigger-humanize` removed, and the four held-out cases
 dropped from the tree with it (they are in the numbers above, not in git, since they were never committed). `tests/test-scan.sh` now
 reads planted fixtures from `tests/fixtures/humanize/`.
 

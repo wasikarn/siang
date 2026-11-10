@@ -76,7 +76,7 @@ SOFTWARE.
   2026-06-10; checked against HEAD 0ef9fe5bc3572734fd3ae6c448fe00a30cd5dcf0; §59-§61 follow its v3.1.0)
 - Used in: universal patterns §1-§30 (`docs/humanize/patterns-universal.md`, `cue-sheet.md`):
   pattern titles, order and structure, from v2.7.0. §59-§61 and the step-6 re-scan and dropped-fact
-  check in `SKILL.md` follow v3.1.0. Its rule text, before/after examples and the worked example
+  check in `docs/humanize/README.md` follow v3.1.0. Its rule text, before/after examples and the worked example
   in `examples.md` were copied until 2026-11-09, when they were rewritten in siang's own words. A
   scratch script run on 2026-11-09 against the four upstream sources (humanizer, kien-thai,
   claude-thai-skills and the Wikipedia page) found no shared run of six or more words outside the

@@ -1,6 +1,6 @@
 # siang
 
-siang edits developer writing in English and Thai so it reads as a person wrote it. These are the terms its rules, evals and reviews use.
+siang drafts text in a user's own voice and repairs Thai text extracted from PDFs, and keeps a reference kit (`docs/humanize/`) for removing AI writing tells in English and Thai. These are the terms its rules, evals and reviews use.
 
 ## Writing
 
