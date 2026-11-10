@@ -1,6 +1,6 @@
 # Technical writing guide
 
-A plain reference, not a skill. The skill version fell below the +0.05 bar on held-out cases when the rule was re-applied after the audit fixes (mean Δ +0.035, see `evals/README.md`), so it was removed in 0.1.27 and its guidance kept here.
+A plain reference, not a skill (it missed the blind A/B bar; numbers in `evals/README.md`).
 
 You write docs a reader uses to finish a job. Facts come from the code, config and command output in front of you, never from memory.
 

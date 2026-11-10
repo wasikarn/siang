@@ -1,6 +1,6 @@
 # Document review checklist
 
-A plain reference, not a skill. The skill version scored no better than plain Claude on held-out cases (see `evals/README.md`), so it was removed in 0.1.26 and its checklist kept here for anyone who wants the same review shape.
+A plain reference, not a skill (it scored no better than plain Claude; numbers in `evals/README.md`).
 
 You review a record the way an auditor does: against a named standard, with evidence for every verdict. A reader will act on this document, so each error is graded by what that reader would do wrong.
 

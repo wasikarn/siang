@@ -1,6 +1,6 @@
 # Humanize: Remove AI Writing Patterns from Dev/Tech Writing (EN + TH)
 
-> A plain reference, not a skill. The skill version scored no better than plain Claude on blind held-out cases (mean Δ 0.00 over four, see `evals/README.md`), so it was removed in 0.1.28. The cue sheet, the pattern files, `examples.md` and `scripts/scan.py` stay here for anyone who wants them; read this file as the loop, and run `python3 docs/humanize/scripts/scan.py <file>` for the pattern pass.
+> A plain reference, not a skill (it scored no better than plain Claude; numbers in `evals/README.md`). Read this file as the loop; run `python3 docs/humanize/scripts/scan.py <file>` for the pattern pass.
 
 You edit dev/tech writing, monolingual English, monolingual Thai, or Thai-English code-switching (Thai particles next to English tech terms), so it reads human. The universal tells follow the Wikipedia list "Signs of AI writing" (WikiProject AI Cleanup), reached through blader/humanizer; siang adds rules of its own for Thai register, terminology and anti-fabrication.
 
@@ -68,14 +68,7 @@ No sample: the Grit Gate default. Opinionated where the genre allows, varied rhy
 
 ## Pattern cue-sheet
 
-Thirty-three universal tells (§1–§30, §59–§61), all languages, one line per cluster; the full table is `cue-sheet.md` (**read it before scanning**; scans without it miss the cues). Thai-only tells (§31–§42, §53–§58): `patterns-thai.md`; Thai sentence structure (§43–§52): `patterns-thai-structure.md`.
-
-- **Content (§1-6)**: significance puffery, notability name-drops, -ing pseudo-depth tails, promo language, weasel attribution and vague association ("linked to", "associated with"), "challenges and future" formula.
-- **Language and grammar (§7-13)**: AI-vocab words, copula avoidance, negative parallelism, rule of three, elegant variation (historical: older models, weak on current ones), false ranges (weak: no longer on Wikipedia's list), passive and subjectless fragments.
-- **Style (§14-19)**: em dashes (#14, zero unless the user's English sample uses them on purpose; never in Thai), bold overuse, inline-header lists, title-case headings, emojis, curly quotes.
-- **Communication (§20-22)**: chat artifacts, cutoff disclaimers and gap-fill, sycophancy.
-- **Replies and argument (§59-61)**: re-explaining what the reader already knows, punchline closers and fragment runs, arguing with objections nobody raised.
-- **Filler and hedging (§23-30)**: filler phrases, excessive hedging, generic positive conclusion, hyphenated-pair overuse, authority tropes, signposting, fragmented headers and thematic breaks, diff-anchored writing.
+Universal tells (§1–§30, §59–§61), all languages: `cue-sheet.md` (**read it before scanning**; scans without it miss the cues). Thai-only tells (§31–§42, §53–§58): `patterns-thai.md`. Thai sentence structure (§43–§52): `patterns-thai-structure.md`.
 
 ## Clusters, not single tells
 
@@ -85,7 +78,7 @@ A single em dash proves nothing. Stack em dashes, a forced triad, *vibrant tapes
 
 Each says when to load it; one level deep; read fully.
 
-- `cue-sheet.md`: the 33-row table (pattern / cue / fix). **Load when:** starting any scan.
+- `cue-sheet.md`: the universal-tell table (pattern / cue / fix). **Load when:** starting any scan.
 - `patterns-universal.md`: full §1–§30 and §59–§61 (problem plus worked before/after), detection guidance. **Load when:** a named tell resists a fix, or before deciding prose is AI vs human.
 - `patterns-thai.md`: §31–§42 and §53–§58 Thai-specific rules (terminology and calque, anti-fabrication tiers, connectives, register matrix, code-switching tells, AI-leaked closers, grammar slips, pronouns, dates, apologies, hidden characters). **Load when:** the draft has Thai. **Skip for monolingual English, except §32 (anti-fabrication tiers).**
 - `patterns-thai-structure.md`: §43–§52 Thai discourse frames (topic first, condition first, space as sentence break, closing particles, dropped subjects, `ก็` pacing, pivots). **Load when:** any Thai text longer than one sentence (step 3). The full frames fit D prose and long B; in A, C and short B apply only the sentence-order rules (condition and time first, §44) and leave register alone.

@@ -1,6 +1,6 @@
 # Personal voice guide
 
-A plain reference, not a skill. The skill version scored 0.975 against 0.925 without it on two blind held-out cases (mean Δ +0.0375, 5 runs per arm), below the +0.05 bar, so it was removed in 0.1.32 and its method kept here (numbers in `evals/README.md`). Read it and follow the steps when you want a draft in your own voice.
+A plain reference, not a skill (it missed the blind A/B bar; numbers in `evals/README.md`). Follow the steps to get a draft in your own voice.
 
 You make a draft sound like one specific person. The voice comes from measurements of their samples, never from a guess at their personality, and every fact in the draft comes from the user.
 
