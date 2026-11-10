@@ -1,0 +1,1963 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.322",
+  "startedAt": "2026-11-10T11:41:55.358Z",
+  "durationSeconds": 91,
+  "costUsd": 2.9309254,
+  "partial": false,
+  "suite": {
+    "root": "<local>",
+    "ablation": "with-without",
+    "caseFilter": "holdout5-technical-writing-*",
+    "threshold": 1,
+    "concurrency": 4,
+    "plugins": [
+      {
+        "name": "siang",
+        "version": "0.1.33",
+        "path": "<local>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "holdout5-technical-writing-key-rotation",
+      "dir": "evals/holdout5-technical-writing-key-rotation",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:technical-writing` skill (Skill tool, `skill: \"siang:technical-writing\"`) to rewrite `ROTATION.md`, our on-call how-to for rotating the signer service's signing key. It has not been touched since before `rotate-key.sh` 2.0 (see `CHANGELOG.md`). The reader is an on-call engineer on a fresh shell who must finish the rotation from this page alone: list everything that has to be in place before the first step, give the steps in the order they must run, and say how long clients can keep using the previous key. `rotate-key.sh` is the source of truth. Do not change `rotate-key.sh` or `CHANGELOG.md`; do not run `rotate-key.sh`.\n\nYour final message is one line naming the file you changed, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 600,
+      "maxTurns": 20,
+      "graders": [
+        {
+          "name": "grace-48-hours",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "ROTATION.md"
+            },
+            "pattern": "\\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "keystore-dir-before-stage",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "ROTATION.md"
+            },
+            "pattern": "KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "no-force-instruction",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "ROTATION.md"
+            },
+            "pattern": "(?:^\\s*(?:\\d+[.)]|[-*])?\\s*|[.;:,]\\s+)(?:[Rr]e-?run|[Rr]etry|[Rr]un|[Pp]ass|[Aa]dd|[Uu]se|[Tt]ry)\\b(?![^.;,\\n]*(?:instead|rather than|without))[^.;,\\n]*--force",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-prerequisites-claim-gone",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "ROTATION.md"
+            },
+            "pattern": "\\b[Nn]o prerequisites\\b|handles everything",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-seven-day-grace",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "ROTATION.md"
+            },
+            "pattern": "(?:stays|remains|is) (?:valid|accepted|trusted) for (?:7|seven) days",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "reload-after-promote",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "ROTATION.md"
+            },
+            "pattern": "--promote[\\s\\S]*reload[^\\n]*signer",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?technical-writing\"",
+            "min": 1
+          }
+        },
+        {
+          "name": "stage-before-promote",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "ROTATION.md"
+            },
+            "pattern": "rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "tools-listed",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "ROTATION.md"
+            },
+            "pattern": "^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.159629,
+            "judgeCostUsd": 0,
+            "durationSeconds": 21,
+            "startedAt": "2026-11-10T11:41:55.450Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.16062959999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-11-10T11:41:55.450Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.14806080000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 18,
+            "startedAt": "2026-11-10T11:41:55.450Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.1507568,
+            "judgeCostUsd": 0,
+            "durationSeconds": 18,
+            "startedAt": "2026-11-10T11:41:55.450Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.1499236,
+            "judgeCostUsd": 0,
+            "durationSeconds": 18,
+            "startedAt": "2026-11-10T11:42:13.130Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.14701779999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-11-10T11:42:13.657Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.12862200000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-10T11:42:16.318Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1394388,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-11-10T11:42:17.315Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.14222480000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 18,
+            "startedAt": "2026-11-10T11:42:30.726Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.138434,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-11-10T11:42:30.816Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "grace-48-hours",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b48(?:\\b|h)|\\b(?:2|two) days\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keystore-dir-before-stage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched KEYSTORE_DIR[\\s\\S]*?rotate-key\\.sh\\s+--stage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-force-instruction",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-prerequisites-claim-gone",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-seven-day-grace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "reload-after-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --promote[\\s\\S]*reload[^\\n]*signer",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "stage-before-promote",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rotate-key\\.sh\\s+--stage[\\s\\S]*rotate-key\\.sh\\s+--promote",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "tools-listed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\bjq\\b)[\\s\\S]*\\bopenssl\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 1,
+        "passRateWithout": 1,
+        "delta": 0
+      }
+    },
+    {
+      "name": "holdout5-technical-writing-thumb-options",
+      "dir": "evals/holdout5-technical-writing-thumb-options",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:technical-writing` skill (Skill tool, `skill: \"siang:technical-writing\"`) to update `OPTIONS.md`, the option reference for our image thumbnail tool `thumb.py`. We just shipped 3.0.0 (see `CHANGELOG.md`) and the page still describes 2.x. Make it a correct reference for 3.0.0: every option with what it does and its default. Also add a migration note so someone upgrading from 2.x knows what to change in the commands and scripts they already run. `thumb.py` is the source of truth. Do not change `thumb.py` or `CHANGELOG.md`.\n\nYour final message is one line naming the file you changed, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 600,
+      "maxTurns": 20,
+      "graders": [
+        {
+          "name": "keep-exif-removal-noted",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "OPTIONS.md"
+            },
+            "pattern": "--keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "no-jpeg-default",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "OPTIONS.md"
+            },
+            "pattern": "--format\\b[^\\n]*\\|\\s*`?jpe?g`?\\s*\\|\\s*$|\\bdefaults? (?:is|to|format is)\\s+`?jpe?g\\b|\\bdefault:\\s*`?jpe?g\\b",
+            "flags": "mi",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-keep-exif-row",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "OPTIONS.md"
+            },
+            "pattern": "^(?:\\|\\s*|\\s*[-*]\\s+)`--keep-exif`\\s*(?:\\||:|—|-)\\s*(?:Copy|Copies|Keep|Keeps|Preserve|Preserves)\\b",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-output-row",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "OPTIONS.md"
+            },
+            "pattern": "^\\|\\s*`--output[^`]*`\\s*\\|[^\\n]*`\\./thumbs`",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-quality-85-default",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "OPTIONS.md"
+            },
+            "pattern": "--quality\\b[^\\n]*\\|\\s*`?85`?\\s*\\|\\s*$|quality[^\\n]*\\bdefaults? (?:is|to)\\s+`?85\\b|quality[^\\n]*\\bdefault:\\s*`?85\\b",
+            "flags": "mi",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "quality-82",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "OPTIONS.md"
+            },
+            "pattern": "quality[\\s\\S]{0,300}?\\b82\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "rename-noted",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "OPTIONS.md"
+            },
+            "pattern": "--output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?technical-writing\"",
+            "min": 1
+          }
+        },
+        {
+          "name": "webp-default",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "OPTIONS.md"
+            },
+            "pattern": "default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.166844,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-11-10T11:42:34.734Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.152949,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-11-10T11:42:35.236Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.162053,
+            "judgeCostUsd": 0,
+            "durationSeconds": 19,
+            "startedAt": "2026-11-10T11:42:47.942Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.16670459999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 21,
+            "startedAt": "2026-11-10T11:42:48.775Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.15808299999999997,
+            "judgeCostUsd": 0,
+            "durationSeconds": 18,
+            "startedAt": "2026-11-10T11:42:52.565Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1304834,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-10T11:42:55.148Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1281816,
+            "judgeCostUsd": 0,
+            "durationSeconds": 13,
+            "startedAt": "2026-11-10T11:43:07.201Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1308062,
+            "judgeCostUsd": 0,
+            "durationSeconds": 15,
+            "startedAt": "2026-11-10T11:43:09.401Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.1415354,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-11-10T11:43:09.534Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.128548,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-10T11:43:10.391Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "keep-exif-removal-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-exif[\\s\\S]{0,300}?(?:remov|no longer|dropped|gone|delet|not (?:supported|available)|unsupported|retired|reject|always strip|never)|(?:remov|dropped|gone|delet|retired)[\\s\\S]{0,400}?--keep-exif",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jpeg-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-keep-exif-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-output-row",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-quality-85-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quality-82",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched quality[\\s\\S]{0,300}?\\b82\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rename-noted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --output\\b[\\s\\S]{0,300}?--out-dir|--out-dir[\\s\\S]{0,300}?--output\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "webp-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched default[^\\n]*\\bwebp\\b|\\bwebp\\b[^\\n]*default|\\|\\s*`?webp`?\\s*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 1,
+        "passRateWithout": 1,
+        "delta": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 2,
+    "casesPassed": 2,
+    "overallScore": 1,
+    "overallPassRate": 1,
+    "meanDelta": 0
+  }
+}

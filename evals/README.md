@@ -306,3 +306,11 @@ Note (deep-audit, 2026-11-10): `holdout3-technical-writing-report-export` is not
 ## Fourth held-out round, `technical-writing` only (2026-11-10, before the run)
 
 Two new cases, `holdout5-technical-writing-key-rotation` and `holdout5-technical-writing-thumb-options`, written by an agent that was told not to read `skills/`, `docs/`, this file, `evals/results/` or any existing `technical-writing` case, and to make every grader accept a correct document. This round exists because the third round was written after the second-round failure (see above), so it is weaker evidence; this one was written without seeing any result of the skill, though by the same session that had seen the earlier failure and wrote the brief. Graders and fixtures are frozen at sha256 `5a17a92e3945e148` (first 16 hex of `find evals/holdout5-* -type f | sort | xargs shasum -a 256 | shasum -a 256`, repo root). Rule: with-skill mean above 0.90 and no case losing by more than 0.05, 5 runs per arm. Known weakness stated by the author before the run: `no-quality-85-default` and `no-jpeg-default` would wrongly fail a migration table whose last column is the old 2.x value. Nothing changes after the run starts.
+
+### Result of the fourth round (2026-11-10, graders frozen at `5a17a92e3945e148`, commit 8819dcb)
+
+5 runs per arm, $2.93. With-skill / without / Δ: `holdout5-technical-writing-key-rotation` 1.00 / 1.00 / 0.00, `holdout5-technical-writing-thumb-options` 1.00 / 1.00 / 0.00. The with-skill mean is 1.00 and no case loses, so `technical-writing` passes the rule on this round too, with no failing grader in either arm. Plain Claude also scores 1.00, so these two cases show that the skill does no harm and do not show that it helps. Together with the third round, `technical-writing` has now passed two rounds of cases written after its second-round failure; its only round written before any failure was seen is the second one, which it failed.
+
+Trigger recheck (same day, `trigger-personal-voice` only, `--ablation none`, 3 runs, $0.35): the skill fired in 3 of 3 on the 0.1.33 description, which dropped one pointer sentence after the earlier 0.1.20 run.
+
+The run results behind the second to fourth rounds and the trigger runs are kept in `docs/eval-runs/` (paths stripped), because `evals/results/` is gitignored.

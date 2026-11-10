@@ -1,0 +1,1963 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.322",
+  "startedAt": "2026-11-10T10:55:15.788Z",
+  "durationSeconds": 117,
+  "costUsd": 3.2609357999999995,
+  "partial": false,
+  "suite": {
+    "root": "<local>",
+    "ablation": "with-without",
+    "caseFilter": "holdout4-*",
+    "threshold": 1,
+    "concurrency": 4,
+    "plugins": [
+      {
+        "name": "siang",
+        "version": "0.1.33",
+        "path": "<local>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "holdout4-technical-writing-assetsync-howto",
+      "dir": "evals/holdout4-technical-writing-assetsync-howto",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:technical-writing` skill (Skill tool, `skill: \"siang:technical-writing\"`) on `docs/howto-sync-assets.md`. It is the how-to for pushing our built assets to the asset host with `bin/assetsync`, and it no longer matches the script. Fix the how-to so a new teammate can run their first sync without surprises: what they need before they start, the steps and commands, the options with their defaults, and what the sync will and will not do to files on the host. Take every fact from `bin/assetsync`, `assetsync.conf` and `CHANGELOG.md`. Do not change any file other than `docs/howto-sync-assets.md`, and do not run a real sync.\n\nYour final message is one line naming the file you wrote, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 600,
+      "maxTurns": 20,
+      "graders": [
+        {
+          "name": "bwlimit-default",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/howto-sync-assets.md"
+            },
+            "pattern": "(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "default-src-dist",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/howto-sync-assets.md"
+            },
+            "pattern": "(?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "delete-opt-in",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/howto-sync-assets.md"
+            },
+            "pattern": "--delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "no-source-command",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/howto-sync-assets.md"
+            },
+            "pattern": "^[ \\t]*(?:\\$[ \\t]+)?(?:[A-Za-z_]\\w*=\\S*[ \\t]+)*(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?=[^\\n#]*[ \\t]--source(?:=|[ \\t]|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?$",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "rsync-prereq",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/howto-sync-assets.md"
+            },
+            "pattern": "\\brsync\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?technical-writing\"",
+            "min": 1
+          }
+        },
+        {
+          "name": "src-flag",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/howto-sync-assets.md"
+            },
+            "pattern": "--src(?![\\w-])",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "target-before-command",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/howto-sync-assets.md"
+            },
+            "pattern": "^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "target-env-prereq",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/howto-sync-assets.md"
+            },
+            "pattern": "ASSETSYNC_TARGET",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.18876939999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 29,
+            "startedAt": "2026-11-10T10:55:15.895Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 8,
+            "costUsd": 0.2141504,
+            "judgeCostUsd": 0,
+            "durationSeconds": 36,
+            "startedAt": "2026-11-10T10:55:15.895Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.17438959999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 25,
+            "startedAt": "2026-11-10T10:55:15.895Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.18949920000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 30,
+            "startedAt": "2026-11-10T10:55:15.895Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.19304859999999996,
+            "judgeCostUsd": 0,
+            "durationSeconds": 32,
+            "startedAt": "2026-11-10T10:55:41.310Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.875,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.1497844,
+            "judgeCostUsd": 0,
+            "durationSeconds": 23,
+            "startedAt": "2026-11-10T10:55:45.350Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file docs/howto-sync-assets.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1492594,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-11-10T10:55:46.374Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.16497720000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 27,
+            "startedAt": "2026-11-10T10:55:51.956Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1518032,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-11-10T10:56:08.021Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1487428,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-11-10T10:56:08.360Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "bwlimit-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--bwlimit|\\bBWLIMIT\\b|bandwidth)[^\\n]{0,80}\\b500\\b|\\b500\\b[^\\n]{0,80}(?:--bwlimit|\\bBWLIMIT\\b|bandwidth)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "default-src-dist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|--src|\\bSRC\\b)[^\\n]{0,80}\\bdist\\b|\\bdist\\b[^\\n]{0,80}(?:default|\\bSRC\\b|assetsync\\.conf)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "delete-opt-in",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --delete(?![\\w-])[^\\n]{0,120}(?:off by default|opt[- ]?in|optional|only (?:when|if)|unless|not (?:on|enabled|the default|set|used|passed)|disabled|if you (?:pass|add|give))|(?:\\bnot\\b|\\bnever\\b|n.t\\b|\\bonly\\b|\\bunless\\b|\\bwithout\\b|\\bnothing\\b|\\bno\\b|\\bkept\\b|\\bleft\\b|opt[- ]?in)[^\\n]{0,120}--delete(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-source-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "rsync-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\brsync\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "src-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --src(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:bash[ \\t]+)?(?:[\\w./~-]*/)?assetsync(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "target-env-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ASSETSYNC_TARGET",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 0.975,
+        "passRateWithout": 0.8,
+        "delta": 0.025000000000000022
+      }
+    },
+    {
+      "name": "holdout4-technical-writing-logtidy-readme",
+      "dir": "evals/holdout4-technical-writing-logtidy-readme",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:technical-writing` skill (Skill tool, `skill: \"siang:technical-writing\"`) on `README.md`. It documents `logtidy.py`, our small script for pruning old log files, but people who follow it get errors. Rewrite `README.md` so a teammate who has never used logtidy can prune a log directory safely: what the script does, anything they must set up first, and the command with its options and their defaults. Take every fact from `logtidy.py`, `logtidy.ini` and `CHANGELOG.md` in this folder. Do not change any file other than `README.md`.\n\nYour final message is one line naming the file you wrote, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 600,
+      "maxTurns": 20,
+      "graders": [
+        {
+          "name": "default-keep-days",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "README.md"
+            },
+            "pattern": "(?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "dir-required",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "README.md"
+            },
+            "pattern": "logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "dry-run-documented",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "README.md"
+            },
+            "pattern": "--dry-run(?![\\w-])",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "keep-days-flag",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "README.md"
+            },
+            "pattern": "--keep-days(?![\\w-])",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "marker-before-command",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "README.md"
+            },
+            "pattern": "^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "marker-prereq",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "README.md"
+            },
+            "pattern": "\\.logtidy-ok",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "no-older-than-command",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "README.md"
+            },
+            "pattern": "^[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?=[^\\n#]*[ \\t]--older-than(?:=|[ \\t]|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?$",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?technical-writing\"",
+            "min": 1
+          }
+        },
+        {
+          "name": "top-level-only",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "README.md"
+            },
+            "pattern": "(?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.1777484,
+            "judgeCostUsd": 0,
+            "durationSeconds": 23,
+            "startedAt": "2026-11-10T10:56:13.139Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.15751779999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 19,
+            "startedAt": "2026-11-10T10:56:18.727Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.1750318,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-11-10T10:56:29.700Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 8,
+            "costUsd": 0.20173179999999996,
+            "judgeCostUsd": 0,
+            "durationSeconds": 29,
+            "startedAt": "2026-11-10T10:56:29.876Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.15935700000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-11-10T10:56:36.196Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.13368960000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-11-10T10:56:38.085Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1349228,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-11-10T10:56:52.134Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1331448,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-11-10T10:56:54.026Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.13391999999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-11-10T10:56:56.427Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1294476,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-10T10:56:58.686Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "default-keep-days",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:default|keep|days?|--keep-days|keep_days)[^\\n]{0,80}\\b14\\b|\\b14\\b[^\\n]{0,80}(?:default|days?)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dir-required",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched logtidy(?:\\.py)?[^\\n]*--dir(?:=|[ \\t]+)\\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "dry-run-documented",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --dry-run(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "keep-days-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --keep-days(?![\\w-])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-before-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!\\n[ \\t]*(?:\\$[ \\t]+)?(?:sudo[ \\t]+)?(?:python3?[ \\t]+)?(?:[\\w./~-]*/)?logtidy(?:\\.py)?(?![ \\t]+--?h(?:elp)?(?:[ \\t]|\\n|$))(?:[ \\t]+--?[\\w-]+(?:(?:=|[ \\t]+)[^\\s#-]\\S*)?)*[ \\t]*(?:#[^\\n]*)?(?:\\n|$))[\\s\\S])*?\\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "marker-prereq",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\.logtidy-ok",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-older-than-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "top-level-only",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bnot\\b|n.t\\b|\\bnever\\b|\\bonly\\b|\\bno\\b|skip|ignor|untouched|left alone|non-)[^\\n]{0,80}(?:recurs|sub-?dir|sub-?folder|nested|descend|top[- ]level)|(?:recurs|sub-?dir|sub-?folder|nested|descend)[^\\n]{0,80}(?:\\bnot\\b|n.t\\b|\\bnever\\b|skip|ignor|untouched|left alone)|top[- ]level|directly (?:in|inside|under)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 1,
+        "passRateWithout": 1,
+        "delta": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 2,
+    "casesPassed": 2,
+    "overallScore": 1,
+    "overallPassRate": 1,
+    "meanDelta": 0.012500000000000011
+  }
+}

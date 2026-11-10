@@ -1,0 +1,125 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.322",
+ "startedAt": "2026-11-10T11:43:54.298Z",
+ "durationSeconds": 30,
+ "costUsd": 0.35384519999999997,
+ "partial": false,
+ "suite": {
+  "root": "<local>",
+  "ablation": "none",
+  "caseFilter": "trigger-personal-voice",
+  "threshold": 1,
+  "concurrency": 1,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.33",
+    "path": "<local>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "trigger-personal-voice",
+   "dir": "evals/trigger-personal-voice",
+   "source": "mixed",
+   "promptMarkdown": "The files in `samples/` are messages I wrote. Rewrite `draft.md` in place so it sounds like me, not like a template.\n\nWhen you are done, your final message is one line saying what you did.",
+   "runsPerCase": 3,
+   "timeoutSeconds": 600,
+   "maxTurns": 15,
+   "graders": [
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?personal-voice\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.11911839999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-10T11:43:54.414Z",
+      "error": null,
+      "tracePath": "<tmp>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..\u221e)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.11702539999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-10T11:44:04.660Z",
+      "error": null,
+      "tracePath": "<tmp>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..\u221e)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.11770139999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-10T11:44:14.580Z",
+      "error": null,
+      "tracePath": "<tmp>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..\u221e)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 1,
+  "casesPassed": 1,
+  "overallScore": 1,
+  "overallPassRate": 1
+ }
+}

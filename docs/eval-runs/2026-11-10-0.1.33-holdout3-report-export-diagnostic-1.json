@@ -1,0 +1,429 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.322",
+  "startedAt": "2026-11-10T10:44:20.152Z",
+  "durationSeconds": 35,
+  "costUsd": 0.552492,
+  "partial": false,
+  "suite": {
+    "root": "<local>",
+    "ablation": "none",
+    "caseFilter": "holdout3-technical-writing-report-export",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "siang",
+        "version": "0.1.33",
+        "path": "<local>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "holdout3-technical-writing-report-export",
+      "dir": "evals/holdout3-technical-writing-report-export",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:technical-writing` skill (Skill tool, `skill: \"siang:technical-writing\"`) on `docs/exporting.md`. It is a how-to someone drafted months ago for exporting our event log with `report.py`, and support keeps getting tickets from people who followed it. Rewrite `docs/exporting.md` as a how-to that takes an analyst from a fresh checkout to an export file they can open: what they need first, the command, the options and their defaults, and where the file ends up. Base every fact on `report.py` and `report.toml` as they are now; do not edit either file.\n\nYour final message is one line naming the most harmful mistake in the old draft, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 600,
+      "maxTurns": 20,
+      "graders": [
+        {
+          "name": "format-default-csv",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/exporting.md"
+            },
+            "pattern": "(?:--format|format\\s*=)[^\\n]*\\bcsv\\b|\\bcsv\\b[^\\n]*\\bdefault|\\bdefault[^\\n]*\\bcsv\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "no-old-python",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/exporting.md"
+            },
+            "pattern": "\\b3\\.(?:[0-9]|10)\\b(?:\\+| or (?:newer|later|above|higher))",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-range-flags-in-command",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/exporting.md"
+            },
+            "pattern": "report\\.py[^\\n]*--(?:until|from)\\b",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-xlsx-claim",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/exporting.md"
+            },
+            "pattern": "report\\.py[^\\n]*--format[ =]xlsx|(?<!never |not |n't )\\bwrites (?:an? )?(?:Excel|xlsx|\\.xlsx)\\b",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "out-dir-default",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/exporting.md"
+            },
+            "pattern": "\\bexports/|(?:--out|dir\\s*=)[^\\n]*\\bexports\\b|\\bexports\\b[^\\n]*(?:--out|default)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "output-filename",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/exporting.md"
+            },
+            "pattern": "events-(?:<|\\{|YYYY|\\d{4}-\\d{2}-\\d{2})",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "python311-before-run",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/exporting.md"
+            },
+            "pattern": "^(?:(?!report\\.py[ \\t]+--)[\\s\\S])*?\\b3\\.1[1-9]\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "since-flag",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/exporting.md"
+            },
+            "pattern": "--since\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?technical-writing\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.165982,
+            "judgeCostUsd": 0,
+            "durationSeconds": 24,
+            "startedAt": "2026-11-10T10:44:20.328Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "format-default-csv",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--format|format\\s*=)[^\\n]*\\bcsv\\b|\\bcsv\\b[^\\n]*\\bdefault|\\bdefault[^\\n]*\\bcsv\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-old-python",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-range-flags-in-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-xlsx-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "out-dir-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bexports/|(?:--out|dir\\s*=)[^\\n]*\\bexports\\b|\\bexports\\b[^\\n]*(?:--out|default)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "output-filename",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched events-(?:<|\\{|YYYY|\\d{4}-\\d{2}-\\d{2})",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "python311-before-run",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!report\\.py[ \\t]+--)[\\s\\S])*?\\b3\\.1[1-9]\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "since-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --since\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 8,
+            "costUsd": 0.20651999999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 34,
+            "startedAt": "2026-11-10T10:44:20.328Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "format-default-csv",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--format|format\\s*=)[^\\n]*\\bcsv\\b|\\bcsv\\b[^\\n]*\\bdefault|\\bdefault[^\\n]*\\bcsv\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-old-python",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-range-flags-in-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-xlsx-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "out-dir-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bexports/|(?:--out|dir\\s*=)[^\\n]*\\bexports\\b|\\bexports\\b[^\\n]*(?:--out|default)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "output-filename",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched events-(?:<|\\{|YYYY|\\d{4}-\\d{2}-\\d{2})",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "python311-before-run",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!report\\.py[ \\t]+--)[\\s\\S])*?\\b3\\.1[1-9]\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "since-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --since\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.17999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 28,
+            "startedAt": "2026-11-10T10:44:20.328Z",
+            "error": null,
+            "tracePath": "<tmp>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "format-default-csv",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:--format|format\\s*=)[^\\n]*\\bcsv\\b|\\bcsv\\b[^\\n]*\\bdefault|\\bdefault[^\\n]*\\bcsv\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-old-python",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-range-flags-in-command",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-xlsx-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "out-dir-default",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bexports/|(?:--out|dir\\s*=)[^\\n]*\\bexports\\b|\\bexports\\b[^\\n]*(?:--out|default)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "output-filename",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched events-(?:<|\\{|YYYY|\\d{4}-\\d{2}-\\d{2})",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "python311-before-run",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?:(?!report\\.py[ \\t]+--)[\\s\\S])*?\\b3\\.1[1-9]\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "since-flag",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --since\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 1,
+    "overallScore": 1,
+    "overallPassRate": 1
+  }
+}

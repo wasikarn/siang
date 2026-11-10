@@ -88,7 +88,7 @@ not the total: plain Claude already scores high on many cases.
   `personal-voice` 0.975 (the 0.1.32 text, worst case −0.025); `humanize` 0.94 (its last `SKILL.md`, no case below −0.03);
   `document-review` 0.985 (worst −0.03); `technical-writing` 0.985 (after the grader fixes, worst −0.03). The restored text was then run on new blind cases (`holdout3-*`, `holdout4-*`): `humanize`, `document-review`, `personal-voice` 1.00; `technical-writing` lost 0.07 on `report-export` in the second round (a loose grader, see `evals/README.md`) and scored 1.00 on two later cases. The Δ column in `evals/README.md`
   is a record of the earlier +0.05 rule; none of these skills met it, and that is why they were removed in 0.1.26 to 0.1.32.
-- 5 `trigger` cases, one per skill, check that the skill fires from the task alone, without being named: it fired in every run (measured on the 0.1.20 descriptions; `personal-voice`'s description has since lost one pointer sentence and was not rerun).
+- 5 `trigger` cases, one per skill, check that the skill fires from the task alone, without being named: it fired in every run (measured on the 0.1.20 descriptions; `trigger-personal-voice` was rerun on the 0.1.33 description and fired in 3 of 3).
 
 Free check, no API call: `bash tests/test-graders.sh`. A paid run is
 `claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`

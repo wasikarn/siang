@@ -17,3 +17,9 @@ current cases.
 | `2026-11-09-0.1.16-no-rescan-variant.json` | with-arm only, a variant without the step-6 rescan: no cost saving, reverted |
 | `2026-11-09-0.1.19-sonnet-neutral-prompts.json` | 18 cases on Sonnet 5.5 with prompts that ask for a human-sounding rewrite and add "(use the `siang:humanize` skill if you have it)": mean Δ +0.043, 1.7x cost |
 | `2026-11-10-0.1.24-thai-with-only.json` | the 14 Thai cases, with-arm only, 3 runs each, after the deep-audit fixes (structure rules scoped by genre, tightened graders): 42/42 at 1.00, $9.15 |
+| `2026-11-09-0.1.20-trigger-five-skills.json` | the five `trigger-*` cases, 3 runs, all 1.00, $2.26 |
+| `2026-11-10-0.1.33-holdout3-eight-cases.json` | second held-out round, 8 cases, 5 runs per arm, $12.45 (`technical-writing` −0.07 on `report-export`) |
+| `2026-11-10-0.1.33-holdout3-report-export-diagnostic-1.json`, `-2.json` | the two `report-export` diagnostics: 3 of 3 pass with-skill, then the `--keep-temp` run that showed the grader rejects correct notes |
+| `2026-11-10-0.1.33-holdout4-technical-writing.json` | third round, 2 cases, 5 runs per arm, $3.26 |
+| `2026-11-10-0.1.33-holdout5-technical-writing.json` | fourth round, 2 cases, 5 runs per arm, 1.00 / 1.00, $2.93 |
+| `2026-11-10-0.1.33-trigger-personal-voice.json` | `trigger-personal-voice` rerun on the 0.1.33 description, 3 of 3, $0.35 |
