@@ -220,8 +220,10 @@ through `${CLAUDE_SKILL_DIR}`), 5 runs per arm, $2.30. The graders and fixtures 
 
 With-skill mean 0.975, mean Δ +0.05, no case loses by more than 0.05: `personal-voice` still passes, at the threshold
 (+0.075 on 0.1.27). The gain is still one case (`terse-lower`, where `no-caps-emphasis` fails all 5 without-arm runs); on the
-code-switch case the with arm missed `english-tech-terms` once. Recorded spend is $31.59 of the $40 cap. Whether the cue sheet
-is read in these runs was not checked.
+code-switch case the with arm missed `english-tech-terms` once. Recorded spend is $31.59 of the $40 cap. One traced run of
+`terse-lower` (0.1.31, with arm, kept with `--keep-temp`) shows no Read of the cue sheet: the model loaded the skill, read the
+samples, wrote and edited `draft.md`, and skipped the step-5 read. So the pass measures the skill without that read; the
+read is not doing work in these cases, and one run does not show whether it ever happens.
 
 ## Humanize on blind held-out cases (0.1.28)
 
