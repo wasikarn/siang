@@ -290,3 +290,7 @@ Against the rule (with-skill mean above 0.90, no case losing by more than 0.05):
 Seven of eight cases scored 1.00 in both arms, so these cases do not separate the skills from plain Claude; they show only that the skills do no harm there.
 
 Diagnostic rerun (same day, after the verdict, does not change it): `holdout3-technical-writing-report-export`, with-skill arm only, 3 runs, `--keep-temp`, $0.55, scored 1.00 in all 3, with `no-range-flags-in-command` passing. The first round failed that grader in 4 of 5 with-skill runs, so the failure did not reproduce and the cause (a loose grader, or run-to-run variance) is still not confirmed: no failing document was kept. The first-round verdict for `technical-writing` stands as recorded; only a fresh blind case set can settle it.
+
+## Third held-out round, `technical-writing` only (2026-11-10, before the run)
+
+Two new cases, `holdout4-technical-writing-logtidy-readme` and `holdout4-technical-writing-assetsync-howto`, written by an agent that was told not to read `skills/` or any existing `technical-writing` case, and to make every grader accept a correct document (including a migration note that names a removed flag). Graders and fixtures are frozen at sha256 `b98cf10e97652006` (first 16 hex of `find evals/holdout4-* -type f | sort | xargs shasum -a 256 | shasum -a 256`, repo root). Rule: with-skill mean above 0.90 and no case losing by more than 0.05, 5 runs per arm. Nothing changes after the run starts.
