@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: holdout3-document-review-access-review-policy
+context:
+  scaffold_script: scaffold.sh
