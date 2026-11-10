@@ -7,7 +7,7 @@
 - Per-register worked examples
 - Monolingual English examples
 
-> Worked applications of the 33 universal + 28 Thai-specific top-level patterns in `patterns-universal.md`, `patterns-thai.md` and `patterns-thai-structure.md`, full loop: draft → "still-AI" bullets → final rewrite. Use as a reference when stuck.
+> Worked applications of the patterns in `patterns-universal.md`, `patterns-thai.md` and `patterns-thai-structure.md`, full loop: draft → "still-AI" bullets → final rewrite. Use as a reference when stuck.
 >
 > ❌/✅ below = bad/good notation, not the decorative emoji §18 tells you to cut from real writing.
 >

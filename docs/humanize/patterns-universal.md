@@ -10,15 +10,10 @@
 - Reader and argument patterns (§59–§61)
 - Detection guidance
 
-The 33 universal patterns, with the problem and a worked before/after for each.
-These apply to **all languages** (EN, TH, mixed). The compact 33-row table is
+Universal patterns for **all languages** (EN, TH, mixed), each with the problem and a worked before/after. The compact table is
 `cue-sheet.md`; open this file for the worked before/after of a tell you cannot fix,
 or for the Detection Guidance at the end before deciding prose is AI at all.
-
-Thai-specific patterns live in `patterns-thai.md` (§31–§42: terminology, calque,
-anti-fabrication, register, code-switching, AI-leaked closers; §53–§58: grammar slips, headings,
-pronouns, dates, apologies, hidden characters) and `patterns-thai-structure.md` (§43–§52).
-
+Thai-only patterns: `patterns-thai.md`, `patterns-thai-structure.md`.
 Every After below uses only facts found in its Before. Where the Before is vague, the After keeps
 the gap visible (`<N>`, `[source?]`) instead of filling it.
 
