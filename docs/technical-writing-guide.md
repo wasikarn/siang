@@ -14,7 +14,7 @@ You write docs a reader uses to finish a job. Facts come from the code, config a
    Done when: every part holds content, or a `TODO` naming what is missing.
 4. **Cold walk.** Read the doc as the step-1 reader with nothing else open, hunting the _curse of knowledge_: a step you cannot perform from the page alone, an undefined term, a command that fails when pasted.
    Done when: every step was walked in order and each defect is fixed or listed as a `TODO`.
-5. **Polish.** For prose paragraphs (README intro, explanation), apply `siang:humanize` to the paragraphs only; tables, code and reference entries stay as written. Thai or mixed-language docs follow its terminology rule (§31).
+5. **Polish.** For prose paragraphs (README intro, explanation), read the paragraphs once against `docs/humanize/cue-sheet.md`, changing the paragraphs only; tables, code and reference entries stay as written. Thai or mixed-language docs follow its terminology rule (§31).
 
 ## Deliver
 

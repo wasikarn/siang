@@ -1,6 +1,6 @@
 # Evals
 
-Cases for `siang:document-review` (removed in 0.1.26) and `siang:technical-writing` (removed in 0.1.27) are described below as a record of what was measured; they are no longer in the tree.
+Cases for `siang:humanize` (removed in 0.1.28), `siang:document-review` (removed in 0.1.26) and `siang:technical-writing` (removed in 0.1.27) are described below as a record of what was measured; they are no longer in the tree.
 
 Eighteen cases for `siang:humanize` in `claude plugin eval`'s native layout (tag `humanize`). Ten of them:
 eight planted cases (English prose, English Slack update with only subtle tells §9/§28/§30/§59-§61,
@@ -207,6 +207,28 @@ misses were the `signoff` and `no-caps-emphasis` graders, strict by design (they
 quirk that must not be copied). Open: the two PDF cases only check that `out.pdf` exists (`%PDF-`), so `cp in.pdf out.pdf`
 plus a hand-edited `check.txt` passes every grader; with regex-on-file, last-message and tool-use graders only, and the
 repaired streams compressed, that cannot be closed here.
+
+## Humanize on blind held-out cases (0.1.28)
+
+The humanize session was no longer running, so the same rule was applied to it. An agent that never saw the skill wrote four
+cases (`holdout2-humanize-en-pr`, `-en-adr`, `-th-chat`, `-th-release`; a model-sounding draft with concrete facts, rewritten
+in place, 8 regex graders each). Graders were frozen at sha256 `81f74ee5e3c5a238` (first 16 hex over the four directories, same command
+as above) and run once, 5 runs per arm, $5.34, total spend $29.29 of the $40 cap.
+
+| case | with | without | Δ |
+|---|---|---|---|
+| `holdout2-humanize-en-pr` | 1.00 | 1.00 | 0.00 |
+| `holdout2-humanize-en-adr` | 0.97 | 1.00 | −0.03 |
+| `holdout2-humanize-th-chat` | 0.90 | 0.88 | +0.03 |
+| `holdout2-humanize-th-release` | 0.88 | 0.88 | 0.00 |
+
+With-skill mean 0.9375 (above 0.90), mean Δ 0.00 against the +0.05 bar: fail. No case loses by more than 0.05. It agrees with the
+session's own 18-case figure (mean Δ +0.04). Two graders failed in both arms alike (`krub-not-every-sentence` in `th-chat`,
+`no-hype-closer` in `th-release`, which bans any ครับ); they were strict by design and were not changed after the result, so the
+verdict stands as run. Converted in 0.1.28: `skills/humanize/` moved to `docs/humanize/` (the loop as `README.md`, the cue sheet,
+patterns, examples and `scripts/scan.py` unchanged), its 18 cases and `trigger-humanize` removed, and the four held-out cases
+dropped from the tree with it (they are in the numbers above, not in git, since they were never committed). `tests/test-scan.sh` now
+reads planted fixtures from `tests/fixtures/humanize/`.
 
 ## Known gap
 

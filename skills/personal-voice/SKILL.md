@@ -1,6 +1,6 @@
 ---
 name: personal-voice
-description: "Personal voice: build a reusable voice profile from the user's own writing samples, then draft or rewrite in that voice. Use for 'sound like me', 'in my style', or when samples are given. Tell removal alone is siang:humanize."
+description: "Personal voice: build a reusable voice profile from the user's own writing samples, then draft or rewrite in that voice. Use for 'sound like me', 'in my style', or when samples are given."
 ---
 
 # Personal voice
@@ -24,7 +24,7 @@ You make a draft sound like one specific person. The voice comes from measuremen
 4. **Draft.** Write the content first from the user's facts, then apply the habits. Voice changes how a thing is said, so an anecdote, opinion, number or name the user did not supply stays out.
    Done when: every fact in the draft traces to the user's input and every habit that fits the genre appears.
 5. **Check.** Measure the draft on the step-2 features and compare with the profile.
-   Done when: each feature lands inside the sample range, or the miss is listed with its reason, and every habit in the profile, openers and closers (a fixed sign-off phrase) included, is found in the draft as a quoted fragment. Then apply `siang:humanize` to the draft; a tell that is one of the profile's habits stays.
+   Done when: each feature lands inside the sample range, or the miss is listed with its reason, and every habit in the profile, openers and closers (a fixed sign-off phrase) included, is found in the draft as a quoted fragment. Then read the draft once for model tells (the cue sheet is `docs/humanize/cue-sheet.md` in the siang repo); a tell that is one of the profile's habits stays.
 
 ## Deliver
 

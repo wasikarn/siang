@@ -1,6 +1,6 @@
 # siang (เสียง)
 
-**Claude Code skills for dev and tech writing that reads like a person wrote it.**
+**Claude Code skills for writing in your own voice and repairing Thai PDF text, plus a reference kit for removing AI tells.**
 
 [ภาษาไทย](README.md)
 
@@ -10,8 +10,8 @@ A standup that opens with "I'm excited to share", a PR description with three bu
 length, a Thai notice that ends every sentence in ครับ and leans on "ซึ่ง" and "โดย". Readers
 notice within a line, and then they stop trusting the rest.
 
-siang is a Claude Code plugin that removes that smell in English, Thai, and Thai-English
-code-switching, and covers the nearby jobs: keeping your own voice, and repairing text extracted from a Thai PDF. เสียง means "voice".
+siang is a Claude Code plugin with two skills: keeping your own voice, and repairing text extracted from a Thai PDF. Removing that smell in English, Thai and
+Thai-English code-switching is a reference kit in `docs/humanize/`, not a skill (the reason is in the next section). เสียง means "voice".
 
 ## Who it's for
 
@@ -27,48 +27,36 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## The three skills
+## The two skills
 
 | Skill | Use it when | What it does |
 |---|---|---|
-| `siang:humanize` | a draft reads like a model wrote it | names every AI tell against a cue sheet, rewrites, then re-reads for what is left |
 | `siang:thai-pua-repair` | text extracted from a Thai PDF shows private-use glyphs or broken tone marks | maps the 27 Windows UPC-font glyphs (U+F700..U+F71A) back to standard Thai, reports any it cannot map, and, on request, rewrites the PDF's ToUnicode maps so the file itself copies and searches correctly (`pua_pdf.py`, needs pikepdf) |
 | `siang:personal-voice` | you want drafts in your own voice | measures your samples, keeps a feature only if two samples show it, drafts from your facts, checks the draft against the profile |
 
-Run one with a slash command (`/siang:humanize`) or just ask. Example prompts:
-
-```
-humanize this standup update, genre B, keep every number
-```
-
+Run one with a slash command (`/siang:personal-voice`) or just ask. Example prompts:
 ```
 use siang:personal-voice: samples/ are my messages, rewrite draft.md like me
 ```
 
-## How `humanize` works
+## The humanize reference kit (not a skill)
 
-It runs a fixed loop:
+`docs/humanize/` holds what used to be the `humanize` skill: the loop in `README.md`, a 33-row universal cue sheet, the Thai-only
+patterns, Thai sentence structure, worked examples, and `scripts/scan.py`, which lists the tells a pattern can catch (em dashes,
+AI vocabulary, chat closers, Thai spelling and date formats) with line and section. Read it yourself or point Claude at it:
+`python3 docs/humanize/scripts/scan.py <file>`.
 
-1. Pick the genre (A chat, B standup/PR/commit, C UI/error copy, D prose/blog/ADR) and the language.
-2. Plan the grit: the concrete specifics from the source that the rewrite must keep.
-3. Name every AI tell against a 33-row universal cue sheet, plus the Thai-only patterns for any
-   Thai. `scripts/scan.py` runs first and lists the tells a pattern can catch (em dashes, AI
-   vocabulary, chat closers, Thai spelling and date formats) with line and section; the model
-   judges each hit and reads for the rest.
-4. Draft, ask "what still reads AI?", then write the final.
-
-Two rules hold throughout: no invented facts (an unverifiable claim is dropped or hedged, never
-made up), and on a file only the prose changes; code blocks, commands, frontmatter and quotes
-stay byte-identical.
+It stopped being a skill in 0.1.28: on four held-out cases written by an agent that never saw the skill (5 runs per arm) its mean
+Δ was 0.00 against the +0.05 bar. The numbers are in `evals/README.md`.
 
 ## Layout
 
 | Path | Contents |
 |---|---|
-| `skills/humanize/` | `SKILL.md`, cue sheet, universal and Thai patterns, Thai sentence structure, examples, sources, `scripts/scan.py` |
+| `docs/humanize/` | the AI-tell reference kit (not a skill): `README.md` loop, cue sheet, universal and Thai patterns, Thai sentence structure, examples, sources, `scripts/scan.py` |
 | `skills/personal-voice/` | `SKILL.md` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 32 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
+| `evals/` | 13 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
 | `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells, `pua_fix.py` maps every known glyph, `pua_pdf.py` repairs a real PDF end to end |
 
 ## Evals
@@ -76,7 +64,7 @@ stay byte-identical.
 Each case runs in two arms, with siang and without it, and the number to read is the difference (Δ),
 not the total: plain Claude already scores high on many cases.
 
-- 18 cases cover `humanize`, English and Thai. Several are regression guards that plain Claude
+- 18 cases covered `humanize`, English and Thai (removed in 0.1.28; kept here as a record). Several are regression guards that plain Claude
   also passes; their job is to catch siang losing to it. Measured gain is narrow: mean Δ +0.04 over the 18 cases
   in both runs below, 3 runs per arm each.
   - Opus 5.5 (2026-11-09, siang 0.1.16, the repo's prompts): all 54 with-arm runs passed, but plain Claude nearly
@@ -97,16 +85,18 @@ not the total: plain Claude already scores high on many cases.
   `thai-pua-repair` mean Δ +0.095 (score 1.00) and `personal-voice` Δ +0.075 (0.985) pass. `personal-voice` was rerun on
   two new cases written by an agent that never saw the skill (the old two had been used to tune it in 0.1.21); its gain
   comes from one case, and on the other plain Claude scores the same.
+- `humanize` failed the rule on four new blind held-out cases (with-skill 0.94, mean Δ 0.00: −0.03, 0.00, +0.03, 0.00). It stopped
+  being a skill in 0.1.28 and lives on as `docs/humanize/`.
 - `document-review` failed the rule (mean Δ −0.02 on its two held-out cases; plain Claude finds the same defects).
   It was removed as a skill in 0.1.26 and its checklist kept as a plain doc, `docs/document-review-checklist.md`.
 - `technical-writing` fell below the bar once three graders that rejected correct answers were fixed and its held-out
   cases rerun (mean Δ +0.035 against +0.05). It was removed as a skill in 0.1.27 and its guidance kept as
   `docs/technical-writing-guide.md`.
-- 3 `trigger` cases check that each skill fires from the task alone, without being named: all fired in every run (the cases for `document-review` and `technical-writing` went with those skills).
+- 2 `trigger` cases check that each skill fires from the task alone, without being named: all fired in every run (the cases for `humanize`, `document-review` and `technical-writing` went with those skills).
 
 Free check, no API call: `bash tests/test-graders.sh`. A paid run is
-`claude plugin eval . --scaffold --tag humanize --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(swap the tag for `personal-voice` or `thai-pua-repair`; add
+`claude plugin eval . --scaffold --tag personal-voice --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
+(swap the tag for `thai-pua-repair`; add
 `--trust-plugin` outside an interactive terminal).
 
 ## Credits

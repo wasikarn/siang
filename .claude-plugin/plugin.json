@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "siang",
   "displayName": "Siang",
-  "version": "0.1.27",
-  "description": "Humanize dev and tech writing in English, Thai, and Thai-English code-switching so it reads like a person wrote it, not a model.",
+  "version": "0.1.28",
+  "description": "Draft in your own voice from your samples, and repair Thai text extracted from PDFs; with a reference kit for removing AI writing tells in English and Thai.",
   "author": {
     "name": "wasikarn"
   },
@@ -16,8 +16,8 @@
   "keywords": [
     "writing",
     "thai",
-    "humanize",
-    "ai-tells",
+    "voice",
+    "pdf",
     "style"
   ]
 }

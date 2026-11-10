@@ -4,12 +4,12 @@
   "owner": {
     "name": "wasikarn"
   },
-  "description": "Siang: humanize dev and tech writing (English and Thai).",
+  "description": "Siang: your own writing voice and Thai PDF text repair.",
   "plugins": [
     {
       "name": "siang",
       "source": "./",
-      "description": "Humanize dev and tech writing in English, Thai, and Thai-English code-switching so it reads like a person wrote it, not a model.",
+      "description": "Draft in your own voice from your samples, and repair Thai text extracted from PDFs; with a reference kit for removing AI writing tells in English and Thai.",
       "category": "productivity"
     }
   ]

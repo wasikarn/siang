@@ -1,7 +1,7 @@
 # Third-party notices
 
 siang adapts rules and examples from three MIT-licensed projects (below). Where each source is
-used is listed in `skills/humanize/references.md`, "Sources adapted". Examples that were close
+used is listed in `docs/humanize/references.md`, "Sources adapted". Examples that were close
 adaptations of a source's own examples were replaced with fresh ones on 2026-11-09. No kien-thai exemplar passage (third-party writing) was copied.
 
 ## chakrit/kien-thai
@@ -74,7 +74,7 @@ SOFTWARE.
 
 - Project: https://github.com/blader/humanizer (v2.7.0, commit a2ace14, reached method-harness on
   2026-06-10; checked against HEAD 0ef9fe5bc3572734fd3ae6c448fe00a30cd5dcf0; §59-§61 follow its v3.1.0)
-- Used in: universal patterns §1-§30 (`skills/humanize/patterns-universal.md`, `cue-sheet.md`):
+- Used in: universal patterns §1-§30 (`docs/humanize/patterns-universal.md`, `cue-sheet.md`):
   pattern titles, order and structure, from v2.7.0. §59-§61 and the step-6 re-scan and dropped-fact
   check in `SKILL.md` follow v3.1.0. Its rule text, before/after examples and the worked example
   in `examples.md` were copied until 2026-11-09, when they were rewritten in siang's own words. A
