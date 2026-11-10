@@ -294,3 +294,7 @@ Diagnostic rerun (same day, after the verdict, does not change it): `holdout3-te
 ## Third held-out round, `technical-writing` only (2026-11-10, before the run)
 
 Two new cases, `holdout4-technical-writing-logtidy-readme` and `holdout4-technical-writing-assetsync-howto`, written by an agent that was told not to read `skills/` or any existing `technical-writing` case, and to make every grader accept a correct document (including a migration note that names a removed flag). Graders and fixtures are frozen at sha256 `b98cf10e97652006` (first 16 hex of `find evals/holdout4-* -type f | sort | xargs shasum -a 256 | shasum -a 256`, repo root). Rule: with-skill mean above 0.90 and no case losing by more than 0.05, 5 runs per arm. Nothing changes after the run starts.
+
+### Result of the third round (2026-11-10, graders frozen at `b98cf10e97652006`, commit 1041917)
+
+5 runs per arm, $3.26. With-skill / without / Δ: `holdout4-technical-writing-assetsync-howto` 1.00 / 0.97 / +0.03, `holdout4-technical-writing-logtidy-readme` 1.00 / 1.00 / 0.00. The with-skill mean is 1.00 and no case loses, so `technical-writing` passes the rule on this round. Its second-round result (`holdout3-technical-writing-report-export`, −0.07) stays on record, so the skill has one failing case and two passing rounds; it stays a skill under the rule's wording (mean above 0.90 per round) but the report-export miss is unresolved. The only failing grader was `delete-opt-in` (1 of 5 without-arm runs).
