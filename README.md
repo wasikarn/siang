@@ -83,7 +83,7 @@ claude plugin install siang@siang
   `personal-voice` 0.975 (ข้อความ 0.1.32, เคสแย่สุด −0.025), `humanize` 0.94 (`SKILL.md` ตัวสุดท้าย, ไม่มีเคสต่ำกว่า −0.03),
   `document-review` 0.985 (แย่สุด −0.03), `technical-writing` 0.985 (หลังแก้ grader, แย่สุด −0.03) ต่อมาข้อความที่คืนมารันบนเคส blind ชุดใหม่ (`holdout3-*`, `holdout4-*`): `humanize`, `document-review`, `personal-voice` ได้ 1.00 ส่วน `technical-writing` แพ้ 0.07 บนเคส `report-export` ในรอบสอง (grader หลวม ดู `evals/README.md`) แล้วได้ 1.00 ในอีกสองเคส คอลัมน์ Δ ใน `evals/README.md`
   เป็นบันทึกของกฎ +0.05 เดิม ทั้ง 4 ตัวไม่ผ่านกฎนั้น จึงถูกถอดใน 0.1.26 ถึง 0.1.32
-- 5 เคส `trigger` ตัวละเคส เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ
+- 5 เคส `trigger` ตัวละเคส เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ (วัดบน description ของ 0.1.20 ส่วน description ของ `personal-voice` ถูกตัดประโยคชี้ไป humanize ออกภายหลังและยังไม่ได้รันซ้ำ)
 
 เช็กฟรีโดยไม่เรียก API: `bash tests/test-graders.sh` ส่วนรันจริง (เสียเงิน) คือ
 `claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`

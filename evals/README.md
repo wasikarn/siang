@@ -90,7 +90,7 @@ Three-run check of the nine non-humanize cases (2026-11-09, 3 runs per arm, with
 some `personal-voice-thai-oneoffs` runs because the profile omitted the one-offs it excluded. 0.1.20 made step 3 require a
 one-offs line, and a rerun of both `personal-voice` cases (3 runs per arm) scored 1.00 vs 0.78 (+0.22) and 1.00 vs 0.70 (+0.30).
 
-Five `trigger-*` cases at the time (two remain; tag `trigger`) test whether each skill fires from the task alone: the prompt never names the skill
+Five `trigger-*` cases at the time (all five are in the tree again since 0.1.33; tag `trigger`) test whether each skill fires from the task alone: the prompt never names the skill
 (its expected name sits in the case `description`, because prompt frontmatter rejects unknown keys, and `tests/test-graders.sh`
 reads it from there), and a `tool_used: Skill` grader checks the call. Run with `--ablation none`, 3 runs each: `humanize`,
 `technical-writing`, `document-review`, `personal-voice` and `thai-pua-repair` all fired 3 of 3. The descriptions alone are
@@ -160,7 +160,7 @@ and `thai-pua-repair` (1.00, +0.12) pass, the first two narrowly and inside run-
 (`document-review-planted-sop`, the two `holdout-document-review-*`, `trigger-document-review`) were removed, and the
 checklist kept as `docs/document-review-checklist.md`. The frozen hash covers the files as they were at the run; the
 removed directories are in git history at 0de01c8. The cases and numbers for the removed skill above in this file are
-a record of what was measured, not of cases that still exist. humanize (mean Δ +0.04 over its 18 cases, measured by its
+a record of what was measured (the cases were restored in 0.1.33). humanize (mean Δ +0.04 over its 18 cases, measured by its
 own session) would fail the same Δ bar; that is for its owner to decide and nothing was changed.
 
 ## Re-check after the second deep-audit (0.1.27)
@@ -268,7 +268,7 @@ at or just under the bar, with its gain in one case. By the rule it does not ear
 `skills/personal-voice/SKILL.md` became `docs/personal-voice-guide.md` (frontmatter replaced by a not-a-skill note, the loop unchanged),
 and its seven cases were removed (`personal-voice-terse-writer`, `personal-voice-thai-oneoffs`, `holdout-personal-voice-chatty`,
 `holdout-personal-voice-formal`, `holdout2-personal-voice-terse-lower`, `holdout2-personal-voice-thai-codeswitch`,
-`trigger-personal-voice`; they are in git history). Recorded spend is $34.01 of the $40 cap. `thai-pua-repair` is the only skill left.
+`trigger-personal-voice`; they are in git history). Recorded spend is $34.01 of the $40 cap. `thai-pua-repair` was the only skill left until 0.1.33.
 
 ## Known gap
 
@@ -297,8 +297,8 @@ Two new cases, `holdout4-technical-writing-logtidy-readme` and `holdout4-technic
 
 ### Result of the third round (2026-11-10, graders frozen at `b98cf10e97652006`, commit 1041917)
 
-5 runs per arm, $3.26. With-skill / without / Δ: `holdout4-technical-writing-assetsync-howto` 1.00 / 0.97 / +0.03, `holdout4-technical-writing-logtidy-readme` 1.00 / 1.00 / 0.00. The with-skill mean is 1.00 and no case loses, so `technical-writing` passes the rule on this round. Its second-round result (`holdout3-technical-writing-report-export`, −0.07) stays on record, so the skill has one failing case and two passing rounds; by the rule's wording (a case losing by more than 0.05 fails) the second round failed on `report-export` (−0.07), and the later rounds are a rerun on a case set written after that failure, not a clean pass. The loose grader explains the miss (next paragraph), but it is an after-the-fact reading. The only failing grader was `delete-opt-in` (1 of 5 without-arm runs).
+5 runs per arm, $3.26. With-skill / without / Δ: `holdout4-technical-writing-assetsync-howto` 1.00 / 0.97 / +0.03, `holdout4-technical-writing-logtidy-readme` 1.00 / 1.00 / 0.00. The with-skill mean is 1.00 and no case loses, so `technical-writing` passes the rule on this round. Its second-round result (`holdout3-technical-writing-report-export`, −0.07) stays on record, so the skill has a failing second round and a passing third round; by the rule's wording (a case losing by more than 0.05 fails) the second round failed on `report-export` (−0.07), and the later rounds are a rerun on a case set written after that failure, not a clean pass. The loose grader explains the miss (next paragraph), but it is an after-the-fact reading. The only failing grader was `delete-opt-in` (1 of 5 without-arm runs).
 
-Cause confirmed (second diagnostic, same day, 5 runs per arm with `--keep-temp`, $1.79): `holdout3-technical-writing-report-export` scored 0.95 with-skill and 0.97 without (Δ −0.03), and `no-range-flags-in-command` failed 3 times (2 with-skill, 1 without). The traces show the failing documents contain correct notes such as "`report.py` has no `--until` option" or "has no `--until` or `--from` option", which match the grader's pattern `report\.py[^\n]*--(?:until|from)\b`. So the grader rejects correct text: the second-round −0.07 came from a loose grader, not from a worse document. The grader file is left unchanged, since it is part of the frozen set `69b6e792354fd05d`, and the round-2 table above stays as measured. The case is retired in favour of the two `holdout4-*` cases, whose graders were written to accept such notes; `technical-writing` stands on the third round (1.00 with-skill, no case losing).
+Cause confirmed (second diagnostic, same day, 5 runs per arm with `--keep-temp`, $1.79): `holdout3-technical-writing-report-export` scored 0.95 with-skill and 0.97 without (Δ −0.03), and `no-range-flags-in-command` failed 3 times (2 with-skill, 1 without). The traces show the failing documents contain correct notes such as "`report.py` has no `--until` option" or "has no `--until` or `--from` option", which match the grader's pattern `report\.py[^\n]*--(?:until|from)\b`. So the grader rejects correct text: the second-round −0.07 came from a loose grader, not from a worse document. The grader file is left unchanged, since it is part of the frozen set `69b6e792354fd05d`, and the round-2 table above stays as measured. The case is retired in favour of the two `holdout4-*` cases, whose graders were written to accept such notes; the third round (1.00 with-skill, no case losing) is a rerun on cases written after the second-round failure, so `technical-writing` stays a skill on a weaker footing than the other three (see the second paragraph of this section).
 
 Note (deep-audit, 2026-11-10): `holdout3-technical-writing-report-export` is not deleted and still carries the tags `holdout` and `technical-writing`, so `--tag technical-writing` or `--tag holdout` still runs it with the loose grader. Select cases with `--case`, or read that case as unreliable. Editing its tags would change the frozen hash `69b6e792354fd05d`.
