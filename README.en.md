@@ -57,7 +57,7 @@ also required a mean Δ of +0.05 over plain Claude; that clause was dropped on 2
 | `skills/humanize/` | `SKILL.md` loop, cue sheet, universal and Thai patterns, Thai sentence structure, examples, sources, `scripts/scan.py` |
 | `skills/personal-voice/`, `skills/technical-writing/`, `skills/document-review/` | one `SKILL.md` each |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 43 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
+| `evals/` | 52 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
 | `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells, `pua_fix.py` maps every known glyph, `pua_pdf.py` repairs a real PDF end to end |
 
 ## Evals
@@ -65,7 +65,7 @@ also required a mean Δ of +0.05 over plain Claude; that clause was dropped on 2
 Each case runs in two arms, with siang and without it, and the number to read is the difference (Δ),
 not the total: plain Claude already scores high on many cases.
 
-- 18 cases covered `humanize`, English and Thai (removed in 0.1.28; kept here as a record). Several are regression guards that plain Claude
+- 18 cases cover `humanize`, English and Thai (removed in 0.1.28, restored in 0.1.33). Several are regression guards that plain Claude
   also passes; their job is to catch siang losing to it. Measured gain is narrow: mean Δ +0.04 over the 18 cases
   in both runs below, 3 runs per arm each.
   - Opus 5.5 (2026-11-09, siang 0.1.16, the repo's prompts): all 54 with-arm runs passed, but plain Claude nearly
@@ -86,9 +86,9 @@ not the total: plain Claude already scores high on many cases.
   `thai-pua-repair` mean Δ +0.095 (score 1.00) passes.
 - Verdicts under the current rule (with-skill mean above 0.90, no case losing by more than 0.05), each on the text it was measured on:
   `personal-voice` 0.975 (the 0.1.32 text, worst case −0.025); `humanize` 0.94 (its last `SKILL.md`, no case below −0.03);
-  `document-review` 0.985 (worst −0.03); `technical-writing` 0.985 (after the grader fixes, worst −0.03). The Δ column in `evals/README.md`
+  `document-review` 0.985 (worst −0.03); `technical-writing` 0.985 (after the grader fixes, worst −0.03). The restored text was then run on new blind cases (`holdout3-*`, `holdout4-*`): `humanize`, `document-review`, `personal-voice` 1.00; `technical-writing` lost 0.07 on `report-export` in the second round (a loose grader, see `evals/README.md`) and scored 1.00 on two later cases. The Δ column in `evals/README.md`
   is a record of the earlier +0.05 rule; none of these skills met it, and that is why they were removed in 0.1.26 to 0.1.32.
-- 1 `trigger` case checks that `thai-pua-repair` fires from the task alone, without being named: it fired in every run.
+- 5 `trigger` cases, one per skill, check that the skill fires from the task alone, without being named: it fired in every run.
 
 Free check, no API call: `bash tests/test-graders.sh`. A paid run is
 `claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`

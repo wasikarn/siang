@@ -55,7 +55,7 @@ claude plugin install siang@siang
 | `skills/humanize/` | `SKILL.md` ลำดับขั้น, cue sheet, pattern สากลและไทย, โครงสร้างประโยคไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
 | `skills/personal-voice/`, `skills/technical-writing/`, `skills/document-review/` | ตัวละ `SKILL.md` ไฟล์เดียว |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 43 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
+| `evals/` | 52 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
 | `tests/` | เช็กฟรีที่ CI รันทุก push: grader self-test, hook เช็ก version, ทุก § และ cue ต้องหาเจอ, `scan.py` จับ tell ที่ใส่ไว้ได้, `pua_fix.py` แปลง glyph ที่รู้จักได้ครบ, `pua_pdf.py` ซ่อม PDF จริงได้ตั้งแต่ต้นจนจบ |
 
 ## Eval
@@ -63,7 +63,7 @@ claude plugin install siang@siang
 แต่ละเคสรันสองฝั่ง คือมี siang กับไม่มี siang ตัวเลขที่ควรดูคือส่วนต่าง (Δ) ไม่ใช่คะแนนรวม
 เพราะ Claude เปล่า ๆ ก็ได้คะแนนสูงในหลายเคส
 
-- 18 เคสของ `humanize` ทั้งไทยและอังกฤษ (ลบแล้วใน 0.1.28 บันทึกนี้เก็บไว้เป็นหลักฐาน) หลายเคสเป็น regression guard ที่ Claude เปล่า ๆ ก็ผ่าน
+- 18 เคสของ `humanize` ทั้งไทยและอังกฤษ (ลบใน 0.1.28 แล้วคืนใน 0.1.33) หลายเคสเป็น regression guard ที่ Claude เปล่า ๆ ก็ผ่าน
   หน้าที่ของมันคือจับตอนที่ siang แพ้ แต่ที่ดีขึ้นจริงมีไม่มาก Δ เฉลี่ย +0.04 ทั้ง 18 เคส ในทั้งสองชุดด้านล่าง
   ชุดละ 3 รอบต่อฝั่ง
   - Opus 5.5 (2026-11-09, siang 0.1.16, prompt ใน repo): ฝั่ง siang ผ่านครบทั้ง 54 รอบ แต่ Claude เปล่า ๆ
@@ -81,9 +81,9 @@ claude plugin install siang@siang
   (ดู `evals/README.md`): `thai-pua-repair` Δ เฉลี่ย +0.095 (คะแนน 1.00) ผ่านเกณฑ์
 - ผลตามเกณฑ์ปัจจุบัน (with-skill mean เกิน 0.90 และไม่มีเคสไหนแพ้เกิน 0.05) แต่ละตัววัดบนข้อความที่ระบุ:
   `personal-voice` 0.975 (ข้อความ 0.1.32, เคสแย่สุด −0.025), `humanize` 0.94 (`SKILL.md` ตัวสุดท้าย, ไม่มีเคสต่ำกว่า −0.03),
-  `document-review` 0.985 (แย่สุด −0.03), `technical-writing` 0.985 (หลังแก้ grader, แย่สุด −0.03) คอลัมน์ Δ ใน `evals/README.md`
+  `document-review` 0.985 (แย่สุด −0.03), `technical-writing` 0.985 (หลังแก้ grader, แย่สุด −0.03) ต่อมาข้อความที่คืนมารันบนเคส blind ชุดใหม่ (`holdout3-*`, `holdout4-*`): `humanize`, `document-review`, `personal-voice` ได้ 1.00 ส่วน `technical-writing` แพ้ 0.07 บนเคส `report-export` ในรอบสอง (grader หลวม ดู `evals/README.md`) แล้วได้ 1.00 ในอีกสองเคส คอลัมน์ Δ ใน `evals/README.md`
   เป็นบันทึกของกฎ +0.05 เดิม ทั้ง 4 ตัวไม่ผ่านกฎนั้น จึงถูกถอดใน 0.1.26 ถึง 0.1.32
-- 1 เคส `trigger` เช็กว่า `thai-pua-repair` ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ
+- 5 เคส `trigger` ตัวละเคส เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ
 
 เช็กฟรีโดยไม่เรียก API: `bash tests/test-graders.sh` ส่วนรันจริง (เสียเงิน) คือ
 `claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
