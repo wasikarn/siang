@@ -1,24 +1,18 @@
 # siang (เสียง)
 
-**Claude Code skills for Thai text: repair Thai PDF text, write in your own voice, remove AI tells.**
+A Claude Code plugin for Thai and English writing: repair text extracted from Thai PDFs, remove AI tells
+from prose, write in your own voice, draft docs, and review records.
 
 [ภาษาไทย](README.md)
 
-> Text from a model has a smell.
+## Why
 
-A standup that opens with "I'm excited to share", a PR description with three bullets of equal
-length, a Thai notice that ends every sentence in ครับ and leans on "ซึ่ง" and "โดย". Readers
-notice within a line, and then they stop trusting the rest.
+Text from a model has a smell. A standup that opens with "I'm excited to share", a PR description with three
+bullets of exactly equal length, a Thai notice that ends every sentence in ครับ. Readers notice within a line,
+then stop trusting the rest. The other problem is a Thai PDF that copies out as garbage characters, so search
+and RAG fail.
 
-siang is a Claude Code plugin with five skills: repairing text extracted from a Thai PDF (`thai-pua-repair`), removing that smell in English, Thai and
-Thai-English code-switching (`humanize`), writing in your own voice (`personal-voice`), drafting docs (`technical-writing`) and reviewing records (`document-review`). เสียง means "voice".
-
-## Who it's for
-
-- Developers who let a model draft chat, standups, PR and commit text, UI strings, ADRs or
-  READMEs, in English or Thai.
-- Teams whose Thai output from a model reads like a translation.
-- Anyone who has pasted a draft and thought "this sounds like AI".
+siang bundles five skills for these two problems. เสียง means "voice".
 
 ## Install
 
@@ -27,98 +21,133 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
-## The skill
+Restart Claude Code after installing. Call a skill with a slash command (`/siang:humanize`) or just ask in
+a sentence. If the task matches a skill's description, Claude picks it on its own.
 
-**`siang:thai-pua-repair`**
+## Skills
 
-- Use it when: text extracted from a Thai PDF shows private-use glyphs or broken tone marks
-- What it does: maps the 27 Windows UPC-font glyphs (U+F700..U+F71A) back to standard Thai, reports any it cannot map, and, on request, rewrites the PDF's ToUnicode maps so the file itself copies and searches correctly (`pua_pdf.py`, needs pikepdf)
+| skill | use it when | what it does |
+|---|---|---|
+| `siang:thai-pua-repair` | text from a Thai PDF shows private-use glyphs or broken tone marks and vowels | maps them back to standard Thai, or repairs the PDF file itself |
+| `siang:humanize` | a chat message, standup, PR, commit, UI string, ADR or README reads like AI | scans for tells by pattern and rewrites; English, Thai and mixed |
+| `siang:personal-voice` | you want writing that sounds like you | builds a voice profile from your own samples, then drafts in it |
+| `siang:technical-writing` | you need a README, how-to, tutorial, reference page, runbook, ADR or release note | writes so the reader can finish the task; facts come from code and real command output |
+| `siang:document-review` | you need an SOP, runbook, policy, spec or change record audited against its standard | reports findings, or fixes them when asked |
 
-Run it with a slash command (`/siang:thai-pua-repair`) or just ask. Example prompt:
+Example prompts:
+
 ```
-use siang:thai-pua-repair: extract report.pdf and fix the Thai text
+Use siang:thai-pua-repair: extract report.pdf and repair the Thai text
+Use siang:humanize on this PR description draft
+Use siang:document-review to check this runbook against our team checklist
 ```
 
-## The other four skills
+### thai-pua-repair
 
-- `humanize`: removes AI tells from dev/tech writing. `skills/humanize/` holds the loop in `SKILL.md`, a 33-row universal cue sheet, the Thai-only
-  patterns, Thai sentence structure, worked examples, and `scripts/scan.py`, which lists the tells a pattern can catch (em dashes, AI vocabulary,
-  chat closers, Thai spelling and date formats) with line and section.
-- `personal-voice`: builds a voice profile from your own samples, then drafts in it.
-- `technical-writing` and `document-review`: draft a doc a reader can use, and audit a record against its standard.
+Maps 27 glyphs of the Windows UPC fonts (U+F700..U+F71A) back to standard Thai and reports the ones it cannot
+map (U+F71B..U+F71D and other private-use sets). The scripts also run on their own:
 
-All four were restored in 0.1.33 under the pass rule in `evals/README.md` (with-skill mean above 0.90, no case losing by more than 0.05). Earlier versions
-also required a mean Δ of +0.05 over plain Claude; that clause was dropped on 2026-11-10 and the recorded Δ results stay as history.
+```bash
+# text: check only (exit 1 if mappable glyphs are found, exit 2 if unmappable ones remain)
+python3 skills/thai-pua-repair/scripts/pua_fix.py --check extracted.txt
 
-## Layout
+# text: convert and print to stdout (reads stdin when no file is given)
+python3 skills/thai-pua-repair/scripts/pua_fix.py extracted.txt > fixed.txt
 
-| Path | Contents |
+# PDF file: rewrite the ToUnicode maps so copy and search work (needs: pip install pikepdf)
+python3 skills/thai-pua-repair/scripts/pua_pdf.py in.pdf out.pdf
+```
+
+`pua_pdf.py` changes only each font's `/ToUnicode` stream; the pages render the same.
+
+### humanize
+
+`skills/humanize/` holds the step order in `SKILL.md`, a cue sheet, universal patterns (§1-§30, §59-§61), Thai
+patterns (§31-§42, §53-§58), Thai sentence structure (§43-§52) and examples. `scripts/scan.py` finds the tells
+a pattern can catch (em dashes, AI-flavored words, chat-style closers, Thai spelling and date formats), with line
+numbers and § numbers:
+
+```bash
+python3 skills/humanize/scripts/scan.py draft.md   # or pipe into stdin
+```
+
+The output is a list of candidates, not verdicts. Read every hit before editing.
+
+## Repo layout
+
+| path | contents |
 |---|---|
-| `skills/humanize/` | `SKILL.md` loop, cue sheet, universal and Thai patterns, Thai sentence structure, examples, sources, `scripts/scan.py` |
-| `skills/personal-voice/`, `skills/technical-writing/`, `skills/document-review/` | one `SKILL.md` each |
+| `skills/humanize/` | `SKILL.md`, cue sheet, universal and Thai patterns, examples, references, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 52 cases in `claude plugin eval`'s native layout, described in `evals/README.md` |
-| `tests/` | free checks that CI runs on every push: grader self-test, version-bump hook, every § and cue reference resolves, `scan.py` finds planted tells, `pua_fix.py` maps every known glyph, `pua_pdf.py` repairs a real PDF end to end |
+| `skills/personal-voice/`, `skills/technical-writing/`, `skills/document-review/` | one `SKILL.md` each |
+| `evals/` | 52 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
+| `docs/eval-runs/` | archived eval run results ([README](docs/eval-runs/README.md)) |
+| `tests/` | free checks that CI runs on every push |
+| `GLOSSARY.md` | project terms |
 
 ## Evals
 
-Each case runs in two arms, with siang and without it, and the number to read is the difference (Δ),
-not the total: plain Claude already scores high on many cases.
+A skill stays in the plugin only if its with-skill mean is above 0.90 (5 runs per arm) and no case loses to the
+no-skill arm by more than 0.05, on held-out cases written by an agent that never saw the skill, with graders
+frozen before the run. Look at the per-case delta, not the overall score: plain Claude scores high on many cases.
 
-- 18 cases cover `humanize`, English and Thai (removed in 0.1.28, restored in 0.1.33). Several are regression guards that plain Claude
-  also passes; their job is to catch siang losing to it. Measured gain is narrow: mean Δ +0.04 over the 18 cases
-  in both runs below, 3 runs per arm each.
-  - Opus 5.5 (2026-11-09, siang 0.1.16, the repo's prompts): all 54 with-arm runs passed, but plain Claude nearly
-    did too. A with-arm run cost 2.1 times a plain one ($0.216 vs $0.102).
-  - Sonnet 5.5, with prompts that ask for a human-sounding rewrite with no genre letter or loop steps, but still add
-    "(use the `siang:humanize` skill if you have it)": siang did not pass every case. It failed the old echo-back
-    grader in th-cs-echo-planted (0.67, same as plain; the outputs were never read) and the `VM 3 ใบ` grader in
-    th-grammar-planted (0.53 vs
-    plain 0.60). The gain sits in Thai dates and times, Thai standup register, leaving a clean Thai chat message
-    alone, and subtle English tells. A with-arm run cost 1.7 times a plain one ($0.081 vs $0.048).
+Latest results (each measured on the skill text named in `evals/README.md`):
 
-  Both runs' results (scores, costs and every grader verdict) are in [`docs/eval-runs/`](docs/eval-runs/); the
-  Sonnet run's prompts are recorded there, but the repo's prompts still name the skill, so rerunning them will not
-  reproduce the Sonnet figures exactly. After the deep-audit fixes (0.1.24), all 14 Thai cases reran with-arm only
-  at 1.00 in 42 of 42 runs.
-- Held-out cases for the other four skills (written by an agent that never saw the skills' steps) were run once
-  more after the graders were frozen, 5 runs per arm, under a rule set before the run (see `evals/README.md`):
-  `thai-pua-repair` mean Δ +0.095 (score 1.00) passes.
-- Verdicts under the current rule (with-skill mean above 0.90, no case losing by more than 0.05), each on the text it was measured on:
-  `personal-voice` 0.975 (the 0.1.32 text, worst case −0.025); `humanize` 0.94 (its last `SKILL.md`, no case below −0.03);
-  `document-review` 0.985 (worst −0.03); `technical-writing` 0.985 (after the grader fixes, worst −0.03). The restored text was then run on new blind cases (`holdout3-*`, `holdout4-*`): `humanize`, `document-review`, `personal-voice` 1.00; `technical-writing` lost 0.07 on `report-export` in the second round (a loose grader, see `evals/README.md`) and scored 1.00 on two later cases. The Δ column in `evals/README.md`
-  is a record of the earlier +0.05 rule; none of these skills met it, and that is why they were removed in 0.1.26 to 0.1.32.
-- 5 `trigger` cases, one per skill, check that the skill fires from the task alone, without being named: it fired in every run (measured on the 0.1.20 descriptions; `trigger-personal-voice` was rerun on the 0.1.33 description and fired in 3 of 3).
+| skill | with-skill mean | worst case |
+|---|---|---|
+| `personal-voice` | 0.975 | −0.025 |
+| `humanize` | 0.94 | −0.03 |
+| `document-review` | 0.985 | −0.03 |
+| `technical-writing` | 0.985 | −0.03 |
 
-Free check, no API call: `bash tests/test-graders.sh`. A paid run is
-`claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(add `--trust-plugin` outside an interactive terminal).
+`thai-pua-repair` passes with a mean delta of +0.095 (score 1.00). Method, criteria history and per-run cost are
+in `evals/README.md` and `docs/eval-runs/`.
 
-## Credits
+## Development
 
-siang started as the `tech-humanize` skill in
-[wasikarn/method-harness](https://github.com/wasikarn/method-harness). Its knowledge base draws on:
+Before a commit:
 
-- [blader/humanizer](https://github.com/blader/humanizer) (MIT, Copyright (c) 2025 Siqi Chen): the
-  titles, order and structure of universal patterns §1-§30 (from its v2.7.0), and §59-§61 plus the
-  step-6 re-scan (from its v3.1.0).
-- [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing),
-  run by WikiProject AI Cleanup: the catalog that both humanizer and siang start from (CC BY-SA 4.0;
-  commits before `27feec4` still quote it, see the notices).
-- [chakrit/kien-thai](https://github.com/chakrit/kien-thai) (MIT, Copyright (c) 2026 Chakrit
-  Wichian): Thai discourse frames, AI tells, register and style rules.
-- [Boom-Vitt/claude-thai-skills](https://github.com/Boom-Vitt/claude-thai-skills) (MIT, Copyright
-  (c) 2026 Vittawat (Boom-Vitt)): pronouns (§55), dates and times (§56), apology and promises (§57),
-  hidden characters (§58), and customer-facing register.
+```bash
+claude plugin validate .
+bash tests/test-graders.sh        # grader self-test (free, no API calls)
+bash tests/test-section-refs.sh   # every §N and cue #N must resolve
+bash tests/test-scan.sh
+bash tests/test-pua.sh
+bash tests/test-pua-pdf.sh        # skips without pikepdf and pdftotext
+bash tests/test-version-hook.sh
+```
 
-The rule wording and examples are siang's own since 2026-11-09. Until then much of the humanizer
-text was copied. A scratch script run on 2026-11-09 against these four sources found no shared run
-of six or more words, apart from pattern titles, section labels, the tell phrases and word lists a
-rule quotes, and source names. That script is not in the repo.
+- Any change under `skills/` needs a `version` bump in `.claude-plugin/plugin.json`; otherwise
+  `claude plugin update` copies nothing. Enable the hook once per clone: `git config core.hooksPath git-hooks`.
+- A new section takes the number after the last one in use (see `CLAUDE.md`). Never renumber.
+- Real eval run (costs money):
+  `claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
+  (add `--trust-plugin` when not running in an interactive terminal)
 
-Which file adapts what, and the full license texts: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-Thank you to all three authors for publishing their work under MIT.
+Full rules are in [`CLAUDE.md`](CLAUDE.md).
 
-## License
+## Credits and license
 
-MIT, see [LICENSE](LICENSE).
+siang started as the `tech-humanize` skill in [wasikarn/method-harness](https://github.com/wasikarn/method-harness).
+The knowledge comes from these sources:
+
+- [blader/humanizer](https://github.com/blader/humanizer) (MIT, Copyright (c) 2025 Siqi Chen): the names, order
+  and structure of universal patterns §1-§30 (from v2.7.0), §59-§61 and the re-scan in step 6 (from v3.1.0).
+- [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by
+  WikiProject AI Cleanup: the original list of tells that both humanizer and siang started from (CC BY-SA 4.0;
+  commits before `27feec4` still contain text quoted from this page, see the notices).
+- [chakrit/kien-thai](https://github.com/chakrit/kien-thai) (MIT, Copyright (c) 2026 Chakrit Wichian): Thai
+  discourse frames, language-level AI tells and style rules.
+- [Boom-Vitt/claude-thai-skills](https://github.com/Boom-Vitt/claude-thai-skills) (MIT, Copyright (c) 2026
+  Vittawat (Boom-Vitt)): pronouns (§55), dates and times (§56), apologies and promises (§57), invisible characters
+  (§58) and the register for customer replies.
+
+The wording of the rules and examples has been siang's own since 2026-11-09; before that, several parts were
+copied from humanizer. On 2026-11-09 a throwaway script compared the text against all four sources and found no
+shared run of six or more words, except pattern names, headings, tell phrases, word lists the rules quote, and
+source names. That script is not in the repo. Which file adapts what, and the full license texts, are in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+Thanks to the three authors who published their work under MIT.
+
+This repo is MIT licensed, see [LICENSE](LICENSE).
