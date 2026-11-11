@@ -314,3 +314,11 @@ Two new cases, `holdout5-technical-writing-key-rotation` and `holdout5-technical
 Trigger recheck (same day, `trigger-personal-voice` only, `--ablation none`, 3 runs, $0.35): the skill fired in 3 of 3 on the 0.1.33 description, which dropped one pointer sentence after the earlier 0.1.20 run.
 
 The run results behind the second to fourth rounds and the trigger runs are kept in `docs/eval-runs/` (paths stripped), because `evals/results/` is gitignored.
+
+## `personal-voice` with `scripts/voice_stats.py` (2026-11-12, 0.1.34 and 0.1.35)
+
+0.1.34 made steps 2 and 5 of `personal-voice` call `voice_stats.py`, so the 0.1.32 numbers above no longer describe the shipped text. Reran the four blind cases `holdout2-personal-voice-*` and `holdout3-personal-voice-*` (5 runs per arm, $6.25, 0.1.34): with-skill / without / Δ `terse-lower` 0.97 / 0.88 / +0.10, `thai-codeswitch` 1.00 / 1.00 / 0.00, `semicolon-memo` 1.00 / 1.00 / 0.00, `thai-chat` 1.00 / 1.00 / 0.00. With-skill mean 0.9925, mean Δ +0.02, no case loses: the rule's two conditions hold. Three of four cases tie with plain Claude, so only `terse-lower` shows a gain.
+
+A kept trace of `terse-lower` (`--keep-temp`, 3 runs, $0.81) showed the skill and the script fired in every with-arm run, and that the one with-arm miss copied the all-caps emphasis ("do NOT") from a one-off sample, which the script did not detect. 0.1.35 added all-caps words to the script (`caps_not_habit`). Rerun of `terse-lower` only (5 runs per arm, $1.51): 0.97 / 0.85 / +0.13; the with-arm failed `no-caps-emphasis` in 0 of 5 runs (without-arm: 5 of 5), and one with-arm run still missed `signoff`, which the script does not check.
+
+Not done: the other three cases were not rerun on 0.1.35, the frozen-grader hash for the `holdout2`/`holdout3` directories was not recomputed, and the run results are not archived in `docs/eval-runs/`. The sample is small (one case carries the gain).
