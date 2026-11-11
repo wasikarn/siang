@@ -79,7 +79,8 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 |---|---|
 | `skills/humanize/` | `SKILL.md`, cue sheet, universal and Thai patterns, examples, references, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `skills/personal-voice/`, `skills/technical-writing/`, `skills/document-review/` | one `SKILL.md` each |
+| `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
+| `skills/technical-writing/`, `skills/document-review/` | one `SKILL.md` each |
 | `evals/` | 52 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
 | `docs/eval-runs/` | archived eval run results ([README](docs/eval-runs/README.md)) |
 | `tests/` | free checks that CI runs on every push |
@@ -112,6 +113,7 @@ claude plugin validate .
 bash tests/test-graders.sh        # grader self-test (free, no API calls)
 bash tests/test-section-refs.sh   # every §N and cue #N must resolve
 bash tests/test-scan.sh
+bash tests/test-voice.sh
 bash tests/test-pua.sh
 bash tests/test-pua-pdf.sh        # skips without pikepdf and pdftotext
 bash tests/test-version-hook.sh

@@ -43,6 +43,9 @@ jobs:
       - name: scan.py finds planted tells
         run: bash tests/test-scan.sh
 
+      - name: voice_stats.py measures samples and drafts
+        run: bash tests/test-voice.sh
+
       - name: pua_fix.py maps Thai PUA glyphs
         run: bash tests/test-pua.sh
 

@@ -77,7 +77,8 @@ python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้
 |---|---|
 | `skills/humanize/` | `SKILL.md`, cue sheet, pattern สากลและไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `skills/personal-voice/`, `skills/technical-writing/`, `skills/document-review/` | ตัวละ `SKILL.md` ไฟล์เดียว |
+| `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
+| `skills/technical-writing/`, `skills/document-review/` | ตัวละ `SKILL.md` ไฟล์เดียว |
 | `evals/` | 52 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
 | `docs/eval-runs/` | ผลรัน eval ที่เก็บไว้ ([README](docs/eval-runs/README.md)) |
 | `tests/` | เช็กฟรีที่ CI รันทุก push |
@@ -110,6 +111,7 @@ claude plugin validate .
 bash tests/test-graders.sh        # grader self-test (ฟรี ไม่เรียก API)
 bash tests/test-section-refs.sh   # ทุก §N และ cue #N ต้องหาเจอ
 bash tests/test-scan.sh
+bash tests/test-voice.sh
 bash tests/test-pua.sh
 bash tests/test-pua-pdf.sh        # ข้ามถ้าไม่มี pikepdf และ pdftotext
 bash tests/test-version-hook.sh
