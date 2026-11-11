@@ -59,6 +59,16 @@ python3 skills/thai-pua-repair/scripts/pua_pdf.py in.pdf out.pdf
 
 `pua_pdf.py` แก้เฉพาะ `/ToUnicode` ของแต่ละฟอนต์ หน้าตาของหน้า PDF ไม่เปลี่ยน
 
+### document-review
+
+`skills/document-review/scripts/doc_check.py` หาจุดที่เช็กด้วยเครื่องได้ใน Markdown: cross-reference ที่หาไม่เจอ, เลข
+หัวข้อและรายการที่ข้ามหรือซ้ำ, ปริมาณที่ขัดกัน (30 minutes กับ 30 s), ตัวย่อที่ไม่เคยอธิบาย, วันที่ที่เป็นไปไม่ได้
+และ section ที่ขาดหรือผิดลำดับ ผลเป็น candidate ให้คนหรือ skill ตัดสินต่อ:
+
+```bash
+python3 skills/document-review/scripts/doc_check.py runbook.md --sections "Purpose,Procedure,Rollback"
+```
+
 ### humanize
 
 `skills/humanize/` เก็บลำดับขั้นใน `SKILL.md`, cue sheet, pattern สากล (§1-§30, §59-§61), pattern ไทย
@@ -78,7 +88,8 @@ python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้
 | `skills/humanize/` | `SKILL.md`, cue sheet, pattern สากลและไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
-| `skills/technical-writing/`, `skills/document-review/` | ตัวละ `SKILL.md` ไฟล์เดียว |
+| `skills/document-review/` | `SKILL.md`, `scripts/doc_check.py` |
+| `skills/technical-writing/` | `SKILL.md` ไฟล์เดียว |
 | `evals/` | 52 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
 | `docs/eval-runs/` | ผลรัน eval ที่เก็บไว้ ([README](docs/eval-runs/README.md)) |
 | `tests/` | เช็กฟรีที่ CI รันทุก push |
@@ -112,6 +123,7 @@ bash tests/test-graders.sh        # grader self-test (ฟรี ไม่เร�
 bash tests/test-section-refs.sh   # ทุก §N และ cue #N ต้องหาเจอ
 bash tests/test-scan.sh
 bash tests/test-voice.sh
+bash tests/test-doc-check.sh
 bash tests/test-pua.sh
 bash tests/test-pua-pdf.sh        # ข้ามถ้าไม่มี pikepdf และ pdftotext
 bash tests/test-version-hook.sh

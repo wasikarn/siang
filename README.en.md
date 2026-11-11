@@ -60,6 +60,17 @@ python3 skills/thai-pua-repair/scripts/pua_pdf.py in.pdf out.pdf
 
 `pua_pdf.py` changes only each font's `/ToUnicode` stream; the pages render the same.
 
+### document-review
+
+`skills/document-review/scripts/doc_check.py` finds what a machine can check in a Markdown record: unresolved
+cross-references, skipped or repeated heading and list numbers, conflicting quantities (30 minutes vs 30 s),
+unexpanded acronyms, impossible dates, and missing or misordered sections. The output is candidates for a person
+or the skill to judge:
+
+```bash
+python3 skills/document-review/scripts/doc_check.py runbook.md --sections "Purpose,Procedure,Rollback"
+```
+
 ### humanize
 
 `skills/humanize/` holds the step order in `SKILL.md`, a cue sheet, universal patterns (§1-§30, §59-§61), Thai
@@ -80,7 +91,8 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 | `skills/humanize/` | `SKILL.md`, cue sheet, universal and Thai patterns, examples, references, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
-| `skills/technical-writing/`, `skills/document-review/` | one `SKILL.md` each |
+| `skills/document-review/` | `SKILL.md`, `scripts/doc_check.py` |
+| `skills/technical-writing/` | `SKILL.md` |
 | `evals/` | 52 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
 | `docs/eval-runs/` | archived eval run results ([README](docs/eval-runs/README.md)) |
 | `tests/` | free checks that CI runs on every push |
@@ -114,6 +126,7 @@ bash tests/test-graders.sh        # grader self-test (free, no API calls)
 bash tests/test-section-refs.sh   # every §N and cue #N must resolve
 bash tests/test-scan.sh
 bash tests/test-voice.sh
+bash tests/test-doc-check.sh
 bash tests/test-pua.sh
 bash tests/test-pua-pdf.sh        # skips without pikepdf and pdftotext
 bash tests/test-version-hook.sh

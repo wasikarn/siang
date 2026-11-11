@@ -43,6 +43,9 @@ jobs:
       - name: scan.py finds planted tells
         run: bash tests/test-scan.sh
 
+      - name: doc_check.py finds planted document defects
+        run: bash tests/test-doc-check.sh
+
       - name: voice_stats.py measures samples and drafts
         run: bash tests/test-voice.sh
 
