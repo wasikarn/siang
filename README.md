@@ -94,7 +94,7 @@ skill ตัวหนึ่งอยู่ใน plugin ได้เมื่อ
 
 | skill | with-skill mean | เคสแย่สุด |
 |---|---|---|
-| `personal-voice` | 0.975 | −0.025 |
+| `personal-voice` (วัดบน 0.1.34) | 0.9925 | 0.00 |
 | `humanize` | 0.94 | −0.03 |
 | `document-review` | 0.985 | −0.03 |
 | `technical-writing` | 0.985 | −0.03 |

@@ -96,7 +96,7 @@ Latest results (each measured on the skill text named in `evals/README.md`):
 
 | skill | with-skill mean | worst case |
 |---|---|---|
-| `personal-voice` | 0.975 | −0.025 |
+| `personal-voice` (measured on 0.1.34) | 0.9925 | 0.00 |
 | `humanize` | 0.94 | −0.03 |
 | `document-review` | 0.985 | −0.03 |
 | `technical-writing` | 0.985 | −0.03 |
