@@ -42,6 +42,16 @@ check "missing exclamation habit reported"     '"punctuation: exclamation" in j[
 python3 "$vs" "$work/a.txt" "$work/b.txt" --draft "$work/a.txt" > "$work/out.json"
 check "a sample as draft has no misses"        'j["draft"]["out_of_range"] == []'
 
+# one all-caps emphasis word in a single sample is a one-off; a draft that copies it is flagged
+printf 'please do NOT merge it. ping me on OPS-2187\n' > "$work/c1.txt"
+printf 'no merges to main today. ping me on OPS-2187\n' > "$work/c2.txt"
+printf 'do not merge, ping me on OPS-2187\n' > "$work/c3.txt"
+printf 'please do NOT deploy, ping me on OPS-2187\n' > "$work/cd.txt"
+python3 "$vs" "$work/c1.txt" "$work/c2.txt" "$work/c3.txt" --draft "$work/cd.txt" > "$work/out.json"
+check "caps word in one sample is a one-off"   'j["one_offs"].get("caps: NOT", "").endswith("c1.txt")'
+check "caps id in every sample is a habit"     '"caps: OPS" in j["habits"]'
+check "draft copying the one-off caps is flagged" 'j["draft"]["caps_not_habit"] == ["NOT"]'
+
 if python3 "$vs" "$work/missing.txt" > /dev/null 2>"$work/err"; then
   echo "FAIL missing file should exit non-zero"; fail=1
 elif grep -q "cannot read" "$work/err"; then echo "PASS missing file exits non-zero with a message"

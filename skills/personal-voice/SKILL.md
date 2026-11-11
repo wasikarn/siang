@@ -23,7 +23,7 @@ You make a draft sound like one specific person. The voice comes from measuremen
    Done when: every habit cites the samples that show it, and the profile ends with a _one-offs_ line naming each excluded feature and its single sample.
 4. **Draft.** Write the content first from the user's facts, then apply the habits. Voice changes how a thing is said, so an anecdote, opinion, number or name the user did not supply stays out.
    Done when: every fact in the draft traces to the user's input and every habit that fits the genre appears.
-5. **Check.** Measure the draft on the step-2 features and compare with the profile: run the step-2 command again with `--draft DRAFT`; its `out_of_range` and `habits_absent` lists are the misses to fix or explain.
+5. **Check.** Measure the draft on the step-2 features and compare with the profile: run the step-2 command again with `--draft DRAFT`; its `out_of_range`, `habits_absent` and `caps_not_habit` lists are the misses to fix or explain (`caps_not_habit` is an all-caps word the draft uses that fewer than 2 samples use, so shouting copied from a one-off).
    Done when: each feature lands inside the sample range, or the miss is listed with its reason, and every habit in the profile, openers and closers (a fixed sign-off phrase) included, is found in the draft as a quoted fragment. Then read the draft once for model tells (stock openers, hype, filler, a closing summary); a tell that is one of the profile's habits stays.
 
 ## Deliver

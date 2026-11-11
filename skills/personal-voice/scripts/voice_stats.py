@@ -5,7 +5,7 @@ Usage: voice_stats.py SAMPLE [SAMPLE ...] [--draft DRAFT]   (SAMPLE or DRAFT may
 
 One file is one sample. Prints JSON:
   samples   per-sample features (sentence and paragraph length, punctuation counts, openers, closer,
-            Thai/Latin letter ratio, hedges, Thai particles)
+            Thai/Latin letter ratio, hedges, Thai particles, all-caps words)
   habits    features present in at least 2 samples (the SKILL.md habit rule)
   one_offs  features seen in exactly 1 sample, with that sample's name
   draft     with --draft: the draft's features, and every numeric feature outside the samples' range
@@ -65,6 +65,7 @@ def features(text):
         "thai_ratio": round(thai / (thai + latin), 2) if thai + latin else 0.0,
         "hedges": {h: low.count(h) for h in HEDGES_EN + HEDGES_TH if low.count(h)},
         "particles": {p: text.count(p) for p in PARTICLES if text.count(p)},
+        "caps_words": dict(Counter(re.findall(r"\b[A-Z]{2,}\b", text))),
         "latin_words": dict(Counter(w.lower() for w in re.findall(r"[A-Za-z][A-Za-z'-]{2,}", text))),
     }
 
@@ -73,6 +74,7 @@ def presence(f):
     """Set of named habits a sample shows, as 'kind: name' strings."""
     out = {f"punctuation: {k}" for k, v in f["punct_counts"].items() if v}
     out |= {f"hedge: {h}" for h in f["hedges"]} | {f"particle: {p}" for p in f["particles"]}
+    out |= {f"caps: {w}" for w in f["caps_words"]}
     out |= {f"opener: {w}" for w in f["sentence_openers"]}
     if f["all_lowercase_start"]:
         out.add("style: lowercase sentence starts")
@@ -119,7 +121,10 @@ def main(argv):
                 miss.append({"feature": f"punct_per_100_sentences: {k}", "draft": d["punct_per_100_sentences"][k],
                              "range": [min(vals), max(vals)]})
         absent = sorted(h for h in result["habits"] if h not in presence(d))
-        result["draft"] = {"features": d, "out_of_range": miss, "habits_absent": absent}
+        # an all-caps word the draft uses that fewer than 2 samples use: copy of a one-off, or a new shout
+        caps_bad = sorted(w for w in d["caps_words"] if f"caps: {w}" not in result["habits"])
+        result["draft"] = {"features": d, "out_of_range": miss, "habits_absent": absent,
+                           "caps_not_habit": caps_bad}
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
