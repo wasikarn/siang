@@ -110,7 +110,7 @@ Latest results (each measured on the skill text named in `evals/README.md`):
 |---|---|---|
 | `personal-voice` (measured on 0.1.34) | 0.9925 | 0.00 |
 | `humanize` | 0.94 | −0.03 |
-| `document-review` | 0.985 | −0.03 |
+| `document-review` (measured on 0.1.36) | 0.972 | 0.00 |
 | `technical-writing` | 0.985 | −0.03 |
 
 `thai-pua-repair` passes with a mean delta of +0.095 (score 1.00). Method, criteria history and per-run cost are
