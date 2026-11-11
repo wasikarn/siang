@@ -1,22 +1,17 @@
 # siang (เสียง)
 
-**skill สำหรับ Claude Code ที่ซ่อมข้อความจาก PDF ไทย และเอกสารอ้างอิงสำหรับเขียนด้วยเสียงของคุณเองกับเอากลิ่น AI ออกจากงานเขียน**
+plugin ของ Claude Code สำหรับงานเขียนภาษาไทยและอังกฤษ: ซ่อมข้อความที่ดึงจาก PDF ไทยแล้วเพี้ยน
+เอากลิ่น AI ออกจากงานเขียน เขียนด้วยเสียงของคุณเอง ร่างเอกสาร และตรวจเอกสารบันทึก
 
 [English](README.en.md)
 
-> ข้อความจาก AI มีกลิ่น
+## ทำไมต้องมี
 
-standup ที่เปิดว่า "ยินดีที่จะแจ้งให้ทราบ" คำอธิบาย PR ที่มีสามข้อยาวเท่ากันเป๊ะ ประกาศภาษาไทยที่ลงท้ายครับ
-ทุกประโยค แถมใช้ "ซึ่ง" กับ "โดย" เต็มไปหมด คนอ่านรู้ตั้งแต่บรรทัดแรก แล้วก็เลิกเชื่อส่วนที่เหลือ
+ข้อความจาก AI มีกลิ่น standup ที่เปิดว่า "ยินดีที่จะแจ้งให้ทราบ" คำอธิบาย PR ที่มีสามข้อยาวเท่ากันเป๊ะ
+ประกาศภาษาไทยที่ลงท้ายครับทุกประโยค คนอ่านรู้ตั้งแต่บรรทัดแรก แล้วก็เลิกเชื่อส่วนที่เหลือ
+อีกปัญหาคือ PDF ไทยที่ copy ออกมาแล้วได้อักขระประหลาด ค้นหาไม่ได้ ใช้กับ RAG ไม่ได้
 
-siang เป็น plugin ของ Claude Code ที่มี skill 5 ตัว: ซ่อมข้อความที่ดึงจาก PDF ไทยแล้วเพี้ยน (`thai-pua-repair`), เอากลิ่นนี้ออกทั้งภาษาอังกฤษ ภาษาไทย และไทยปนอังกฤษ (`humanize`),
-เขียนด้วยเสียงของคุณเอง (`personal-voice`), ร่างเอกสาร (`technical-writing`) และตรวจเอกสารบันทึก (`document-review`) เสียง แปลว่า voice
-
-## เหมาะกับใคร
-
-- developer ที่ให้ AI ร่าง chat, standup, PR, commit, ข้อความใน UI, ADR หรือ README ทั้งไทยและอังกฤษ
-- ทีมที่ได้ output ภาษาไทยจาก AI แล้วอ่านเหมือนงานแปล
-- ใครที่เคยวาง draft แล้วคิดว่า "นี่มันเสียง AI"
+siang รวม skill 5 ตัวที่แก้สองเรื่องนี้ ชื่อ "เสียง" แปลว่า voice
 
 ## ติดตั้ง
 
@@ -25,70 +20,109 @@ claude plugin marketplace add wasikarn/siang
 claude plugin install siang@siang
 ```
 
+ติดตั้งแล้ว restart Claude Code เรียก skill ด้วย slash command (`/siang:humanize`) หรือสั่งเป็นประโยคก็ได้
+ถ้างานตรงกับ description Claude จะเลือก skill เอง
+
 ## Skill ที่มี
 
-**`siang:thai-pua-repair`**
+| skill | ใช้เมื่อ | ทำอะไร |
+|---|---|---|
+| `siang:thai-pua-repair` | ข้อความจาก PDF ไทยมีอักขระ private-use วรรณยุกต์หรือสระเพี้ยน | แปลงกลับเป็นอักษรไทยมาตรฐาน หรือซ่อมไฟล์ PDF เอง |
+| `siang:humanize` | แก้ chat, standup, PR, commit, ข้อความใน UI, ADR, README ให้ไม่เหมือน AI เขียน | ไล่ tell ตาม pattern แล้วเขียนใหม่ ทั้งอังกฤษ ไทย และไทยปนอังกฤษ |
+| `siang:personal-voice` | อยากให้งานเขียนฟังเหมือนคุณ | สร้าง profile เสียงจากตัวอย่างงานของคุณ แล้วร่างตาม profile |
+| `siang:technical-writing` | ร่างหรือปรับ README, how-to, tutorial, reference, runbook, ADR, release note | เขียนให้ผู้อ่านทำงานจนเสร็จได้ ข้อมูลมาจาก code และผลคำสั่งจริง |
+| `siang:document-review` | ตรวจ SOP, runbook, policy, spec, change record เทียบกับมาตรฐานของมัน | รายงานข้อบกพร่อง หรือแก้ให้เมื่อสั่ง |
 
-- ใช้เมื่อ: ข้อความที่ extract จาก PDF ไทยมีอักขระ private-use หรือวรรณยุกต์เพี้ยน
-- ทำอะไร: แปลง glyph 27 ตัวของฟอนต์ UPC บน Windows (U+F700..U+F71A) กลับเป็นอักษรไทยมาตรฐาน รายงานตัวที่แปลงไม่ได้ และเมื่อสั่งจะแก้ ToUnicode map ในไฟล์ PDF เอง ให้ copy และค้นหาได้ถูก (`pua_pdf.py` ต้องมี pikepdf)
+ตัวอย่าง prompt:
 
-เรียกด้วย slash command (`/siang:thai-pua-repair`) หรือสั่งเป็นประโยคก็ได้ ตัวอย่าง prompt:
 ```
 ใช้ siang:thai-pua-repair: extract report.pdf แล้วซ่อมข้อความไทย
+ใช้ siang:humanize ปรับ draft PR description นี้
+ใช้ siang:document-review ตรวจ runbook นี้เทียบกับ checklist ของทีม
 ```
 
-## skill อีก 4 ตัว
+### thai-pua-repair
 
-- `humanize`: เอากลิ่น AI ออกจากงานเขียน dev/tech `skills/humanize/` เก็บลำดับขั้นใน `SKILL.md`, cue sheet สากล 33 แถว, pattern เฉพาะภาษาไทย,
-  โครงสร้างประโยคไทย, ตัวอย่าง และ `scripts/scan.py` ที่ไล่หา tell ที่ pattern จับได้ (em dash, คำสาย AI, ประโยคปิดแบบ chat,
-  การสะกดและรูปแบบวันที่ภาษาไทย) พร้อมเลขบรรทัดและเลข §
-- `personal-voice`: สร้าง profile เสียงจากตัวอย่างของคุณเอง แล้วเขียน draft ตาม profile
-- `technical-writing` และ `document-review`: ร่างเอกสารที่ผู้อ่านใช้งานได้ และตรวจเอกสารบันทึกเทียบกับมาตรฐานของมัน
+แปลง glyph 27 ตัวของฟอนต์ UPC บน Windows (U+F700..U+F71A) กลับเป็นอักษรไทยมาตรฐาน
+รายงานตัวที่แปลงไม่ได้ (U+F71B..U+F71D และ private-use ชุดอื่น) ใช้ script ตรง ๆ ได้ด้วย:
 
-ทั้ง 4 ตัวกลับมาเป็น skill ใน 0.1.33 ตามเกณฑ์ใน `evals/README.md` (with-skill mean เกิน 0.90 และไม่มีเคสไหนแพ้เกิน 0.05)
-ก่อนหน้านี้เกณฑ์มีเงื่อนไข Δ เฉลี่ยเหนือ Claude เปล่า +0.05 ด้วย เงื่อนไขนั้นถูกตัดออกเมื่อ 2026-11-10 ส่วนผล Δ ที่บันทึกไว้คงอยู่เป็นประวัติ
+```bash
+# ข้อความ: เช็กอย่างเดียว (exit 1 ถ้าเจอ glyph ที่แปลงได้, exit 2 ถ้ามีตัวที่แปลงไม่ได้เหลือ)
+python3 skills/thai-pua-repair/scripts/pua_fix.py --check extracted.txt
+
+# ข้อความ: แปลงแล้วพิมพ์ออก stdout (อ่านจาก stdin ได้ถ้าไม่ระบุไฟล์)
+python3 skills/thai-pua-repair/scripts/pua_fix.py extracted.txt > fixed.txt
+
+# ไฟล์ PDF: แก้ ToUnicode map ให้ copy และค้นหาได้ถูก (ต้อง pip install pikepdf)
+python3 skills/thai-pua-repair/scripts/pua_pdf.py in.pdf out.pdf
+```
+
+`pua_pdf.py` แก้เฉพาะ `/ToUnicode` ของแต่ละฟอนต์ หน้าตาของหน้า PDF ไม่เปลี่ยน
+
+### humanize
+
+`skills/humanize/` เก็บลำดับขั้นใน `SKILL.md`, cue sheet, pattern สากล (§1-§30, §59-§61), pattern ไทย
+(§31-§42, §53-§58), โครงสร้างประโยคไทย (§43-§52) และตัวอย่าง `scripts/scan.py` ไล่หา tell ที่ pattern
+จับได้ (em dash, คำสาย AI, ประโยคปิดแบบ chat, การสะกดและรูปแบบวันที่ไทย) พร้อมเลขบรรทัดและเลข §:
+
+```bash
+python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้า stdin
+```
+
+ผลที่ได้เป็น candidate ไม่ใช่คำตัดสิน อ่านทุก hit ก่อนแก้
 
 ## โครงสร้าง repo
 
 | path | เนื้อหา |
 |---|---|
-| `skills/humanize/` | `SKILL.md` ลำดับขั้น, cue sheet, pattern สากลและไทย, โครงสร้างประโยคไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
-| `skills/personal-voice/`, `skills/technical-writing/`, `skills/document-review/` | ตัวละ `SKILL.md` ไฟล์เดียว |
+| `skills/humanize/` | `SKILL.md`, cue sheet, pattern สากลและไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
-| `evals/` | 52 เคสในรูปแบบของ `claude plugin eval` อธิบายใน `evals/README.md` |
-| `tests/` | เช็กฟรีที่ CI รันทุก push: grader self-test, hook เช็ก version, ทุก § และ cue ต้องหาเจอ, `scan.py` จับ tell ที่ใส่ไว้ได้, `pua_fix.py` แปลง glyph ที่รู้จักได้ครบ, `pua_pdf.py` ซ่อม PDF จริงได้ตั้งแต่ต้นจนจบ |
+| `skills/personal-voice/`, `skills/technical-writing/`, `skills/document-review/` | ตัวละ `SKILL.md` ไฟล์เดียว |
+| `evals/` | 52 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
+| `docs/eval-runs/` | ผลรัน eval ที่เก็บไว้ ([README](docs/eval-runs/README.md)) |
+| `tests/` | เช็กฟรีที่ CI รันทุก push |
+| `GLOSSARY.md` | ศัพท์ของโปรเจกต์ |
 
 ## Eval
 
-แต่ละเคสรันสองฝั่ง คือมี siang กับไม่มี siang ตัวเลขที่ควรดูคือส่วนต่าง (Δ) ไม่ใช่คะแนนรวม
-เพราะ Claude เปล่า ๆ ก็ได้คะแนนสูงในหลายเคส
+skill ตัวหนึ่งอยู่ใน plugin ได้เมื่อผ่านเกณฑ์: with-skill mean เกิน 0.90 (5 รอบต่อฝั่ง) และไม่มีเคสไหนแพ้ Claude
+เปล่า ๆ เกิน 0.05 บนเคส held-out ที่เขียนโดย agent ที่ไม่เคยเห็น skill และ grader ถูกแช่แข็งก่อนรัน
+ตัวเลขที่ควรดูคือส่วนต่างต่อเคส ไม่ใช่คะแนนรวม เพราะ Claude เปล่า ๆ ได้คะแนนสูงในหลายเคส
 
-- 18 เคสของ `humanize` ทั้งไทยและอังกฤษ (ลบใน 0.1.28 แล้วคืนใน 0.1.33) หลายเคสเป็น regression guard ที่ Claude เปล่า ๆ ก็ผ่าน
-  หน้าที่ของมันคือจับตอนที่ siang แพ้ แต่ที่ดีขึ้นจริงมีไม่มาก Δ เฉลี่ย +0.04 ทั้ง 18 เคส ในทั้งสองชุดด้านล่าง
-  ชุดละ 3 รอบต่อฝั่ง
-  - Opus 5.5 (2026-11-09, siang 0.1.16, prompt ใน repo): ฝั่ง siang ผ่านครบทั้ง 54 รอบ แต่ Claude เปล่า ๆ
-    ก็เกือบผ่านหมด ค่าใช้จ่ายต่อรอบของฝั่ง siang ราว 2.1 เท่าของฝั่งเปล่า ($0.216 เทียบกับ $0.102)
-  - Sonnet 5.5 กับ prompt ที่สั่งให้เขียนใหม่ให้เหมือนคนเขียน ไม่บอก genre และไม่บอกขั้นตอน แต่ยังมีวงเล็บว่า "(use the
-    `siang:humanize` skill if you have it)": siang ไม่ได้ผ่านทุกเคส ตก grader echo-back ตัวเก่าใน th-cs-echo-planted
-    (0.67 เท่ากับฝั่งเปล่า ไม่ได้เปิดอ่าน output จริง) และตก grader `VM 3 ใบ` ใน th-grammar-planted (0.53
-    เทียบกับฝั่งเปล่า 0.60) ส่วนที่ดีขึ้นกระจุกอยู่ที่วันที่และเวลาภาษาไทย น้ำเสียงของ standup ไทย การไม่แตะข้อความ
-    chat ไทยที่ดีอยู่แล้ว และ tell ในภาษาอังกฤษที่ละเอียด ค่าใช้จ่ายต่อรอบของฝั่ง siang ราว 1.7 เท่า ($0.081 เทียบกับ $0.048)
+ผลล่าสุด (แต่ละตัววัดบนข้อความ skill ที่ระบุไว้ใน `evals/README.md`):
 
-  ผลของทั้งสองชุด (คะแนน ค่าใช้จ่าย และผลของ grader ทุกตัว) เก็บไว้ใน [`docs/eval-runs/`](docs/eval-runs/) prompt
-  ของรอบ Sonnet อยู่ใน JSON นั้น แต่ prompt ใน repo ยังระบุชื่อ skill อยู่ รันซ้ำจึงได้ตัวเลขของ Sonnet ไม่ตรงเป๊ะ
-  หลังแก้ตาม deep-audit (0.1.24) รันเคสภาษาไทยทั้ง 14 เคสใหม่เฉพาะฝั่ง siang ได้ 1.00 ครบ 42 รอบ
-- เคส held-out ของ skill อีก 4 ตัว (เขียนโดย agent ที่ไม่เคยเห็นขั้นตอนของ skill) รัน 5 รอบต่อฝั่ง ตามกฎที่ตั้งไว้ก่อนรัน
-  (ดู `evals/README.md`): `thai-pua-repair` Δ เฉลี่ย +0.095 (คะแนน 1.00) ผ่านเกณฑ์
-- ผลตามเกณฑ์ปัจจุบัน (with-skill mean เกิน 0.90 และไม่มีเคสไหนแพ้เกิน 0.05) แต่ละตัววัดบนข้อความที่ระบุ:
-  `personal-voice` 0.975 (ข้อความ 0.1.32, เคสแย่สุด −0.025), `humanize` 0.94 (`SKILL.md` ตัวสุดท้าย, ไม่มีเคสต่ำกว่า −0.03),
-  `document-review` 0.985 (แย่สุด −0.03), `technical-writing` 0.985 (หลังแก้ grader, แย่สุด −0.03) ต่อมาข้อความที่คืนมารันบนเคส blind ชุดใหม่ (`holdout3-*`, `holdout4-*`): `humanize`, `document-review`, `personal-voice` ได้ 1.00 ส่วน `technical-writing` แพ้ 0.07 บนเคส `report-export` ในรอบสอง (grader หลวม ดู `evals/README.md`) แล้วได้ 1.00 ในอีกสองเคส คอลัมน์ Δ ใน `evals/README.md`
-  เป็นบันทึกของกฎ +0.05 เดิม ทั้ง 4 ตัวไม่ผ่านกฎนั้น จึงถูกถอดใน 0.1.26 ถึง 0.1.32
-- 5 เคส `trigger` ตัวละเคส เช็กว่า skill ถูกเรียกเองจากงานโดยไม่ระบุชื่อ: ถูกเรียกทุกรอบ (วัดบน description ของ 0.1.20 ส่วน `trigger-personal-voice` รันซ้ำบน description ของ 0.1.33 แล้ว ถูกเรียก 3 จาก 3 รอบ)
+| skill | with-skill mean | เคสแย่สุด |
+|---|---|---|
+| `personal-voice` | 0.975 | −0.025 |
+| `humanize` | 0.94 | −0.03 |
+| `document-review` | 0.985 | −0.03 |
+| `technical-writing` | 0.985 | −0.03 |
 
-เช็กฟรีโดยไม่เรียก API: `bash tests/test-graders.sh` ส่วนรันจริง (เสียเงิน) คือ
-`claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
-(ถ้าไม่ได้รันใน
-terminal แบบ interactive ให้เติม `--trust-plugin`)
+`thai-pua-repair` ผ่านด้วย Δ เฉลี่ย +0.095 (คะแนน 1.00) วิธีวัด ประวัติเกณฑ์ และต้นทุนต่อรอบอยู่ใน
+`evals/README.md` กับ `docs/eval-runs/`
+
+## พัฒนา
+
+ก่อน commit:
+
+```bash
+claude plugin validate .
+bash tests/test-graders.sh        # grader self-test (ฟรี ไม่เรียก API)
+bash tests/test-section-refs.sh   # ทุก §N และ cue #N ต้องหาเจอ
+bash tests/test-scan.sh
+bash tests/test-pua.sh
+bash tests/test-pua-pdf.sh        # ข้ามถ้าไม่มี pikepdf และ pdftotext
+bash tests/test-version-hook.sh
+```
+
+- แก้อะไรใน `skills/` ต้องเพิ่ม `version` ใน `.claude-plugin/plugin.json` ไม่งั้น `claude plugin update`
+  ไม่คัดลอกอะไร เปิด hook ครั้งเดียวต่อ clone: `git config core.hooksPath git-hooks`
+- เลข section ใหม่ใช้เลขถัดจากตัวสุดท้ายที่มี (ดู `CLAUDE.md`) ห้าม renumber
+- รัน eval จริง (เสียเงิน):
+  `claude plugin eval . --scaffold --tag thai-pua-repair --allow-tools "Bash,Edit,Write" --runs 1 --no-publish`
+  (ถ้าไม่ได้รันใน terminal แบบ interactive ให้เติม `--trust-plugin`)
+
+กฎเต็มอยู่ใน [`CLAUDE.md`](CLAUDE.md)
 
 ## เครดิตและ license
 
@@ -109,8 +143,8 @@ siang เริ่มจาก skill `tech-humanize` ใน [wasikarn/method-har
 ถ้อยคำของกฎและตัวอย่างเป็นของ siang เองตั้งแต่ 2026-11-09 ก่อนหน้านั้นคัดลอกข้อความจาก humanizer มาหลายส่วน
 วันที่ 2026-11-09 ตรวจด้วย script ชั่วคราวเทียบกับทั้งสี่แหล่งนี้แล้ว ไม่เจอช่วงที่ซ้ำกันตั้งแต่หกคำขึ้นไป ยกเว้นชื่อ pattern
 ชื่อหัวข้อ วลี tell และรายการคำที่กฎยกมา และชื่อแหล่ง ส่วน script ตัวนั้นไม่ได้อยู่ใน repo
-
 ไฟล์ไหนดัดแปลงอะไรมา และ license ฉบับเต็ม ดูได้ที่ [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+
 ขอบคุณผู้เขียนทั้งสามที่เผยแพร่งานภายใต้ MIT
 
 license ของ repo นี้คือ MIT ดู [LICENSE](LICENSE)
