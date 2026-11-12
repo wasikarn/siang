@@ -390,7 +390,10 @@ above were measured on 0.1.37.
 
 Rerun of the fresh blind pair on 0.1.39 (graders still at `58898ea161642a39`, 5 runs per arm, $3.29): `review-comments`
 1.00 / 1.00 / 0.00, `thai-announce` 0.98 / 0.92 / +0.07. With-skill mean 0.992, mean Δ +0.033, no case loses: the
-rule holds. The only miss is again `habit-signoff-infra` (with-arm 1 of 5, without-arm 5 of 5, against 3 of 5 and 5 of
-5 on 0.1.37). The fix was driven by the audit, not by this pair's scores, but this session had read the pair's sample
-habit lists while checking the fix, so the pair is weaker evidence than a fresh one. Two cases at 5 runs is a small
-sample: the gain over 0.1.37 (+0.017 to +0.033) is within run-to-run noise.
+rule holds on these numbers, but they are not blind. One 0.1.39 fix, detecting ปล. as a P.S., was added after the
+whole-picture reviewer pointed at the planted ปล. line in `holdout5-personal-voice-thai-announce/scaffold.sh`, and
+this session read the pair's sample habit lists while checking the fix. By the acceptance rule a change made after
+seeing a case voids it for that version, so this is a rerun on known cases, not a blind result; the blind result for
+`personal-voice` stays the 0.1.37 one above (0.975, +0.017). The only miss is again `habit-signoff-infra` (with-arm 1
+of 5, without-arm 5 of 5, against 3 of 5 and 5 of 5 on 0.1.37), a difference of two runs that is within run-to-run
+noise, so this does not show the fix widens the gap over plain Claude. A blind check of 0.1.39 needs a new pair.
