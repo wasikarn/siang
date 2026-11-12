@@ -5,7 +5,7 @@ Usage: voice_stats.py SAMPLE [SAMPLE ...] [--draft DRAFT]   (SAMPLE or DRAFT may
 
 One file is one sample. Prints JSON:
   samples   per-sample features (sentence and paragraph length, punctuation counts, openers, closer,
-            Thai/Latin letter ratio, hedges, Thai particles, all-caps words)
+            Thai/Latin letter ratio, hedges, Thai particles, all-caps words, @mention/#hashtag/URL/P.S., digits vs spelled-out numbers)
   habits    features present in at least 2 samples (the SKILL.md habit rule)
   one_offs  features seen in exactly 1 sample, with that sample's name
   draft     with --draft: the draft's features, and every numeric feature outside the samples' range
@@ -29,6 +29,11 @@ HEDGES_EN = ["maybe", "probably", "i think", "kind of", "sort of", "just", "real
              "basically", "pretty much", "tbh", "imo"]
 HEDGES_TH = ["น่าจะ", "อาจ", "ค่อนข้าง", "ประมาณ", "มาก ๆ", "จริง ๆ", "เหมือน"]
 PARTICLES = ["ครับ", "ค่ะ", "คะ", "นะ", "เลย", "แล้ว", "ด้วย", "จ้า", "จ้ะ", "ละ", "หรอก", "สิ", "เนอะ"]
+SYMBOLS = {"mention": re.compile(r"@[\w\u0e00-\u0e7f]+"), "hashtag": re.compile(r"(?<![\w&])#\w+"),
+           "url": re.compile(r"https?://\S+"), "ps": re.compile(r"^\s*p\.?s\.?(?::|\s)", re.I | re.M)}
+NUMWORDS = re.compile(r"\b(?:zero|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|"
+                      r"sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|"
+                      r"hundred|thousand|million)\b", re.I)  # "one" is left out: it is also a pronoun
 THAI = re.compile("[฀-๿]")
 LATIN = re.compile("[A-Za-z]")
 
@@ -65,6 +70,9 @@ def features(text):
         "thai_ratio": round(thai / (thai + latin), 2) if thai + latin else 0.0,
         "hedges": {h: low.count(h) for h in HEDGES_EN + HEDGES_TH if low.count(h)},
         "particles": {p: text.count(p) for p in PARTICLES if text.count(p)},
+        "symbols": {k: len(rx.findall(text)) for k, rx in SYMBOLS.items() if rx.search(text)},
+        "digit_numbers": len(re.findall(r"\d+(?:[.,]\d+)*", text)),
+        "number_words": dict(Counter(w.lower() for w in NUMWORDS.findall(text))),
         "caps_words": dict(Counter(re.findall(r"\b[A-Z]{2,}\b", text))),
         "latin_words": dict(Counter(w.lower() for w in re.findall(r"[A-Za-z][A-Za-z'-]{2,}", text))),
     }
@@ -75,6 +83,7 @@ def presence(f):
     out = {f"punctuation: {k}" for k, v in f["punct_counts"].items() if v}
     out |= {f"hedge: {h}" for h in f["hedges"]} | {f"particle: {p}" for p in f["particles"]}
     out |= {f"caps: {w}" for w in f["caps_words"]}
+    out |= {f"symbol: {k}" for k in f["symbols"]} | {f"numword: {w}" for w in f["number_words"]}
     out |= {f"opener: {w}" for w in f["sentence_openers"]}
     if f["all_lowercase_start"]:
         out.add("style: lowercase sentence starts")
@@ -124,7 +133,10 @@ def main(argv):
         # an all-caps word the draft uses that fewer than 2 samples use: copy of a one-off, or a new shout
         caps_bad = sorted(w for w in d["caps_words"] if f"caps: {w}" not in result["habits"])
         result["draft"] = {"features": d, "out_of_range": miss, "habits_absent": absent,
-                           "caps_not_habit": caps_bad}
+                           "caps_not_habit": caps_bad,
+                           "symbols_not_habit": sorted(k for k in d["symbols"] if f"symbol: {k}" not in result["habits"]),
+                           "number_words_not_habit": sorted(w for w in d["number_words"]
+                                                            if f"numword: {w}" not in result["habits"])}
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 

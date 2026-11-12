@@ -52,6 +52,26 @@ check "caps word in one sample is a one-off"   'j["one_offs"].get("caps: NOT", "
 check "caps id in every sample is a habit"     '"caps: OPS" in j["habits"]'
 check "draft copying the one-off caps is flagged" 'j["draft"]["caps_not_habit"] == ["NOT"]'
 
+# symbols: an @mention in one sample is a one-off; a draft that uses a symbol kind that is not a habit is flagged
+printf -- '- 10:20 paused the consumer @nok please check\n- 10:40 done\n' > "$work/s1.txt"
+printf -- '- 11:05 rolled back\n- 11:09 done\n' > "$work/s2.txt"
+printf -- '- 12:30 started\n- 12:50 done\n' > "$work/s3.txt"
+printf -- '- 14:22 @nok rolled back, see https://x.example/a #inc\n' > "$work/sd.txt"
+python3 "$vs" "$work/s1.txt" "$work/s2.txt" "$work/s3.txt" --draft "$work/sd.txt" > "$work/out.json"
+check "@mention in one sample is a one-off"    'j["one_offs"].get("symbol: mention", "").endswith("s1.txt")'
+check "draft symbols that are not habits"      'j["draft"]["symbols_not_habit"] == ["hashtag", "mention", "url"]'
+
+# number style: samples use digits, a draft that spells a number out is flagged; "one" is a pronoun and ignored
+printf 'lost 38 minutes and 1,240 requests\nalert fires 14 days out\n' > "$work/n1.txt"
+printf 'checkout down 40 min\nnobody noticed the one thing\n' > "$work/n2.txt"
+printf 'reran 3 jobs, all green\n' > "$work/n3.txt"
+printf 'alert fires two weeks out; three jobs reran; no one noticed\n' > "$work/nd.txt"
+python3 "$vs" "$work/n1.txt" "$work/n2.txt" "$work/n3.txt" --draft "$work/nd.txt" > "$work/out.json"
+check "sample digit counts are reported"       'j["samples"][[k for k in j["samples"] if k.endswith("n1.txt")][0]]["digit_numbers"] == 3'
+check "draft number words not habits"          'j["draft"]["number_words_not_habit"] == ["three", "two"]'
+python3 "$vs" "$work/n1.txt" "$work/n2.txt" "$work/n3.txt" --draft "$work/n3.txt" > "$work/out.json"
+check "digits-only draft has no number words"  'j["draft"]["number_words_not_habit"] == []'
+
 if python3 "$vs" "$work/missing.txt" > /dev/null 2>"$work/err"; then
   echo "FAIL missing file should exit non-zero"; fail=1
 elif grep -q "cannot read" "$work/err"; then echo "PASS missing file exits non-zero with a message"
