@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: holdout6-technical-writing-cron-janitor
+context:
+  scaffold_script: scaffold.sh

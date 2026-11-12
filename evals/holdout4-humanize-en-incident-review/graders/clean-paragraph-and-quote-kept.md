@@ -1,0 +1,11 @@
+---
+type: regex
+pattern: '^(?=[\s\S]*The release bumped poolkit from 1\.9 to 2\.0\. Poolkit 2\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\. Postgres hit its connection limit four minutes after the deploy finished\.)(?=[\s\S]*"This is not just a defaults change but a behavior change for every long-lived pool\.")'
+match: contains
+target: {source: file, path: INCIDENT-2291.md}
+# must-pass: The release bumped poolkit from 1.9 to 2.0. Poolkit 2.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones. Postgres hit its connection limit four minutes after the deploy finished. > "This is not just a defaults change but a behavior change for every long-lived pool."
+# must-pass: "This is not just a defaults change but a behavior change for every long-lived pool." The release bumped poolkit from 1.9 to 2.0. Poolkit 2.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones. Postgres hit its connection limit four minutes after the deploy finished.
+# must-fail: The release bumped poolkit from 1.9 to 2.0. Poolkit 2.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones. Postgres hit its connection limit within minutes after the deploy finished. > "This is not just a defaults change but a behavior change for every long-lived pool."
+# must-fail: The release bumped poolkit from 1.9 to 2.0. Poolkit 2.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones. Postgres hit its connection limit four minutes after the deploy finished. > "This is a behavior change for every long-lived pool."
+---
+The "The release bumped poolkit" paragraph has no tells and stays byte-identical. The blockquote looks like a "not just X but Y" tell but is a genuine quote from the poolkit release notes, so its words stay exactly as written.

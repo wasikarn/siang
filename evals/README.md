@@ -330,3 +330,26 @@ Not done: the other three cases were not rerun on 0.1.35, the frozen-grader hash
 The with-skill drop on the planted case is wording, not substance. Kept traces show the agents found every planted defect, including 30 minutes against 30 s and the unsourced 90 days, and listed the 90 days under "Unverifiable items". The `units` grader wants "contradict", "inconsisten", "mismatch" or "disagree" and the agents wrote "conflict" (the script's check is named `quantity-conflict`); the `unverifiable-claim` grader wants "90 days" and "unverifiable" on one line. The graders were left as they are, since changing a grader or the skill after seeing results voids the run. The script was called in every with-skill run (25 of 25 traces).
 
 Not done: the frozen-grader hash was not recomputed and the run results are not archived in `docs/eval-runs/`.
+
+## Fifth held-out round: eight hard blind cases (2026-11-12, plugin 0.1.36, graders frozen at `f9caf6323dccf031`)
+
+Four agents that were told not to read `skills/`, `docs/`, this file, `evals/results/` or any existing case of their skill wrote two cases each for `document-review` (`holdout4-document-review-*`), `humanize` (`holdout4-humanize-*`), `personal-voice` (`holdout4-personal-voice-*`) and `technical-writing` (`holdout6-technical-writing-*`). They aimed at what a plain model gets wrong: defects buried in a 125 to 139 line document, subtle tells, one-off quirks and a pasted non-user sample, a stale README next to a runnable script. Cases were not chosen or dropped by how the no-skill arm scored. Hash: sha256 of the files under the eight directories, `find <eight dirs> -type f | sort | xargs shasum -a 256 | shasum -a 256` from the repo root, first 16 hex.
+
+One grader was edited before its case had ever run: `holdout4-humanize-en-incident-review/graders/code-and-table-unchanged.md` failed to load because the front-matter reader cut at the `---` in a table separator row; it now accepts any separator row instead of checking it byte for byte. The first hash of the eight directories (`ffc2bd4d04de2546`) predates that edit. No result had been seen for that case.
+
+5 runs per arm, $19.40 in total (the first run also reran two older `holdout4-technical-writing-*` cases, which are not part of this round). With-skill / without / Δ:
+
+| case | with | without | Δ |
+|---|---|---|---|
+| `holdout4-document-review-db-failover` | 1.00 | 1.00 | 0.00 |
+| `holdout4-document-review-vendor-onboarding` | 1.00 | 1.00 | 0.00 |
+| `holdout4-humanize-en-incident-review` | 1.00 | 1.00 | 0.00 |
+| `holdout4-humanize-th-release-announcement` | 0.96 | 0.66 | +0.30 |
+| `holdout4-personal-voice-dry-wit` | 0.88 | 0.85 | +0.03 |
+| `holdout4-personal-voice-ticket-notes` | 0.95 | 0.92 | +0.03 |
+| `holdout6-technical-writing-cron-janitor` | 0.93 | 0.76 | +0.18 |
+| `holdout6-technical-writing-webhook-relay` | 0.98 | 0.87 | +0.11 |
+
+Per skill, with-skill mean and mean Δ: `document-review` 1.00 / 0.00, `humanize` 0.98 / +0.15, `personal-voice` 0.915 / +0.03, `technical-writing` 0.955 / +0.145. No case loses, so all four skills hold the rule's two conditions on these cases. The gain is in `humanize` (Thai), `technical-writing` and, barely, `personal-voice`. `document-review` ties on both cases that were built to be hard for a plain model, so `doc_check.py` is not shown to help there. Remaining misses in the with-arm: `one-spelling-per-term` (Thai humanize), `habit-digits` (dry-wit), `oneoff-no-mention` (ticket-notes), `removed-path-flag` (cron-janitor), `step-result` (webhook-relay).
+
+Not done: results are not archived in `docs/eval-runs/`, the two older `holdout4-technical-writing-*` reruns (0.95 / 0.97 / −0.03 and 1.00 / 1.00 / 0.00) are not analysed here, and no trace was opened to check why the with-arm missed the graders above.

@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: holdout4-humanize-th-release-announcement
+context:
+  scaffold_script: scaffold.sh
