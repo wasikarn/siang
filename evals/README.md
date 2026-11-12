@@ -465,3 +465,17 @@ was not driven by their results; this session knew one with-arm miss name there 
 Rule, fixed before the run: 0.1.40 keeps `humanize` as a skill if the with-skill mean is above 0.90 and no case loses
 to the no-skill arm by more than 0.05. Also reported, not part of the verdict: with-arm score and cost per run against
 the before numbers. Expectation from the mh pilot: same score, no lower cost.
+
+### Result (2026-11-12, plugin 0.1.40, graders at `f9caf6323dccf031`)
+
+5 runs per arm, $4.28. With-skill / without / Δ: `holdout4-humanize-th-release-announcement` 0.82 / 0.64 / +0.18,
+`holdout4-humanize-en-incident-review` 1.00 / 1.00 / 0.00. With-skill mean 0.91, mean Δ +0.09, no case loses:
+`humanize` 0.1.40 passes the rule, by 0.01.
+
+Against the long text on the Thai case: the long text scored 0.96 in the counted 0.1.36 run and 0.78 in the
+interrupted one (5 valid runs each), so the short text's 0.82 is inside the long text's own run-to-run range, and
+the score shows no change either way. Cost per with-arm run on the Thai case rose from $0.26-0.29 to $0.41 and turns
+from 8 to 11.4; on the English case it was $0.19 before and $0.18 after. The with-arm misses on the Thai case are the
+same three graders as the interrupted long-text run (`clean-paragraph-and-quote-kept` 4 of 5, `one-spelling-per-term`
+3 of 5, `no-chat-closer-or-particle-run` 2 of 5). As the mh pilot found, the short text is easier to read but not
+cheaper: the extra turns are reads of the sibling files.

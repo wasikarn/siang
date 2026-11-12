@@ -108,7 +108,7 @@ Latest blind round per skill (details in `evals/README.md`):
 | skill | round (version) | with-skill mean | mean Δ | worst case Δ |
 |---|---|---|---|---|
 | `personal-voice` | blind `holdout6` pair (0.1.39) | 0.987 | +0.04 | 0.00 |
-| `humanize` | fifth round (0.1.36) | 0.98 | +0.15 | 0.00 |
+| `humanize` | `holdout4` pair, short text (0.1.40) | 0.91 | +0.09 | 0.00 |
 | `technical-writing` | fifth round (0.1.36) | 0.956 | +0.144 | +0.11 |
 
 The same 0.1.36 run also reran an older `technical-writing` case outside the round, which lost by −0.025.
