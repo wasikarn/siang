@@ -1,0 +1,3467 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.322",
+  "startedAt": "2026-11-12T05:20:33.811Z",
+  "durationSeconds": 86,
+  "costUsd": 3.5290141999999998,
+  "partial": false,
+  "suite": {
+    "root": "<path>",
+    "ablation": "with-without",
+    "caseFilter": "holdout6-personal-voice-*",
+    "threshold": 1,
+    "concurrency": 4,
+    "plugins": [
+      {
+        "name": "siang",
+        "version": "0.1.39",
+        "path": "<path>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "holdout6-personal-voice-bakery-closure",
+      "dir": "evals/holdout6-personal-voice-bakery-closure",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:personal-voice` skill (Skill tool, `skill: \"siang:personal-voice\"`) on the writing samples in `samples/` and write my next post for my bakery's Facebook page, in Thai and in my voice, saved to `draft.md`. The samples are my last few posts on the page.\n\nFacts it must contain:\n- The shop is closed Monday 15 to Wednesday 17 December because the oven is being repaired.\n- The shop opens again on Thursday 18 December.\n- Pre-orders are open for Christmas stollen, 390 baht a loaf.\n- Pre-orders close on Sunday 21 December; people order through the page chat.\n- Pick-up is at the shop on Wednesday 24 December, 1pm to 5pm.\n\nDo not add any point I did not list.\n\nYour final message is one line naming the file you wrote, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 900,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "outcome-fact-closed-dates",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\b15\\b[^\\n]{0,40}\\b17\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-deadline",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "(?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-order-chat",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-oven",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "เตา|oven",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-pickup",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-price",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\b390\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-reopen",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-stollen",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "[สช](?:โต|ตอ)ล?เล.?น|stollen",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-hashtag-close",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "(?:^|\\n)#ขนมปังซอยแปด\\s*$",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-no-added-points",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-oneoff-no-delivery",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-oneoff-no-emoji",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*\\p{Extended_Pictographic})[\\s\\S]+",
+            "flags": "u",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-price-style",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-self-reference",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "พี่(?!ๆ)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-time-style",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "process-skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?personal-voice\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.21670640000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-11-12T05:20:34.706Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched พี่(?!ๆ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.22798619999999997,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-11-12T05:20:34.706Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched พี่(?!ๆ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 0.9333333333333333,
+            "passed": false,
+            "turns": 11,
+            "costUsd": 0.2802062,
+            "judgeCostUsd": 0,
+            "durationSeconds": 31,
+            "startedAt": "2026-11-12T05:20:34.706Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 0.9333333333333333,
+            "passed": false,
+            "turns": 8,
+            "costUsd": 0.2188738,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-11-12T05:20:34.706Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.22764859999999995,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-11-12T05:20:54.342Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched พี่(?!ๆ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.8666666666666667,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.12203320000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 11,
+            "startedAt": "2026-11-12T05:20:54.539Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8666666666666667,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.1215108,
+            "judgeCostUsd": 0,
+            "durationSeconds": 12,
+            "startedAt": "2026-11-12T05:20:55.201Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.9333333333333333,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.1266764,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-12T05:21:05.503Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.9333333333333333,
+            "passed": false,
+            "turns": 5,
+            "costUsd": 0.12976459999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-12T05:21:06.022Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\p{Extended_Pictographic})[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8666666666666667,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.11109959999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 9,
+            "startedAt": "2026-11-12T05:21:07.318Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-closed-dates",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[^\\n]{0,40}\\b17\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deadline",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:ปิดรับ|ภายใน|ก่อน|ถึง|หมดเขต|ไม่เกิน|สุดท้าย)[^\\n]{0,30}\\b21\\b|\\b21\\b[^\\n]{0,30}(?:ปิดรับ|หมดเขต|สุดท้าย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-order-chat",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched แชท|แช็ท|inbox|อินบ็อกซ์|อินบอกซ์|ข้อความ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-oven",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เตา|oven",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-pickup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b24\\b)[\\s\\S]*(?:13[.:]00|บ่ายโมง|บ่าย ?1\\b)[^\\n]{0,20}(?:17[.:]00|ห้าโมง|5 ?โมง)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-price",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b390\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reopen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched เปิด[^\\n]{0,40}\\b18\\b|\\b18\\b[^\\n]{0,40}เปิด",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-stollen",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [สช](?:โต|ตอ)ล?เล.?น|stollen",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-hashtag-close",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)#ขนมปังซอยแปด\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-points",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:ส่วนลด|ลดราคา|โปรโมชั่น|ของแถม|แถมฟรี|จำนวนจำกัด|มีจำกัด|หมดแล้วหมดเลย|สะสมแต้ม|มัดจำ|โอนเงิน|เลขบัญชี))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-delivery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:grab|line ?man|เดลิเวอรี่?|ไรเดอร์|ค่าส่ง|จัดส่ง|ส่งถึงบ้าน))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-emoji",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-price-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\d\\s*บาท)[\\s\\S]*\\b390\\.-",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-self-reference",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-time-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}:\\d{2}\\b)[\\s\\S]*\\b13\\.00\\b",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.9733333333333334,
+        "passRate": 0.6,
+        "scoreWithout": 0.8933333333333333,
+        "passRateWithout": 0,
+        "delta": 0.08000000000000007
+      }
+    },
+    {
+      "name": "holdout6-personal-voice-db-maintenance",
+      "dir": "evals/holdout6-personal-voice-db-maintenance",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:personal-voice` skill (Skill tool, `skill: \"siang:personal-voice\"`) on the writing samples in `samples/` and write my next post for the #eng-announcements channel, in my voice, saved to `draft.md`. The samples are my last few posts there.\n\nIt announces the orders-db maintenance. Facts it must contain:\n- The orders-db primary moves from Postgres 15 to Postgres 17 on Thursday March 19, 2pm to 4pm UTC.\n- During the switchover, writes to orders fail for up to 10 minutes. Reads keep working the whole time.\n- What teams need to do: pause any batch job that writes to orders before 1:45pm UTC that day; do not deploy anything that touches orders-db during the window; after 4pm UTC, check your service's error dashboard.\n- If the switchover fails, we stay on Postgres 15 and try again next Thursday.\n\nDo not add any point I did not list.\n\nYour final message is one line naming the file you wrote, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 900,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "outcome-24h-utc-times",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-batch-pause",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-dashboard",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "(?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-date",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-deploy-freeze",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "(?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-reads-ok",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-rollback",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-versions",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-window",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-writes-fail",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-no-added-closer",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-no-exclamation",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*!)[\\s\\S]+",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-numbered-list-style",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-oneoff-no-apology",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-oneoff-no-ps",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-signoff",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "(?:^|\\n)-m\\s*$",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-tldr-first",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^\\s*tl;dr:",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "process-skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?personal-voice\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 8,
+            "costUsd": 0.2380852,
+            "judgeCostUsd": 0,
+            "durationSeconds": 19,
+            "startedAt": "2026-11-12T05:21:16.012Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.25111340000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 18,
+            "startedAt": "2026-11-12T05:21:16.775Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 9,
+            "costUsd": 0.24403280000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 21,
+            "startedAt": "2026-11-12T05:21:19.537Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 8,
+            "costUsd": 0.2686326,
+            "judgeCostUsd": 0,
+            "durationSeconds": 27,
+            "startedAt": "2026-11-12T05:21:19.729Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 8,
+            "costUsd": 0.17765020000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-11-12T05:21:34.550Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1120598,
+            "judgeCostUsd": 0,
+            "durationSeconds": 9,
+            "startedAt": "2026-11-12T05:21:34.894Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.1215428,
+            "judgeCostUsd": 0,
+            "durationSeconds": 11,
+            "startedAt": "2026-11-12T05:21:40.611Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.1071948,
+            "judgeCostUsd": 0,
+            "durationSeconds": 7,
+            "startedAt": "2026-11-12T05:21:44.080Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.11466819999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 9,
+            "startedAt": "2026-11-12T05:21:46.668Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.11152859999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 9,
+            "startedAt": "2026-11-12T05:21:51.175Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-24h-utc-times",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b\\d{1,2}(?::\\d{2})?\\s?[ap]\\.?m\\b)[\\s\\S]*\\b1[46]:00\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-batch-pause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched batch[\\s\\S]{0,120}(?:13:45|1:45\\s?pm)|(?:13:45|1:45\\s?pm)[\\s\\S]{0,120}batch",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-dashboard",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:16:00|4\\s?pm|after)[\\s\\S]{0,80}dashboard|dashboard[\\s\\S]{0,80}(?:16:00|4\\s?pm|after)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:Mar(?:ch)?\\.?\\s+19(?:th)?|19(?:th)?\\s+Mar(?:ch)?|(?:2026-)?03-19|0?3/19|19/0?3)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-deploy-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:\\bno\\b|don.?t|do not|hold|freeze|pause|avoid|stop)[\\s\\S]{0,40}deploy|deploy[\\s\\S]{0,30}(?:freeze|hold|pause)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-reads-ok",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\breads?\\b[\\s\\S]{0,60}(?:keep|still|continue|unaffected|not affected|fine|work|ok\\b|stay|unchanged)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollback",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b15\\b[\\s\\S]{0,120}(?:next|following)\\s+(?:Thu|Thursday|week)|(?:next|following)\\s+(?:Thu|Thursday|week)[\\s\\S]{0,120}\\b15\\b|\\b15\\b[\\s\\S]{0,120}(?:Mar(?:ch)?\\.?\\s+26|26\\s+Mar|03-26|3/26)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b15\\b)(?=[\\s\\S]*\\b17\\b)[\\s\\S]*(?:postgres|\\bpg\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:14(?::00)?|2\\s?pm)[\\s\\S]{0,30}\\b(?:16(?::00)?|4\\s?pm)[\\s\\S]{0,10}UTC",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-writes-fail",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\bwrites?\\b[\\s\\S]{0,100}\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b|\\b(?:10|ten)[\\s-]?(?:min|mins|minutes?)\\b[\\s\\S]{0,100}\\bwrites?\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-closer",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:let (?:me|us) know|reach out|feel free|any questions|questions\\?|thanks for (?:your )?(?:patience|understanding)|happy to help))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-exclamation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*!)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-numbered-list-style",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*(?:\\d+\\.|[-*•+])[ \\t])[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-apology",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:sorry|apolog\\w*|inconvenien\\w*)\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-oneoff-no-ps",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[ \\t]*p\\.?\\s?s\\.?\\b)[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-signoff",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)-m\\s*$",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-tldr-first",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^\\s*tl;dr:",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 1,
+        "passRateWithout": 1,
+        "delta": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 2,
+    "casesPassed": 1,
+    "overallScore": 0.9866666666666667,
+    "overallPassRate": 0.8,
+    "meanDelta": 0.040000000000000036
+  }
+}

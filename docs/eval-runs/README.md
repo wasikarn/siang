@@ -32,3 +32,4 @@ current cases.
 | `2026-11-12-0.1.37-personal-voice-tuned.json` | 0.1.37 on the same two cases after tuning, 5 per arm, $3.82 (not blind) |
 | `2026-11-12-0.1.37-personal-voice-fresh-blind.json` | fresh blind `holdout5-personal-voice-*` pair, 5 per arm, $3.30 |
 | `2026-11-12-0.1.39-personal-voice-fresh-blind.json` | same pair rerun on 0.1.39 (not blind, see `evals/README.md`), 5 per arm, $3.29 |
+| `2026-11-12-0.1.39-personal-voice-holdout6-blind.json` | blind `holdout6-personal-voice-*` pair on 0.1.39, 5 per arm, $3.53 |

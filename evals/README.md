@@ -413,3 +413,13 @@ Rule, fixed before the run: 5 runs per arm; `personal-voice` 0.1.39 passes if th
 above 0.90 and no case loses to the no-skill arm by more than 0.05. Reported beside it, not part of the verdict: the
 outcome-only score per arm (process grader left out), which says whether the skill changes the draft, not just the
 route. No bare-only pilot was run; the no-skill arm is the bare measurement. Nothing changes after the run starts.
+
+### Result (2026-11-12, plugin 0.1.39, graders frozen at `6f5d5a1be3b2afea`, commit ef200ed)
+
+5 runs per arm, $3.53. With-skill / without / Δ: `holdout6-personal-voice-bakery-closure` 0.97 / 0.89 / +0.08,
+`holdout6-personal-voice-db-maintenance` 1.00 / 1.00 / 0.00. With-skill mean 0.987, mean Δ +0.04, no case loses:
+`personal-voice` 0.1.39 passes the rule. Outcome-only scores (the `outcome-*` graders) are the same numbers: the
+gain is in the drafts, not only in the route. The misses: `outcome-self-reference` (the writer calls herself พี่),
+with-arm 2 of 5, without-arm 5 of 5; `outcome-oneoff-no-emoji` (an emoji from one sample copied), without-arm 3 of 5,
+with-arm 0 of 5. The English case ties at 1.00: plain Claude already matched every habit there, so it shows no
+headroom. As in every earlier round, the skill's gain comes from one case of two, and it is small.

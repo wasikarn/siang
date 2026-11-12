@@ -107,13 +107,13 @@ Latest blind round per skill (details in `evals/README.md`):
 
 | skill | round (version) | with-skill mean | mean Δ | worst case Δ |
 |---|---|---|---|---|
-| `personal-voice` | fresh blind pair (0.1.37) | 0.975 | +0.017 | 0.00 |
+| `personal-voice` | blind `holdout6` pair (0.1.39) | 0.987 | +0.04 | 0.00 |
 | `humanize` | fifth round (0.1.36) | 0.98 | +0.15 | 0.00 |
 | `technical-writing` | fifth round (0.1.36) | 0.956 | +0.144 | +0.11 |
 
 The same 0.1.36 run also reran an older `technical-writing` case outside the round, which lost by −0.025.
-`personal-voice` 0.1.39 reran the same pair (0.992, +0.033), but that is not blind: one 0.1.39 fix (ปล. as a P.S.)
-was added after a reviewer pointed at a line in that pair, so 0.1.37 stays the blind result.
+A rerun of the earlier `personal-voice` pair on 0.1.39 (0.992, +0.033) is not counted as blind: one 0.1.39 fix
+(ปล. as a P.S.) came after a reviewer pointed at a line in that pair.
 
 `thai-pua-repair` passes with a mean delta of +0.095 (score 1.00). Method, criteria history and per-run cost are
 in `evals/README.md` and `docs/eval-runs/`.
