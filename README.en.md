@@ -91,7 +91,7 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` |
-| `evals/` | 66 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
+| `evals/` | 68 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
 | `docs/document-review/` | the document-review procedure (formerly a skill) and `doc_check.py` |
 | `docs/eval-runs/` | archived eval run results ([README](docs/eval-runs/README.md)) |
 | `tests/` | free checks that CI runs on every push |

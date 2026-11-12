@@ -24,8 +24,10 @@ for f in files:
             if n not in defs: bad.append(f"{f}:{i}: §{n} is not a section")
         for n in re.findall(r'cue #(\d+)', line, re.I):
             if n not in cues: bad.append(f"{f}:{i}: cue #{n} is not in cue-sheet.md")
-        for name, n in re.findall(r'`?([\w-]+\.md)`? +§(\d+(?:\.\d+)*)', line):  # "<file> §N" must name the defining file
+        # "<file> §N", "<file> (§N)", "(<file>, §N)" must name the defining file; a bare "<file>, §N" is a list, not a pointer
+        for m in re.finditer(r"\(`([\w-]+\.md)`, §(\d+(?:\.\d+)*)|`?([\w-]+\.md)`?(?:'s)? ?\(?§(\d+(?:\.\d+)*)", line):
             if f.startswith('evals/'): break  # graders stay frozen once run; their prose is not read by the skill
+            name, n = m.group(1) or m.group(3), m.group(2) or m.group(4)
             if n in defs and os.path.basename(defs[n]) != name: bad.append(f"{f}:{i}: §{n} is in {defs[n]}, not {name}")
 for f in skill + sorted(glob.glob('skills/humanize/scripts/*.py')):  # the skill has no README.md since it became a skill again
     for i, line in enumerate(open(f), 1):

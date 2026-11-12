@@ -33,5 +33,5 @@ current cases.
 | `2026-11-12-0.1.37-personal-voice-fresh-blind.json` | fresh blind `holdout5-personal-voice-*` pair, 5 per arm, $3.30 |
 | `2026-11-12-0.1.39-personal-voice-fresh-blind.json` | same pair rerun on 0.1.39 (not blind, see `evals/README.md`), 5 per arm, $3.29 |
 | `2026-11-12-0.1.39-personal-voice-holdout6-blind.json` | blind `holdout6-personal-voice-*` pair on 0.1.39, 5 per arm, $3.53 |
-| `2026-11-12-0.1.40-humanize-short.json` | `holdout4-humanize-*` pair on the short 0.1.40 `humanize`, 5 per arm, $4.28 |
+| `2026-11-12-0.1.40-humanize-short.json` | `holdout4-humanize-*` pair on the short 0.1.40 `humanize` (rerun on known cases, not fresh blind), 5 per arm, $4.28 |
 | `2026-11-12-0.1.41-humanize-holdout7-blind.json` | blind `holdout7-humanize-*` pair on 0.1.41, 5 per arm, $3.58 |

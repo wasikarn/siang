@@ -64,4 +64,8 @@ for (const g of fs.readdirSync(gdir).sort()) {
 process.exit(bad);
 JS
 done
+n=$(find "$root/evals" -mindepth 2 -maxdepth 2 -name case.yaml | wc -l | tr -d ' ')
+for r in README.md README.en.md; do  # the layout table states the case count
+  grep -q "| \`evals/\` | $n " "$root/$r" || { echo "FAIL $r: evals/ row does not say $n cases"; fail=1; }
+done
 [ "$fail" -eq 0 ] && echo "graders: all cases pass" || exit 1

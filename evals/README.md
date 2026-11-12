@@ -434,13 +434,14 @@ on all 32 archived files at the time; `skill-fired` was scored only in with-arm-
 above is already an outcome-only Δ.
 
 One verdict run per blind case (the round's run on the version it judged; tuned and rerun results left out), mean
-over cases, cost per agent run in USD. The `humanize` row is the 0.1.36 long text; 0.1.40 is in the next section.
+over cases, cost per agent run in USD. The `humanize` row is the 0.1.36 long text on its four older cases plus 0.1.41 on the `holdout7` pair (added
+later); 0.1.40 is a rerun and is left out.
 Corrected after a later audit: the `personal-voice` and `document-review` rows first used the 0.1.34 and 0.1.36
 reruns of the `holdout3` cases; they now use the round's 0.1.33 runs (scores unchanged):
 
 | skill | blind cases | with / without | mean Δ | cases with Δ > 0.05 | ties (\|Δ\| ≤ 0.05) | worst Δ | cost per run with / without | turns with / without |
 |---|---|---|---|---|---|---|---|---|
-| `humanize` | 4 | 0.990 / 0.915 | +0.075 | 1 | 3 | 0.00 | 0.205 / 0.121 (1.7x) | 6.9 / 4.2 |
+| `humanize` | 6 | 0.993 / 0.943 | +0.050 | 1 | 5 | 0.00 | 0.217 / 0.120 (1.8x) | 7.6 / 4.2 |
 | `technical-writing` | 8 | 0.976 / 0.947 | +0.030 | 2 | 5 | −0.07 | 0.191 / 0.161 (1.2x) | 6.5 / 4.6 |
 | `personal-voice` | 10 | 0.973 / 0.945 | +0.027 | 2 | 8 | 0.00 | 0.199 / 0.113 (1.8x) | 7.0 / 4.7 |
 | `document-review` (now a doc) | 6 | 1.000 / 1.000 | 0.000 | 0 | 6 | 0.00 | 0.213 / 0.164 (1.3x) | 5.5 / 4.8 |
@@ -513,3 +514,10 @@ for the operator's go. Also reported, not part of the verdict: cost and turns pe
 already removes these tells and keeps these facts, so the pair shows no gain, like most blind `humanize` cases; the
 only blind gain on record is the fifth-round Thai case (+0.30 on 0.1.36). Cost per run with / without: Thai
 $0.305 / $0.122 (turns 11.2 / 4.2), English $0.178 / $0.112 (turns 7.0 / 3.8).
+
+What the pass shows, from a later review: an unedited fixture already scores 0.67 on each case (8 of 12), and the
+four graders it fails only check that listed words, emoji and em dashes are gone. No grader checks a tell that only
+the skill's catalog targets (the PR's bold-colon labels, §15 and §16; the Thai `นอกจากนี้`), and none checks the
+lines 0.1.41 restored. So the pair can show harm, not gain, and this pass means no harm. Known grader limits, left
+frozen: three PR fact graders reject correct rewrites ("Each API key gets 120", "Burst: 30", "9,000 search
+requests"), the Thai window grader does not require the year 2569, and `ทำการ` also matches `วันทำการ`.
