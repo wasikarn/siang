@@ -530,3 +530,23 @@ blind round:
   write "per `grit.md`, Voice".
 - `skills/humanize/SKILL.md` step 4 says "vary sentence length" with no condition, while `grit.md` Voice keeps a
   sample's short sentences short: write "vary sentence length (unless a sample sets it)".
+
+## Agent workflows considered, not built (2026-11-12, no run)
+
+Question: would `humanize` do better as a multi-agent workflow (a `workflows/` script, a critic subagent, or a
+separate draft, critic and revise loop)? Decision: keep it a single skill. Reasons, from this file and two sources:
+- No room to show a gain: plain Claude scores 1.00 on 5 of the 6 blind `humanize` cases; the only gain is the Thai
+  release announcement (+0.30).
+- Steps 5 and 6 already form a critic and revise loop, and `scan.py` gives it an outside check. Studies of
+  self-correction with no outside check (Huang et al., ICLR 2024, and later surveys) found no gain on reasoning, QA,
+  code and planning tasks; style editing was not tested.
+- The skill already costs 1.8x a plain run (11.2 turns against 4.2 on the `holdout7` Thai case); more agents add
+  turns.
+- Anthropic's "When to fold subagents into your main agent loop" (2026-10-22) keeps subagents for context bloat,
+  parallel fresh-context work, or tool-choice trouble. `humanize` edits one short text in order, so none applies.
+- A plugin workflow runs only when the user asks for it (`/siang:<name>`, "use a workflow" or ultracode), so it
+  would not start on its own the way the skill did in 10 of 10 with-arm runs. Whether `claude plugin eval` can run a
+  workflow arm is not verified, so the blind A/B rule may not be applicable to one.
+
+Worth testing only if a new blind pair of long Thai text (where plain Claude scores below 1.00) is written: three
+arms (no plugin, skill, skill plus a fresh-context critic subagent), with the critic kept only if it wins there.
