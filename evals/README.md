@@ -521,3 +521,12 @@ the skill's catalog targets (the PR's bold-colon labels, §15 and §16; the Thai
 lines 0.1.41 restored. So the pair can show harm, not gain, and this pass means no harm. Known grader limits, left
 frozen: three PR fact graders reject correct rewrites ("Each API key gets 120", "Burst: 30", "9,000 search
 requests"), the Thai window grader does not require the year 2569, and `ทำการ` also matches `วันทำการ`.
+
+### Deferred to the next `humanize` change
+
+Found after the 0.1.41 run; any skill edit voids that result, so these wait for the next change that gets its own
+blind round:
+- `skills/humanize/patterns-universal.md` §14 says "per the Voice section", which moved to `grit.md` in 0.1.40:
+  write "per `grit.md`, Voice".
+- `skills/humanize/SKILL.md` step 4 says "vary sentence length" with no condition, while `grit.md` Voice keeps a
+  sample's short sentences short: write "vary sentence length (unless a sample sets it)".
