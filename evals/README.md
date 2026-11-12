@@ -418,33 +418,37 @@ route. No bare-only pilot was run; the no-skill arm is the bare measurement. Not
 
 5 runs per arm, $3.53. With-skill / without / Δ: `holdout6-personal-voice-bakery-closure` 0.97 / 0.89 / +0.08,
 `holdout6-personal-voice-db-maintenance` 1.00 / 1.00 / 0.00. With-skill mean 0.987, mean Δ +0.04, no case loses:
-`personal-voice` 0.1.39 passes the rule. Outcome-only scores (the `outcome-*` graders) are the same numbers: the
-gain is in the drafts, not only in the route. The misses: `outcome-self-reference` (the writer calls herself พี่),
+`personal-voice` 0.1.39 passes the rule. Outcome-only scores (the `outcome-*` graders) are the same numbers by
+construction, not as a finding: `process-skill-fired` is unscored in with/without runs (see the next section), so
+every scored grader already judges the draft. The misses: `outcome-self-reference` (the writer calls herself พี่),
 with-arm 2 of 5, without-arm 5 of 5; `outcome-oneoff-no-emoji` (an emoji from one sample copied), without-arm 3 of 5,
-with-arm 0 of 5. The English case ties at 1.00: plain Claude already matched every habit there, so it shows no
+with-arm 0 of 5. `outcome-self-reference` is loose: its pattern `พี่(?!ๆ)` also passes a spaced `พี่ ๆ` or
+`พี่ลูกค้า` addressing the reader, so some with-arm passes may be false; the grader stays frozen. The English case ties at 1.00: plain Claude already matched every habit there, so it shows no
 headroom. As in every earlier round, the skill's gain comes from one case of two, and it is small.
 
 ## Outcome and cost across all blind rounds (2026-11-12, from `docs/eval-runs/`, no new run)
 
 Process graders were never part of these scores: in every with/without run the `skill-fired` grader is recorded with
 `"withOnly": true, "scored": false`, and each run's `score` equals the weighted mean of its scored graders (checked
-on all 32 archived files; `skill-fired` was scored only in with-arm-only runs, where it always passed). So every Δ
+on all 32 archived files at the time; `skill-fired` was scored only in with-arm-only runs, where it always passed). So every Δ
 above is already an outcome-only Δ.
 
 One verdict run per blind case (the round's run on the version it judged; tuned and rerun results left out), mean
-over cases, cost per agent run in USD:
+over cases, cost per agent run in USD. The `humanize` row is the 0.1.36 long text; 0.1.40 is in the next section.
+Corrected after a later audit: the `personal-voice` and `document-review` rows first used the 0.1.34 and 0.1.36
+reruns of the `holdout3` cases; they now use the round's 0.1.33 runs (scores unchanged):
 
 | skill | blind cases | with / without | mean Δ | cases with Δ > 0.05 | ties (\|Δ\| ≤ 0.05) | worst Δ | cost per run with / without | turns with / without |
 |---|---|---|---|---|---|---|---|---|
 | `humanize` | 4 | 0.990 / 0.915 | +0.075 | 1 | 3 | 0.00 | 0.205 / 0.121 (1.7x) | 6.9 / 4.2 |
 | `technical-writing` | 8 | 0.976 / 0.947 | +0.030 | 2 | 5 | −0.07 | 0.191 / 0.161 (1.2x) | 6.5 / 4.6 |
-| `personal-voice` | 10 | 0.973 / 0.945 | +0.027 | 2 | 8 | 0.00 | 0.219 / 0.112 (2.0x) | 8.0 / 4.4 |
-| `document-review` (now a doc) | 6 | 1.000 / 1.000 | 0.000 | 0 | 6 | 0.00 | 0.215 / 0.165 (1.3x) | 5.5 / 4.7 |
+| `personal-voice` | 10 | 0.973 / 0.945 | +0.027 | 2 | 8 | 0.00 | 0.199 / 0.113 (1.8x) | 7.0 / 4.7 |
+| `document-review` (now a doc) | 6 | 1.000 / 1.000 | 0.000 | 0 | 6 | 0.00 | 0.213 / 0.164 (1.3x) | 5.5 / 4.8 |
 
 The gains sit in few cases: `humanize` in the Thai release announcement (+0.30), `technical-writing` in the two
 `holdout6` cases (+0.18, +0.11), `personal-voice` in `terse-lower` (+0.10) and `bakery-closure` (+0.08). Most
 blind cases tie because plain Claude already scores 1.00 on them, so they cannot show a gain. Every skill costs more
-per run (1.2x to 2.0x, from extra turns spent reading the skill and running its script), which is a few US cents per
+per run (1.2x to 1.8x, from extra turns spent reading the skill and running its script), which is a few US cents per
 run in absolute terms. `thai-pua-repair` has no archived with/without run, so it is not in the table.
 
 ## `humanize` rewritten short (0.1.40, 2026-11-12, before the run)
@@ -478,4 +482,5 @@ the score shows no change either way. Cost per with-arm run on the Thai case ros
 from 8 to 11.4; on the English case it was $0.19 before and $0.18 after. The with-arm misses on the Thai case are the
 same three graders as the interrupted long-text run (`clean-paragraph-and-quote-kept` 4 of 5, `one-spelling-per-term`
 3 of 5, `no-chat-closer-or-particle-run` 2 of 5). As the mh pilot found, the short text is easier to read but not
-cheaper: the extra turns are reads of the sibling files.
+cheaper. The extra turns on the Thai case are probably reads of the sibling files, but the archive keeps no
+traces to show it, and with-arm turns on the English case fell slightly (6.6 to 6.4).

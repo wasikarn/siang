@@ -91,7 +91,7 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` |
-| `evals/` | 64 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
+| `evals/` | 66 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
 | `docs/document-review/` | the document-review procedure (formerly a skill) and `doc_check.py` |
 | `docs/eval-runs/` | archived eval run results ([README](docs/eval-runs/README.md)) |
 | `tests/` | free checks that CI runs on every push |
@@ -103,15 +103,18 @@ A skill stays in the plugin only if its with-skill mean is above 0.90 (5 runs pe
 no-skill arm by more than 0.05, on held-out cases written by an agent that never saw the skill, with graders
 frozen before the run. Look at the per-case delta, not the overall score: plain Claude scores high on many cases.
 
-Latest blind round per skill (details in `evals/README.md`):
+Latest round per skill (details in `evals/README.md`):
 
 | skill | round (version) | with-skill mean | mean Δ | worst case Δ |
 |---|---|---|---|---|
 | `personal-voice` | blind `holdout6` pair (0.1.39) | 0.987 | +0.04 | 0.00 |
-| `humanize` | `holdout4` pair, short text (0.1.40) | 0.91 | +0.09 | 0.00 |
+| `humanize` | `holdout4` pair rerun, short text (0.1.40) | 0.91 | +0.09 | 0.00 |
 | `technical-writing` | fifth round (0.1.36) | 0.956 | +0.144 | +0.11 |
 
-The same 0.1.36 run also reran an older `technical-writing` case outside the round, which lost by −0.025.
+The fifth round also reran an older `technical-writing` case outside the round, which lost by −0.025.
+The `humanize` row reruns the fifth-round pair: the cases were written blind and did not drive the rewrite, but
+the skill changed after their 0.1.36 results were seen, so it is not a fresh blind result (fifth round, long text:
+0.98, +0.15).
 A rerun of the earlier `personal-voice` pair on 0.1.39 (0.992, +0.033) is not counted as blind: one 0.1.39 fix
 (ปล. as a P.S.) came after a reviewer pointed at a line in that pair.
 

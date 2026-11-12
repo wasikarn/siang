@@ -88,7 +88,7 @@ python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` ไฟล์เดียว |
-| `evals/` | 64 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
+| `evals/` | 66 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
 | `docs/document-review/` | ขั้นตอนตรวจเอกสาร (เดิมเป็น skill) และ `doc_check.py` |
 | `docs/eval-runs/` | ผลรัน eval ที่เก็บไว้ ([README](docs/eval-runs/README.md)) |
 | `tests/` | เช็กฟรีที่ CI รันทุก push |
@@ -100,15 +100,17 @@ skill ตัวหนึ่งอยู่ใน plugin ได้เมื่อ
 เปล่า ๆ เกิน 0.05 บนเคส held-out ที่เขียนโดย agent ที่ไม่เคยเห็น skill และ grader ถูกแช่แข็งก่อนรัน
 ตัวเลขที่ควรดูคือส่วนต่างต่อเคส ไม่ใช่คะแนนรวม เพราะ Claude เปล่า ๆ ได้คะแนนสูงในหลายเคส
 
-รอบ blind ล่าสุดของแต่ละ skill (รายละเอียดใน `evals/README.md`):
+รอบล่าสุดของแต่ละ skill (รายละเอียดใน `evals/README.md`):
 
 | skill | รอบ (เวอร์ชัน) | with-skill mean | Δ เฉลี่ย | Δ เคสแย่สุด |
 |---|---|---|---|---|
 | `personal-voice` | คู่เคส blind `holdout6` (0.1.39) | 0.987 | +0.04 | 0.00 |
-| `humanize` | คู่เคส `holdout4` ข้อความสั้น (0.1.40) | 0.91 | +0.09 | 0.00 |
+| `humanize` | รันซ้ำคู่เคส `holdout4` ข้อความสั้น (0.1.40) | 0.91 | +0.09 | 0.00 |
 | `technical-writing` | รอบที่ห้า (0.1.36) | 0.956 | +0.144 | +0.11 |
 
-รันเดียวกันบน 0.1.36 ยังรันเคส `technical-writing` เก่าอีกเคสนอกรอบ และเคสนั้นแพ้ −0.025
+รอบที่ห้ายังรันเคส `technical-writing` เก่าอีกเคสนอกรอบ และเคสนั้นแพ้ −0.025
+แถว `humanize` คือการรันซ้ำคู่เคสของรอบที่ห้า เคสเขียนแบบ blind และไม่ได้เป็นตัวกำหนดการเขียนใหม่ แต่ skill
+ถูกแก้หลังจากเห็นผล 0.1.36 ของเคสคู่นี้แล้ว จึงไม่นับเป็นผล blind รอบใหม่ (รอบที่ห้าบนข้อความยาว: 0.98, +0.15)
 ผลรันซ้ำเคสคู่เดิมของ `personal-voice` บน 0.1.39 (0.992, +0.033) ไม่นับเป็น blind เพราะการแก้ข้อหนึ่งของ 0.1.39
 (จับ ปล. เป็น P.S.) เพิ่มเข้ามาหลังจาก reviewer ชี้บรรทัดในเคสคู่นั้น
 
