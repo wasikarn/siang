@@ -1,7 +1,7 @@
 # siang (เสียง)
 
 A Claude Code plugin for Thai and English writing: repair text extracted from Thai PDFs, remove AI tells
-from prose, write in your own voice, draft docs, and review records.
+from prose, write in your own voice, and draft docs.
 
 [ภาษาไทย](README.md)
 
@@ -12,7 +12,7 @@ bullets of exactly equal length, a Thai notice that ends every sentence in ค�
 then stop trusting the rest. The other problem is a Thai PDF that copies out as garbage characters, so search
 and RAG fail.
 
-siang bundles five skills for these two problems. เสียง means "voice".
+siang bundles four skills for these two problems. เสียง means "voice".
 
 ## Install
 
@@ -32,14 +32,12 @@ a sentence. If the task matches a skill's description, Claude picks it on its ow
 | `siang:humanize` | a chat message, standup, PR, commit, UI string, ADR or README reads like AI | scans for tells by pattern and rewrites; English, Thai and mixed |
 | `siang:personal-voice` | you want writing that sounds like you | builds a voice profile from your own samples, then drafts in it |
 | `siang:technical-writing` | you need a README, how-to, tutorial, reference page, runbook, ADR or release note | writes so the reader can finish the task; facts come from code and real command output |
-| `siang:document-review` | you need an SOP, runbook, policy, spec or change record audited against its standard | reports findings, or fixes them when asked |
 
 Example prompts:
 
 ```
 Use siang:thai-pua-repair: extract report.pdf and repair the Thai text
 Use siang:humanize on this PR description draft
-Use siang:document-review to check this runbook against our team checklist
 ```
 
 ### thai-pua-repair
@@ -60,15 +58,16 @@ python3 skills/thai-pua-repair/scripts/pua_pdf.py in.pdf out.pdf
 
 `pua_pdf.py` changes only each font's `/ToUnicode` stream; the pages render the same.
 
-### document-review
+### Document review (no longer a skill)
 
-`skills/document-review/scripts/doc_check.py` finds what a machine can check in a Markdown record: unresolved
+`document-review` became a plain doc in 0.1.38: on blind eval cases it scored the same as plain Claude.
+The procedure is in [`docs/document-review/README.md`](docs/document-review/README.md), and `docs/document-review/doc_check.py` finds what a machine can check in a Markdown record: unresolved
 cross-references, skipped or repeated heading and list numbers, conflicting quantities (30 minutes vs 30 s),
-unexpanded acronyms, impossible dates, and missing or misordered sections. The output is candidates for a person
-or the skill to judge:
+unexpanded acronyms, impossible dates, and missing or misordered sections. The output is candidates for a person to
+judge:
 
 ```bash
-python3 skills/document-review/scripts/doc_check.py runbook.md --sections "Purpose,Procedure,Rollback"
+python3 docs/document-review/doc_check.py runbook.md --sections "Purpose,Procedure,Rollback"
 ```
 
 ### humanize
@@ -91,9 +90,9 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 | `skills/humanize/` | `SKILL.md`, cue sheet, universal and Thai patterns, examples, references, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
-| `skills/document-review/` | `SKILL.md`, `scripts/doc_check.py` |
 | `skills/technical-writing/` | `SKILL.md` |
 | `evals/` | 52 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
+| `docs/document-review/` | the document-review procedure (formerly a skill) and `doc_check.py` |
 | `docs/eval-runs/` | archived eval run results ([README](docs/eval-runs/README.md)) |
 | `tests/` | free checks that CI runs on every push |
 | `GLOSSARY.md` | project terms |
@@ -110,7 +109,6 @@ Latest results (each measured on the skill text named in `evals/README.md`):
 |---|---|---|
 | `personal-voice` (measured on 0.1.34) | 0.9925 | 0.00 |
 | `humanize` | 0.94 | −0.03 |
-| `document-review` (measured on 0.1.36) | 0.972 | 0.00 |
 | `technical-writing` | 0.985 | −0.03 |
 
 `thai-pua-repair` passes with a mean delta of +0.095 (score 1.00). Method, criteria history and per-run cost are

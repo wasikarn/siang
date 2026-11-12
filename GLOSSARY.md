@@ -1,6 +1,6 @@
 # siang
 
-siang repairs Thai text extracted from PDFs, and ships writing skills (`skills/humanize/`, `skills/personal-voice/`, `skills/technical-writing/`, `skills/document-review/`) for removing AI writing tells, drafting in a user's own voice, writing docs and reviewing records, in English and Thai. These are the terms its rules, evals and reviews use.
+siang repairs Thai text extracted from PDFs, and ships writing skills (`skills/humanize/`, `skills/personal-voice/`, `skills/technical-writing/`) for removing AI writing tells, drafting in a user's own voice and writing docs, plus a document-review procedure kept as a plain doc (`docs/document-review/`), in English and Thai. These are the terms its rules, evals and reviews use.
 
 ## Writing
 

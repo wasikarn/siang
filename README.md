@@ -1,7 +1,7 @@
 # siang (เสียง)
 
 plugin ของ Claude Code สำหรับงานเขียนภาษาไทยและอังกฤษ: ซ่อมข้อความที่ดึงจาก PDF ไทยแล้วเพี้ยน
-เอากลิ่น AI ออกจากงานเขียน เขียนด้วยเสียงของคุณเอง ร่างเอกสาร และตรวจเอกสารบันทึก
+เอากลิ่น AI ออกจากงานเขียน เขียนด้วยเสียงของคุณเอง และร่างเอกสาร
 
 [English](README.en.md)
 
@@ -11,7 +11,7 @@ plugin ของ Claude Code สำหรับงานเขียนภาษ
 ประกาศภาษาไทยที่ลงท้ายครับทุกประโยค คนอ่านรู้ตั้งแต่บรรทัดแรก แล้วก็เลิกเชื่อส่วนที่เหลือ
 อีกปัญหาคือ PDF ไทยที่ copy ออกมาแล้วได้อักขระประหลาด ค้นหาไม่ได้ ใช้กับ RAG ไม่ได้
 
-siang รวม skill 5 ตัวที่แก้สองเรื่องนี้ ชื่อ "เสียง" แปลว่า voice
+siang รวม skill 4 ตัวที่แก้สองเรื่องนี้ ชื่อ "เสียง" แปลว่า voice
 
 ## ติดตั้ง
 
@@ -31,14 +31,12 @@ claude plugin install siang@siang
 | `siang:humanize` | แก้ chat, standup, PR, commit, ข้อความใน UI, ADR, README ให้ไม่เหมือน AI เขียน | ไล่ tell ตาม pattern แล้วเขียนใหม่ ทั้งอังกฤษ ไทย และไทยปนอังกฤษ |
 | `siang:personal-voice` | อยากให้งานเขียนฟังเหมือนคุณ | สร้าง profile เสียงจากตัวอย่างงานของคุณ แล้วร่างตาม profile |
 | `siang:technical-writing` | ร่างหรือปรับ README, how-to, tutorial, reference, runbook, ADR, release note | เขียนให้ผู้อ่านทำงานจนเสร็จได้ ข้อมูลมาจาก code และผลคำสั่งจริง |
-| `siang:document-review` | ตรวจ SOP, runbook, policy, spec, change record เทียบกับมาตรฐานของมัน | รายงานข้อบกพร่อง หรือแก้ให้เมื่อสั่ง |
 
 ตัวอย่าง prompt:
 
 ```
 ใช้ siang:thai-pua-repair: extract report.pdf แล้วซ่อมข้อความไทย
 ใช้ siang:humanize ปรับ draft PR description นี้
-ใช้ siang:document-review ตรวจ runbook นี้เทียบกับ checklist ของทีม
 ```
 
 ### thai-pua-repair
@@ -59,14 +57,15 @@ python3 skills/thai-pua-repair/scripts/pua_pdf.py in.pdf out.pdf
 
 `pua_pdf.py` แก้เฉพาะ `/ToUnicode` ของแต่ละฟอนต์ หน้าตาของหน้า PDF ไม่เปลี่ยน
 
-### document-review
+### ตรวจเอกสาร (ไม่ใช่ skill แล้ว)
 
-`skills/document-review/scripts/doc_check.py` หาจุดที่เช็กด้วยเครื่องได้ใน Markdown: cross-reference ที่หาไม่เจอ, เลข
+`document-review` ถูกลดเป็นเอกสารธรรมดาใน 0.1.38 เพราะใน eval แบบ blind ได้คะแนนเท่า Claude เปล่า ๆ
+ขั้นตอนอยู่ใน [`docs/document-review/README.md`](docs/document-review/README.md) ส่วน `docs/document-review/doc_check.py` หาจุดที่เช็กด้วยเครื่องได้ใน Markdown: cross-reference ที่หาไม่เจอ, เลข
 หัวข้อและรายการที่ข้ามหรือซ้ำ, ปริมาณที่ขัดกัน (30 minutes กับ 30 s), ตัวย่อที่ไม่เคยอธิบาย, วันที่ที่เป็นไปไม่ได้
-และ section ที่ขาดหรือผิดลำดับ ผลเป็น candidate ให้คนหรือ skill ตัดสินต่อ:
+และ section ที่ขาดหรือผิดลำดับ ผลเป็น candidate ให้คนตัดสินต่อ:
 
 ```bash
-python3 skills/document-review/scripts/doc_check.py runbook.md --sections "Purpose,Procedure,Rollback"
+python3 docs/document-review/doc_check.py runbook.md --sections "Purpose,Procedure,Rollback"
 ```
 
 ### humanize
@@ -88,9 +87,9 @@ python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้
 | `skills/humanize/` | `SKILL.md`, cue sheet, pattern สากลและไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
-| `skills/document-review/` | `SKILL.md`, `scripts/doc_check.py` |
 | `skills/technical-writing/` | `SKILL.md` ไฟล์เดียว |
 | `evals/` | 52 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
+| `docs/document-review/` | ขั้นตอนตรวจเอกสาร (เดิมเป็น skill) และ `doc_check.py` |
 | `docs/eval-runs/` | ผลรัน eval ที่เก็บไว้ ([README](docs/eval-runs/README.md)) |
 | `tests/` | เช็กฟรีที่ CI รันทุก push |
 | `GLOSSARY.md` | ศัพท์ของโปรเจกต์ |
@@ -107,7 +106,6 @@ skill ตัวหนึ่งอยู่ใน plugin ได้เมื่อ
 |---|---|---|
 | `personal-voice` (วัดบน 0.1.34) | 0.9925 | 0.00 |
 | `humanize` | 0.94 | −0.03 |
-| `document-review` (วัดบน 0.1.36) | 0.972 | 0.00 |
 | `technical-writing` | 0.985 | −0.03 |
 
 `thai-pua-repair` ผ่านด้วย Δ เฉลี่ย +0.095 (คะแนน 1.00) วิธีวัด ประวัติเกณฑ์ และต้นทุนต่อรอบอยู่ใน

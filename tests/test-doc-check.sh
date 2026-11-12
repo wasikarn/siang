@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# skills/document-review/scripts/doc_check.py finds the planted mechanical defects in a small SOP, stays quiet on a
+# docs/document-review/doc_check.py finds the planted mechanical defects in a small SOP, stays quiet on a
 # clean one, and skips code blocks. Run: bash tests/test-doc-check.sh
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
-dc="$root/skills/document-review/scripts/doc_check.py"
+dc="$root/docs/document-review/doc_check.py"
 work=$(mktemp -d)
 trap 'python3 -c "import shutil,sys; shutil.rmtree(sys.argv[1])" "$work"' EXIT
 fail=0
