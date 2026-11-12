@@ -72,9 +72,57 @@ check "draft number words not habits"          'j["draft"]["number_words_not_hab
 python3 "$vs" "$work/n1.txt" "$work/n2.txt" "$work/n3.txt" --draft "$work/n3.txt" > "$work/out.json"
 check "digits-only draft has no number words"  'j["draft"]["number_words_not_habit"] == []'
 
-if python3 "$vs" "$work/missing.txt" > /dev/null 2>"$work/err"; then
-  echo "FAIL missing file should exit non-zero"; fail=1
-elif grep -q "cannot read" "$work/err"; then echo "PASS missing file exits non-zero with a message"
-else echo "FAIL missing file message"; fail=1; fi
+# words that only contain a particle or hedge are not one: และ (and) is not ละ, สิ่ง/สิบ are not สิ, อาจารย์ is not
+# อาจ, every/delivery are not "very", adjust is not "just"; an email is not an @mention, #123 is not a hashtag,
+# "ps aux" is not a P.S.; real particles at a phrase end still count, also when stacked (แล้วนะครับ)
+printf 'ทีมและฝ่ายขายคุยกัน สิ่งที่ค้างมีสิบข้อ ถามอาจารย์ก่อน\n' > "$work/w1.txt"
+printf 'every delivery must adjust the plan, mail bob@example.com about #123\n' > "$work/w2.txt"
+printf 'ps aux shows it\n' > "$work/w3.txt"
+printf 'มาเลย ไปด้วยนะ เสร็จแล้วนะครับ ส่งแล้วฮะ อาจจะช้า it just works\n' > "$work/w4.txt"
+python3 "$vs" "$work/w1.txt" "$work/w2.txt" "$work/w3.txt" "$work/w4.txt" > "$work/out.json"
+w() { echo "j['samples'][[k for k in j['samples'] if k.endswith('$1')][0]]"; }
+check "Thai words holding a particle or hedge are not one" "$(w w1.txt)['particles'] == {} and $(w w1.txt)['hedges'] == {}"
+check "every/delivery/adjust are not hedges"   "$(w w2.txt)['hedges'] == {}"
+check "email and #123 are not symbols"          "$(w w2.txt)['symbols'] == {}"
+check "ps aux is not a P.S."                    "'ps' not in $(w w3.txt)['symbols']"
+check "real Thai particles still count"         "$(w w4.txt)['particles'] == {'เลย': 1, 'ด้วย': 1, 'นะ': 2, 'แล้ว': 2, 'ครับ': 1, 'ฮะ': 1}"
+check "real hedges still count"                 "$(w w4.txt)['hedges'] == {'อาจ': 1, 'just': 1}"
+
+# a real P.S. still counts; a polite particle glued to the next Thai word still counts, คะแนน is not คะ, #123 next to
+# Thai is not a hashtag
+printf 'PS I will be late\n' > "$work/p1.txt"; printf 'PS. see you\n' > "$work/p2.txt"; printf 'P.S. thanks\n' > "$work/p3.txt"
+printf 'ขอบคุณครับพี่ ได้เลยค่ะทุกคน คะแนนดี fixed in #123ครับ\n' > "$work/glued.txt"
+python3 "$vs" "$work/p1.txt" "$work/p2.txt" "$work/p3.txt" "$work/glued.txt" > "$work/out.json"
+check "PS, PS. and P.S. are a P.S."             "all(j['samples'][[k for k in j['samples'] if k.endswith(f)][0]]['symbols'].get('ps') == 1 for f in ['p1.txt', 'p2.txt', 'p3.txt'])"
+check "polite particle before Thai counts"      "$(w glued.txt)['particles'] == {'ครับ': 2, 'เลย': 1, 'ค่ะ': 1}"
+check "#123 glued to Thai is not a hashtag"     "'hashtag' not in $(w glued.txt)['symbols']"
+
+# a draft whose particles are stretched (นะะ), doubled (ครับๆ), stacked before Thai (แล้วนะคะทุกคน) or นะ before a
+# name (นะพี่) has the particle, so habits_absent must not ask for it; P.Somchai is not a P.S., ปล. is; มากๆ is a hedge
+printf 'ฝากด้วยนะ\nพรุ่งนี้เจอกัน\n' > "$work/h1.txt"; printf 'ส่งแล้วนะ\nเช็กอีกรอบ\n' > "$work/h2.txt"
+printf 'ฝากดูนะพี่\nโอเคนะะ\nเสร็จแล้วนะคะทุกคน\nครับๆ ดีมากๆ\n' > "$work/hd.txt"
+python3 "$vs" "$work/h1.txt" "$work/h2.txt" --draft "$work/hd.txt" > "$work/out.json"
+check "particles the draft has are not absent"  "'particle: นะ' not in j['draft']['habits_absent']"
+check "stretched, doubled, stacked particles"   "j['draft']['features']['particles'] == {'นะ': 3, 'แล้ว': 1, 'คะ': 1, 'ครับ': 1}"
+check "มากๆ without a space is a hedge"         "j['draft']['features']['hedges'] == {'มาก ๆ': 1}"
+printf 'P.Somchai said hi\n' > "$work/ps1.txt"; printf 'ปล. พรุ่งนี้หยุด\nปลาทูทอด\n' > "$work/ps2.txt"
+python3 "$vs" "$work/ps1.txt" "$work/ps2.txt" > "$work/out.json"
+check "P.Somchai is not a P.S."                 "'ps' not in $(w ps1.txt)['symbols']"
+check "ปล. is a P.S., ปลา is not"               "$(w ps2.txt)['symbols'].get('ps') == 1"
+printf 'fyi deploy เสร็จแล้ว\nเดี๋ยวดูให้\nok ไปต่อ\n' > "$work/mixed.txt"
+python3 "$vs" "$work/mixed.txt" > "$work/out.json"
+check "Thai-initial lines do not cancel lowercase style" "$(w mixed.txt)['all_lowercase_start'] is True"
+
+printf '123 started\n456 done\n' > "$work/digits.txt"
+python3 "$vs" "$work/digits.txt" > "$work/out.json"
+check "no letter-initial sentence is not lowercase style" "$(w digits.txt)['all_lowercase_start'] is False"
+
+rc=0; python3 "$vs" "$work/missing.txt" > /dev/null 2>"$work/err" || rc=$?
+if [ "$rc" -eq 1 ] && grep -q "cannot read" "$work/err"; then echo "PASS missing file exits 1 with a message"
+else echo "FAIL missing file: exit $rc, $(cat "$work/err")"; fail=1; fi
+printf '\xff\xfe bad bytes\n' > "$work/latin1.txt"
+rc=0; python3 "$vs" "$work/latin1.txt" > /dev/null 2>"$work/err" || rc=$?
+if [ "$rc" -eq 1 ] && grep -q "cannot read" "$work/err"; then echo "PASS non-UTF-8 file exits 1 with a message"
+else echo "FAIL non-UTF-8 file: exit $rc, $(tail -1 "$work/err")"; fail=1; fi
 
 exit $fail

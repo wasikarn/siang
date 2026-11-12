@@ -13,7 +13,7 @@ One file is one sample. Prints JSON:
 It measures; it does not judge. Thai has no sentence punctuation, so a Thai sentence is a line or a
 stretch ending in . ! ? (shortcut: no Thai word segmentation, so Thai recurring words are not counted;
 upgrade when a segmenter such as pythainlp is acceptable as a dependency).
-Exit: 0 ok, 2 bad arguments or unreadable file.
+Exit: 0 ok, 1 bad arguments or unreadable file.
 """
 import json
 import re
@@ -28,13 +28,41 @@ EMOJI = re.compile("[\U0001F300-\U0001FAFF☀-➿]")
 HEDGES_EN = ["maybe", "probably", "i think", "kind of", "sort of", "just", "really", "very", "actually",
              "basically", "pretty much", "tbh", "imo"]
 HEDGES_TH = ["น่าจะ", "อาจ", "ค่อนข้าง", "ประมาณ", "มาก ๆ", "จริง ๆ", "เหมือน"]
-PARTICLES = ["ครับ", "ค่ะ", "คะ", "นะ", "เลย", "แล้ว", "ด้วย", "จ้า", "จ้ะ", "ละ", "หรอก", "สิ", "เนอะ"]
-SYMBOLS = {"mention": re.compile(r"@[\w\u0e00-\u0e7f]+"), "hashtag": re.compile(r"(?<![\w&])#\w+"),
-           "url": re.compile(r"https?://\S+"), "ps": re.compile(r"^\s*p\.?s\.?(?::|\s)", re.I | re.M)}
+PARTICLES = ["ครับ", "ค่ะ", "คะ", "ฮะ", "นะ", "เลย", "แล้ว", "ด้วย", "จ้า", "จ้ะ", "ละ", "ล่ะ", "หรอก", "สิ", "เนอะ"]
+SYMBOLS = {"mention": re.compile(r"(?<![\w.])@[\w\u0e00-\u0e7f]+"),  # an email's @ follows a letter
+           # #123 is an issue number, also when Thai follows it
+           "hashtag": re.compile(r"(?<![\w&])#(?!\d+(?![^\W\u0e00-\u0e7f]))\w+"),
+           "url": re.compile(r"https?://\S+"),
+           # P.S., PS, ps: and Thai ปล.; not the "ps aux" command, initials (P.Somchai) or ปลา
+           "ps": re.compile(r"^\s*(?:[Pp]\.[Ss]\.?(?![A-Za-z])|PS\b|ps:|ปล\.?(?![\u0e00-\u0e7f]))", re.M)}
 NUMWORDS = re.compile(r"\b(?:zero|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|"
                       r"sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|"
                       r"hundred|thousand|million)\b", re.I)  # "one" is left out: it is also a pronoun
 THAI = re.compile("[฀-๿]")
+# Thai has no spaces between words, so a particle or hedge is matched only where it cannot be inside a longer
+# word: not after a leading vowel (และ is not ละ) and not before a following vowel or mark (อาจารย์ is not อาจ,
+# สิ่ง is not สิ). A particle, alone or stacked (แล้วนะครับ), must also end a Thai run (สิบ is not สิ, คะแนน is
+# not คะ), unless it is a stack of two or more (แล้วนะคะทุกคน) or ends in a particle few words end in (นะพี่,
+# ขอบคุณครับพี่). Stretched (นะะ) and doubled (ครับๆ) particles count once.
+# shortcut: a word ending in a particle's letters (ชนะ) and a conjunction แล้ว before a space still count;
+# upgrade with a Thai word segmenter.
+LEAD, MARK = "\u0e40-\u0e44", "\u0e30-\u0e3a\u0e45-\u0e4e"
+PART_ALT = "|".join(sorted(PARTICLES, key=len, reverse=True))
+PART_RUN = re.compile(rf"(?<![{LEAD}])(?:{PART_ALT})+(?![{MARK}])")
+BEFORE_THAI = {"ครับ", "ค่ะ", "ฮะ", "จ้า", "จ้ะ", "เนอะ", "หรอก", "นะ"}
+HEDGE_RX = {h: re.compile(rf"(?<![{LEAD}]){re.escape(h).replace(chr(92) + ' ', r'\s*')}(?![{MARK}])"  # มากๆ = มาก ๆ
+                         if THAI.search(h) else rf"\b{re.escape(h)}\b")
+            for h in HEDGES_EN + HEDGES_TH}
+
+
+def particles(text):
+    text = re.sub(r"([\u0e00-\u0e7f])\1+", r"\1", re.sub(r"\s*ๆ", "", text))  # นะะ -> นะ, ครับๆ -> ครับ
+    out = Counter()
+    for m in PART_RUN.finditer(text):
+        parts = re.findall(PART_ALT, m.group())
+        if not THAI.match(text[m.end():m.end() + 1]) or len(parts) > 1 or parts[-1] in BEFORE_THAI:
+            out.update(parts)
+    return out
 LATIN = re.compile("[A-Za-z]")
 
 
@@ -66,10 +94,11 @@ def features(text):
         "opener": (sents[0].split() or [""])[0] if sents else "",
         "sentence_openers": dict(Counter(s.split()[0].lower() for s in sents if s.split())),
         "closer": lines[-1] if lines else "",
-        "all_lowercase_start": bool(sents) and all(s[0].islower() for s in sents if s[0].isalpha()),
+        "all_lowercase_start": any(LATIN.match(s) for s in sents) and all(s[0].islower() for s in sents
+                                                                          if LATIN.match(s)),  # Thai has no case
         "thai_ratio": round(thai / (thai + latin), 2) if thai + latin else 0.0,
-        "hedges": {h: low.count(h) for h in HEDGES_EN + HEDGES_TH if low.count(h)},
-        "particles": {p: text.count(p) for p in PARTICLES if text.count(p)},
+        "hedges": {h: n for h, rx in HEDGE_RX.items() if (n := len(rx.findall(low)))},
+        "particles": dict(particles(text)),
         "symbols": {k: len(rx.findall(text)) for k, rx in SYMBOLS.items() if rx.search(text)},
         "digit_numbers": len(re.findall(r"\d+(?:[.,]\d+)*", text)),
         "number_words": dict(Counter(w.lower() for w in NUMWORDS.findall(text))),
@@ -93,8 +122,8 @@ def presence(f):
 def read(path):
     try:
         return sys.stdin.read() if path == "-" else open(path, encoding="utf-8").read()
-    except OSError as e:
-        sys.exit(f"voice_stats.py: cannot read {path}: {e.strerror}")
+    except (OSError, UnicodeDecodeError) as e:
+        sys.exit(f"voice_stats.py: cannot read {path}: {getattr(e, 'strerror', None) or e}")
 
 
 def main(argv):

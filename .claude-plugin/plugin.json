@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "siang",
   "displayName": "Siang",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "description": "Thai text skills: repair Thai PDF text, remove AI writing tells in English and Thai, write in your own voice, draft technical docs.",
   "author": {
     "name": "wasikarn"
