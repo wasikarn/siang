@@ -91,7 +91,7 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` |
-| `evals/` | 52 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
+| `evals/` | 64 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
 | `docs/document-review/` | the document-review procedure (formerly a skill) and `doc_check.py` |
 | `docs/eval-runs/` | archived eval run results ([README](docs/eval-runs/README.md)) |
 | `tests/` | free checks that CI runs on every push |
@@ -103,13 +103,16 @@ A skill stays in the plugin only if its with-skill mean is above 0.90 (5 runs pe
 no-skill arm by more than 0.05, on held-out cases written by an agent that never saw the skill, with graders
 frozen before the run. Look at the per-case delta, not the overall score: plain Claude scores high on many cases.
 
-Latest results (each measured on the skill text named in `evals/README.md`):
+Latest blind round per skill (details in `evals/README.md`):
 
-| skill | with-skill mean | worst case |
-|---|---|---|
-| `personal-voice` (measured on 0.1.34) | 0.9925 | 0.00 |
-| `humanize` | 0.94 | −0.03 |
-| `technical-writing` | 0.985 | −0.03 |
+| skill | round (version) | with-skill mean | mean Δ | worst case Δ |
+|---|---|---|---|---|
+| `personal-voice` | fresh blind pair (0.1.37) | 0.975 | +0.017 | 0.00 |
+| `humanize` | fifth round (0.1.36) | 0.98 | +0.15 | 0.00 |
+| `technical-writing` | fifth round (0.1.36) | 0.956 | +0.144 | +0.11 |
+
+The same 0.1.36 run also reran an older `technical-writing` case outside the round, which lost by −0.025. 0.1.39
+fixed false matches in `voice_stats.py`; `personal-voice` has not been rerun since.
 
 `thai-pua-repair` passes with a mean delta of +0.095 (score 1.00). Method, criteria history and per-run cost are
 in `evals/README.md` and `docs/eval-runs/`.

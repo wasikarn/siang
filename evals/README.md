@@ -317,19 +317,19 @@ The run results behind the second to fourth rounds and the trigger runs are kept
 
 ## `personal-voice` with `scripts/voice_stats.py` (2026-11-12, 0.1.34 and 0.1.35)
 
-0.1.34 made steps 2 and 5 of `personal-voice` call `voice_stats.py`, so the 0.1.32 numbers above no longer describe the shipped text. Reran the four blind cases `holdout2-personal-voice-*` and `holdout3-personal-voice-*` (5 runs per arm, $6.25, 0.1.34): with-skill / without / Δ `terse-lower` 0.97 / 0.88 / +0.10, `thai-codeswitch` 1.00 / 1.00 / 0.00, `semicolon-memo` 1.00 / 1.00 / 0.00, `thai-chat` 1.00 / 1.00 / 0.00. With-skill mean 0.9925, mean Δ +0.02, no case loses: the rule's two conditions hold. Three of four cases tie with plain Claude, so only `terse-lower` shows a gain.
+0.1.34 made steps 2 and 5 of `personal-voice` call `voice_stats.py`, so the 0.1.32 numbers above no longer describe the shipped text. Reran the four blind cases `holdout2-personal-voice-*` and `holdout3-personal-voice-*` (5 runs per arm, $6.25, 0.1.34): with-skill / without / Δ `terse-lower` 0.97 / 0.88 / +0.10, `thai-codeswitch` 1.00 / 1.00 / 0.00, `semicolon-memo` 1.00 / 1.00 / 0.00, `thai-chat` 1.00 / 1.00 / 0.00. With-skill mean 0.994, mean Δ +0.025, no case loses: the rule's two conditions hold. Three of four cases tie with plain Claude, so only `terse-lower` shows a gain.
 
 A kept trace of `terse-lower` (`--keep-temp`, 3 runs, $0.81) showed the skill and the script fired in every with-arm run, and that the one with-arm miss copied the all-caps emphasis ("do NOT") from a one-off sample, which the script did not detect. 0.1.35 added all-caps words to the script (`caps_not_habit`). Rerun of `terse-lower` only (5 runs per arm, $1.51): 0.97 / 0.85 / +0.13; the with-arm failed `no-caps-emphasis` in 0 of 5 runs (without-arm: 5 of 5), and one with-arm run still missed `signoff`, which the script does not check.
 
-Not done: the other three cases were not rerun on 0.1.35, the frozen-grader hash for the `holdout2`/`holdout3` directories was not recomputed, and the run results are not archived in `docs/eval-runs/`. The sample is small (one case carries the gain).
+Not done: the other three cases were not rerun on 0.1.35, the frozen-grader hash for the `holdout2`/`holdout3` directories was not recomputed, and the run results were archived later in `docs/eval-runs/` (commit 84379b8). The sample is small (one case carries the gain).
 
 ## `document-review` with `scripts/doc_check.py` (2026-11-12, 0.1.36)
 
-0.1.36 made steps 2 and 5 of `document-review` call `doc_check.py`, so the earlier numbers no longer describe the shipped text. Reran all five `*document-review-*` cases (5 runs per arm, $8.39): with-skill / without / Δ `document-review-planted-sop` 0.86 / 0.54 / +0.31, and 1.00 / 1.00 / 0.00 on `holdout-document-review-calibration-sop`, `holdout-document-review-change-record`, `holdout3-document-review-access-review-policy` and `holdout3-document-review-backup-runbook`. With-skill mean 0.972, mean Δ +0.06, no case loses: the rule's two conditions hold. Four of five cases tie with plain Claude, so only the planted case shows a gain (it was +0.38 before, with-skill 1.00).
+0.1.36 made steps 2 and 5 of `document-review` call `doc_check.py`, so the earlier numbers no longer describe the shipped text. Reran all five `*document-review-*` cases (5 runs per arm, $8.39): with-skill / without / Δ `document-review-planted-sop` 0.86 / 0.54 / +0.31, and 1.00 / 1.00 / 0.00 on `holdout-document-review-calibration-sop`, `holdout-document-review-change-record`, `holdout3-document-review-access-review-policy` and `holdout3-document-review-backup-runbook`. With-skill mean 0.971, mean Δ +0.06, no case loses: the rule's two conditions hold. Four of five cases tie with plain Claude, so only the planted case shows a gain (it was +0.38 before, with-skill 1.00).
 
 The with-skill drop on the planted case is wording, not substance. Kept traces show the agents found every planted defect, including 30 minutes against 30 s and the unsourced 90 days, and listed the 90 days under "Unverifiable items". The `units` grader wants "contradict", "inconsisten", "mismatch" or "disagree" and the agents wrote "conflict" (the script's check is named `quantity-conflict`); the `unverifiable-claim` grader wants "90 days" and "unverifiable" on one line. The graders were left as they are, since changing a grader or the skill after seeing results voids the run. The script was called in every with-skill run (25 of 25 traces).
 
-Not done: the frozen-grader hash was not recomputed and the run results are not archived in `docs/eval-runs/`.
+Not done: the frozen-grader hash was not recomputed and the run results were archived later in `docs/eval-runs/` (commit 84379b8).
 
 ## Fifth held-out round: eight hard blind cases (2026-11-12, plugin 0.1.36, graders frozen at `f9caf6323dccf031`)
 
@@ -350,7 +350,7 @@ One grader was edited before its case had ever run: `holdout4-humanize-en-incide
 | `holdout6-technical-writing-cron-janitor` | 0.93 | 0.76 | +0.18 |
 | `holdout6-technical-writing-webhook-relay` | 0.98 | 0.87 | +0.11 |
 
-Per skill, with-skill mean and mean Δ: `document-review` 1.00 / 0.00, `humanize` 0.98 / +0.15, `personal-voice` 0.915 / +0.03, `technical-writing` 0.955 / +0.145. No case loses, so all four skills hold the rule's two conditions on these cases. The gain is in `humanize` (Thai), `technical-writing` and, barely, `personal-voice`. `document-review` ties on both cases that were built to be hard for a plain model, so `doc_check.py` is not shown to help there. Remaining misses in the with-arm: `one-spelling-per-term` (Thai humanize), `habit-digits` (dry-wit), `oneoff-no-mention` (ticket-notes), `removed-path-flag` (cron-janitor), `step-result` (webhook-relay).
+Per skill, with-skill mean and mean Δ: `document-review` 1.00 / 0.00, `humanize` 0.98 / +0.15, `personal-voice` 0.915 / +0.03, `technical-writing` 0.956 / +0.144. No case loses, so all four skills hold the rule's two conditions on these cases. The gain is in `humanize` (Thai), `technical-writing` and, barely, `personal-voice`. `document-review` ties on both cases that were built to be hard for a plain model, so `doc_check.py` is not shown to help there. Remaining misses in the with-arm: `one-spelling-per-term` (Thai humanize), `habit-digits` (dry-wit), `oneoff-no-mention` (ticket-notes), `removed-path-flag` (cron-janitor), `step-result` (webhook-relay).
 
 A first attempt at this round stopped when the session ended, after $7.68 of partial runs; it is archived but not counted. Not done: the two older `holdout4-technical-writing-*` reruns (0.95 / 0.97 / −0.03 and 1.00 / 1.00 / 0.00) are not analysed here, and no trace was opened to check why the with-arm missed the graders above.
 
@@ -362,10 +362,28 @@ These two cases are no longer blind for 0.1.37: the features were chosen after s
 
 ### Fresh blind pair for `personal-voice` 0.1.37 (2026-11-12, graders frozen at `58898ea161642a39`)
 
-An agent told not to read `skills/`, `docs/`, this file, `evals/results/` or any `personal-voice` case wrote `holdout5-personal-voice-review-comments` (English review comments) and `holdout5-personal-voice-thai-announce` (Thai announcement); it was not told what `voice_stats.py` measures. Hash over the two directories as above. 5 runs per arm, $3.30: `review-comments` 1.00 / 1.00 / 0.00, `thai-announce` 0.95 / 0.92 / +0.03. With-skill mean 0.975, mean Δ +0.015, no case loses: the rule holds. The only miss in either arm is the `habit-signoff-infra` sign-off (with-arm 3 of 5, without-arm 5 of 5); neither arm copied the one-offs (555, a ปล. line, `cc @dana`, FWIW).
+An agent told not to read `skills/`, `docs/`, this file, `evals/results/` or any `personal-voice` case wrote `holdout5-personal-voice-review-comments` (English review comments) and `holdout5-personal-voice-thai-announce` (Thai announcement); it was not told what `voice_stats.py` measures. Hash over the two directories as above. 5 runs per arm, $3.30: `review-comments` 1.00 / 1.00 / 0.00, `thai-announce` 0.95 / 0.92 / +0.03. With-skill mean 0.975, mean Δ +0.017, no case loses: the rule holds. The only miss in either arm is the `habit-signoff-infra` sign-off (with-arm 3 of 5, without-arm 5 of 5); neither arm copied the one-offs (555, a ปล. line, `cc @dana`, FWIW).
 
 On blind cases, then, `personal-voice` 0.1.37 ties plain Claude or wins by a hair. The +0.18 and +0.08 on the fifth-round pair above came from tuning on those cases and do not carry over.
 
 ## `document-review` demoted to a plain doc (0.1.38, 2026-11-12)
 
 On every blind case `document-review` tied plain Claude: `holdout-*`, `holdout3-*` and the two hard `holdout4-*` cases built for it all scored 1.00 / 1.00, and only the non-blind `document-review-planted-sop` showed a gain (+0.31). It passes the rule, but nothing shows it beats plain Claude, and a with-skill run costs more. Following the operator's decision, 0.1.38 moved `SKILL.md` to `docs/document-review/README.md` and `doc_check.py` to `docs/document-review/doc_check.py` (still covered by `tests/test-doc-check.sh`). The `*document-review*` cases stay as a record; with the skill gone, running them measures plain Claude only and the `skill-fired` graders fail.
+
+## `voice_stats.py` false matches fixed (0.1.39, 2026-11-12, not measured)
+
+A deep audit after 0.1.38 found that `voice_stats.py` matched Thai particles and hedges, and English hedges, as
+substrings: และ counted as the particle ละ, สิ่ง as สิ, อาจารย์ as the hedge อาจ, "every" as "very" and "adjust" as
+"just". An email counted as an @mention, `#123` as a hashtag and a `ps aux` line as a P.S. 0.1.39 matches whole
+English words, takes a Thai particle at the end of a Thai run, in a stack of two or more (แล้วนะคะทุกคน), or before
+more Thai when it is นะ or a polite particle (ขอบคุณครับพี่), counts stretched and doubled particles (นะะ, ครับๆ),
+adds ฮะ and ล่ะ, counts มากๆ as มาก ๆ, judges lowercase starts on Latin-initial sentences only (Thai has no case),
+detects ปล. as a P.S. and fixes the other symbol patterns (`tests/test-voice.sh`). On the eval samples this changes
+four profiles: `holdout2-personal-voice-thai-codeswitch` gains `particle: ฮะ` (3 samples),
+`holdout4-personal-voice-ticket-notes` keeps `particle: แล้ว` in 2 samples instead of 4,
+`holdout5-personal-voice-thai-announce` drops `particle: แล้ว` to a one-off and gains `style: lowercase sentence
+starts` (2 samples) and the planted ปล. as a `symbol: ps` one-off, and `holdout3-personal-voice-thai-chat` gains the
+lowercase style as a one-off. The lost one-offs `particle: ละ` and `holdout-personal-voice-chatty`'s `hedge: very`
+were false.
+แล้ว used as a conjunction before a space still counts (`migration แล้ว deploy`). The `personal-voice` numbers
+above were measured on 0.1.37; 0.1.39 has not been rerun, so they describe the earlier script.

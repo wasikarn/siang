@@ -1,6 +1,6 @@
 # Eval runs
 
-The `claude plugin eval --json` results behind the humanize numbers in `README.md`, `README.en.md` and
+The `claude plugin eval --json` results behind the eval numbers in `README.md`, `README.en.md` and
 `evals/README.md`, kept here because `evals/results/` is gitignored. Trace paths and local paths were
 stripped; scores, costs, turns, grader verdicts and the LLM judges' quoted output remain. Each file
 records the prompts and graders it ran with (`promptMarkdown`, `graders`), which may differ from the

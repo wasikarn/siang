@@ -88,7 +88,7 @@ python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` ไฟล์เดียว |
-| `evals/` | 52 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
+| `evals/` | 64 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
 | `docs/document-review/` | ขั้นตอนตรวจเอกสาร (เดิมเป็น skill) และ `doc_check.py` |
 | `docs/eval-runs/` | ผลรัน eval ที่เก็บไว้ ([README](docs/eval-runs/README.md)) |
 | `tests/` | เช็กฟรีที่ CI รันทุก push |
@@ -100,13 +100,16 @@ skill ตัวหนึ่งอยู่ใน plugin ได้เมื่อ
 เปล่า ๆ เกิน 0.05 บนเคส held-out ที่เขียนโดย agent ที่ไม่เคยเห็น skill และ grader ถูกแช่แข็งก่อนรัน
 ตัวเลขที่ควรดูคือส่วนต่างต่อเคส ไม่ใช่คะแนนรวม เพราะ Claude เปล่า ๆ ได้คะแนนสูงในหลายเคส
 
-ผลล่าสุด (แต่ละตัววัดบนข้อความ skill ที่ระบุไว้ใน `evals/README.md`):
+รอบ blind ล่าสุดของแต่ละ skill (รายละเอียดใน `evals/README.md`):
 
-| skill | with-skill mean | เคสแย่สุด |
-|---|---|---|
-| `personal-voice` (วัดบน 0.1.34) | 0.9925 | 0.00 |
-| `humanize` | 0.94 | −0.03 |
-| `technical-writing` | 0.985 | −0.03 |
+| skill | รอบ (เวอร์ชัน) | with-skill mean | Δ เฉลี่ย | Δ เคสแย่สุด |
+|---|---|---|---|---|
+| `personal-voice` | คู่เคส blind ชุดใหม่ (0.1.37) | 0.975 | +0.017 | 0.00 |
+| `humanize` | รอบที่ห้า (0.1.36) | 0.98 | +0.15 | 0.00 |
+| `technical-writing` | รอบที่ห้า (0.1.36) | 0.956 | +0.144 | +0.11 |
+
+รันเดียวกันบน 0.1.36 ยังรันเคส `technical-writing` เก่าอีกเคสนอกรอบ และเคสนั้นแพ้ −0.025 ส่วน 0.1.39 แก้
+`voice_stats.py` ที่นับคำผิดเป็น particle หรือ hedge และยังไม่ได้รัน eval ของ `personal-voice` ใหม่
 
 `thai-pua-repair` ผ่านด้วย Δ เฉลี่ย +0.095 (คะแนน 1.00) วิธีวัด ประวัติเกณฑ์ และต้นทุนต่อรอบอยู่ใน
 `evals/README.md` กับ `docs/eval-runs/`
