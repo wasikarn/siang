@@ -423,3 +423,26 @@ gain is in the drafts, not only in the route. The misses: `outcome-self-referenc
 with-arm 2 of 5, without-arm 5 of 5; `outcome-oneoff-no-emoji` (an emoji from one sample copied), without-arm 3 of 5,
 with-arm 0 of 5. The English case ties at 1.00: plain Claude already matched every habit there, so it shows no
 headroom. As in every earlier round, the skill's gain comes from one case of two, and it is small.
+
+## Outcome and cost across all blind rounds (2026-11-12, from `docs/eval-runs/`, no new run)
+
+Process graders were never part of these scores: in every with/without run the `skill-fired` grader is recorded with
+`"withOnly": true, "scored": false`, and each run's `score` equals the weighted mean of its scored graders (checked
+on all 32 archived files; `skill-fired` was scored only in with-arm-only runs, where it always passed). So every Δ
+above is already an outcome-only Δ.
+
+One verdict run per blind case (the round's run on the version it judged; tuned and rerun results left out), mean
+over cases, cost per agent run in USD:
+
+| skill | blind cases | with / without | mean Δ | cases with Δ > 0.05 | ties (\|Δ\| ≤ 0.05) | worst Δ | cost per run with / without | turns with / without |
+|---|---|---|---|---|---|---|---|---|
+| `humanize` | 4 | 0.990 / 0.915 | +0.075 | 1 | 3 | 0.00 | 0.205 / 0.121 (1.7x) | 6.9 / 4.2 |
+| `technical-writing` | 8 | 0.976 / 0.947 | +0.030 | 2 | 5 | −0.07 | 0.191 / 0.161 (1.2x) | 6.5 / 4.6 |
+| `personal-voice` | 10 | 0.973 / 0.945 | +0.027 | 2 | 8 | 0.00 | 0.219 / 0.112 (2.0x) | 8.0 / 4.4 |
+| `document-review` (now a doc) | 6 | 1.000 / 1.000 | 0.000 | 0 | 6 | 0.00 | 0.215 / 0.165 (1.3x) | 5.5 / 4.7 |
+
+The gains sit in few cases: `humanize` in the Thai release announcement (+0.30), `technical-writing` in the two
+`holdout6` cases (+0.18, +0.11), `personal-voice` in `terse-lower` (+0.10) and `bakery-closure` (+0.08). Most
+blind cases tie because plain Claude already scores 1.00 on them, so they cannot show a gain. Every skill costs more
+per run (1.2x to 2.0x, from extra turns spent reading the skill and running its script), which is a few US cents per
+run in absolute terms. `thai-pua-repair` has no archived with/without run, so it is not in the table.
