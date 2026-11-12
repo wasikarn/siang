@@ -1,0 +1,1091 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.322",
+ "startedAt": "2026-11-12T03:31:28.388Z",
+ "durationSeconds": 44,
+ "costUsd": 1.5898046,
+ "partial": false,
+ "suite": {
+  "root": "<path>",
+  "ablation": "with-without",
+  "caseFilter": "holdout4-humanize-en-incident-review",
+  "threshold": 1,
+  "concurrency": 4,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.36",
+    "path": "<path>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "holdout4-humanize-en-incident-review",
+   "dir": "evals/holdout4-humanize-en-incident-review",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) to rewrite `INCIDENT-2291.md`, the incident review we are about to share with the payments team, so it no longer reads as machine-written. Edit the file in place. Keep every fact: numbers, ids, names, dates and versions.\n\nYour final message is one line naming the file you changed, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "clean-paragraph-and-quote-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "INCIDENT-2291.md"
+      },
+      "pattern": "^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "code-and-table-unchanged",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "INCIDENT-2291.md"
+      },
+      "pattern": "^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "INCIDENT-2291.md"
+      },
+      "pattern": "^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-em-dash",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "INCIDENT-2291.md"
+      },
+      "pattern": "—",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-inflated-significance",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "INCIDENT-2291.md"
+      },
+      "pattern": "underscores the importance|serves as a (?:valuable |powerful |important |stark )?reminder|foundation of a resilient|resilient platform|swift, coordinated,? and transparent",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-not-only-frame-outside-quote",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "INCIDENT-2291.md"
+      },
+      "pattern": "^(?!\\s*>).*\\bnot (?:just|only|merely)\\b[^.\\n]{0,80}\\bbut\\b",
+      "flags": "im",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-stacked-hedges",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "INCIDENT-2291.md"
+      },
+      "pattern": "could potentially|may have possibly|potentially be argued|it could be argued",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-stock-opener-or-closer",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "INCIDENT-2291.md"
+      },
+      "pattern": "let me know if|feel free to|hope (?:this|that) helps|happy to (?:help|answer|discuss)|reach out|in conclusion|in summary|to sum (?:it )?up|^(?:overall|ultimately|in short|all in all),",
+      "flags": "im",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-vague-attribution",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "INCIDENT-2291.md"
+      },
+      "pattern": "some engineers have noted|(?:some|many) (?:engineers|experts|people|teams) (?:have )?(?:noted|observed|argued|believe|feel|agree)|experts agree|it is (?:widely|generally|often) (?:known|accepted|agreed)",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.1935374,
+      "judgeCostUsd": 0,
+      "durationSeconds": 19,
+      "startedAt": "2026-11-12T03:31:28.583Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.17046360000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 15,
+      "startedAt": "2026-11-12T03:31:28.583Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.21157259999999997,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-12T03:31:28.583Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.1947498,
+      "judgeCostUsd": 0,
+      "durationSeconds": 20,
+      "startedAt": "2026-11-12T03:31:28.583Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.19038599999999997,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-12T03:31:43.329Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.1231136,
+      "judgeCostUsd": 0,
+      "durationSeconds": 13,
+      "startedAt": "2026-11-12T03:31:46.380Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.11949900000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 12,
+      "startedAt": "2026-11-12T03:31:47.851Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.13984660000000004,
+      "judgeCostUsd": 0,
+      "durationSeconds": 16,
+      "startedAt": "2026-11-12T03:31:48.262Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.12332040000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 13,
+      "startedAt": "2026-11-12T03:31:59.294Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.12331560000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 13,
+      "startedAt": "2026-11-12T03:31:59.581Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*The release bumped poolkit from 1\\.9 to 2\\.0\\. Poolkit 2\\.0 closes idle connections after 30 seconds instead of keeping them open, so under normal checkout traffic the gateway kept dropping connections and opening new ones\\. Postgres hit its connection limit four minutes after the deploy finished\\.)(?=[\\s\\S]*\"This is not just a defaults change but a behavior change for every long-lived pool\\.\")",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "code-and-table-unchanged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*```yaml(?:\\n|\\\\n)db:(?:\\n|\\\\n)  pool:(?:\\n|\\\\n)    max_idle_conns: 64    # explicit since poolkit 2\\.0(?:\\n|\\\\n)    idle_timeout: 30s(?:\\n|\\\\n)```)(?=[\\s\\S]*\\| Time \\(UTC\\) \\| Event \\|(?:\\n|\\\\n)\\|[^|\\n\\\\]{1,20}\\|[^|\\n\\\\]{1,20}\\|(?:\\n|\\\\n)\\| 09:12 \\| v3\\.18\\.2 deploy finished \\|(?:\\n|\\\\n)\\| 09:16 \\| Checkout error rate reached 18% \\|(?:\\n|\\\\n)\\| 09:31 \\| Rollback to v3\\.18\\.1 started \\|(?:\\n|\\\\n)\\| 09:59 \\| Error rate back under 0\\.5% \\|)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*INC-2291)(?=[\\s\\S]*(?:2026-10-14|14 Oct(?:ober)? 2026|Oct(?:ober)? 14,? 2026))(?=[\\s\\S]*\\b47(?:\\s|-)?min)(?=[\\s\\S]*\\b1,?284\\b)(?=[\\s\\S]*\\b512\\b)(?=[\\s\\S]*Priya Raman)(?=[\\s\\S]*v3\\.18\\.3)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflated-significance",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-hedges",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stock-opener-or-closer",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 1,
+  "casesPassed": 1,
+  "overallScore": 1,
+  "overallPassRate": 1,
+  "meanDelta": 0
+ }
+}

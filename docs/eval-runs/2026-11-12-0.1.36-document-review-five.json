@@ -1,0 +1,4579 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.322",
+ "startedAt": "2026-11-11T21:27:26.077Z",
+ "durationSeconds": 326,
+ "costUsd": 8.3946424,
+ "partial": false,
+ "suite": {
+  "root": "<path>",
+  "ablation": "with-without",
+  "caseFilter": "*document-review-*",
+  "threshold": 1,
+  "concurrency": 4,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.36",
+    "path": "<path>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "document-review-planted-sop",
+   "dir": "evals/document-review-planted-sop",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:document-review` skill (Skill tool, `skill: \"siang:document-review\"`) to review `docs/sop-restore.md` against `docs/standard.md`. Review only: do not edit the SOP. Write your ledger and verdict to `review.md`.\n\nYour final message is one line naming the verdict.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same review task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 15,
+   "graders": [
+    {
+     "name": "missing-section",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "rollback",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "order",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "severity-grades",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "\\b(blocks|misleads)\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?document-review\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "units",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "30 ?(min(utes?)?|s(ec(onds?)?)?)\\b[\\s\\S]*(contradict|inconsisten|mismatch|disagree)|(contradict|inconsisten|mismatch|disagree)[\\s\\S]*30 ?(min(utes?)?|s(ec(onds?)?)?)\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "unverifiable-claim",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "90 days[^\\n]*unverifiable|unverifiable[^\\n]*90 days",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "verdict",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "\\b(approve with changes|reject)\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "xref",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "section 7|§ ?7",
+      "flags": "i",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 0.7142857142857143,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.1781922,
+      "judgeCostUsd": 0,
+      "durationSeconds": 28,
+      "startedAt": "2026-11-11T21:27:26.209Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(blocks|misleads)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "units",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(approve with changes|reject)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8571428571428571,
+      "passed": false,
+      "turns": 6,
+      "costUsd": 0.1713222,
+      "judgeCostUsd": 0,
+      "durationSeconds": 25,
+      "startedAt": "2026-11-11T21:27:26.209Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(blocks|misleads)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "units",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 30 ?(min(utes?)?|s(ec(onds?)?)?)\\b[\\s\\S]*(contradict|inconsisten|mismatch|disagree)|(contradict|inconsisten|mismatch|disagree)[\\s\\S]*30 ?(min(utes?)?|s(ec(onds?)?)?)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(approve with changes|reject)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2156304,
+      "judgeCostUsd": 0,
+      "durationSeconds": 38,
+      "startedAt": "2026-11-11T21:27:26.209Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(blocks|misleads)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "units",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 30 ?(min(utes?)?|s(ec(onds?)?)?)\\b[\\s\\S]*(contradict|inconsisten|mismatch|disagree)|(contradict|inconsisten|mismatch|disagree)[\\s\\S]*30 ?(min(utes?)?|s(ec(onds?)?)?)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 90 days[^\\n]*unverifiable|unverifiable[^\\n]*90 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(approve with changes|reject)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.7142857142857143,
+      "passed": false,
+      "turns": 6,
+      "costUsd": 0.1904558,
+      "judgeCostUsd": 0,
+      "durationSeconds": 31,
+      "startedAt": "2026-11-11T21:27:26.209Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(blocks|misleads)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "units",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(approve with changes|reject)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2026132,
+      "judgeCostUsd": 0,
+      "durationSeconds": 36,
+      "startedAt": "2026-11-11T21:27:51.041Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(blocks|misleads)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "units",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 30 ?(min(utes?)?|s(ec(onds?)?)?)\\b[\\s\\S]*(contradict|inconsisten|mismatch|disagree)|(contradict|inconsisten|mismatch|disagree)[\\s\\S]*30 ?(min(utes?)?|s(ec(onds?)?)?)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 90 days[^\\n]*unverifiable|unverifiable[^\\n]*90 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(approve with changes|reject)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0.42857142857142855,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.1337524,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-11T21:27:54.004Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "units",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.5714285714285714,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.1297992,
+      "judgeCostUsd": 0,
+      "durationSeconds": 16,
+      "startedAt": "2026-11-11T21:27:56.722Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "units",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 30 ?(min(utes?)?|s(ec(onds?)?)?)\\b[\\s\\S]*(contradict|inconsisten|mismatch|disagree)|(contradict|inconsisten|mismatch|disagree)[\\s\\S]*30 ?(min(utes?)?|s(ec(onds?)?)?)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.5714285714285714,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.1347204,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-11T21:28:04.267Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "units",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 30 ?(min(utes?)?|s(ec(onds?)?)?)\\b[\\s\\S]*(contradict|inconsisten|mismatch|disagree)|(contradict|inconsisten|mismatch|disagree)[\\s\\S]*30 ?(min(utes?)?|s(ec(onds?)?)?)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.5714285714285714,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.15048640000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 24,
+      "startedAt": "2026-11-11T21:28:12.379Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "units",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 30 ?(min(utes?)?|s(ec(onds?)?)?)\\b[\\s\\S]*(contradict|inconsisten|mismatch|disagree)|(contradict|inconsisten|mismatch|disagree)[\\s\\S]*30 ?(min(utes?)?|s(ec(onds?)?)?)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.5714285714285714,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.1419444,
+      "judgeCostUsd": 0,
+      "durationSeconds": 21,
+      "startedAt": "2026-11-11T21:28:13.166Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "missing-section",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched rollback",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched restore\\.conf(?:(?!\\bpass\\b)[\\s\\S]){0,150}?(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)|(?:before|after|\\border(?:ing)?\\b|precede|later|earlier|too late|sequence)(?:(?!\\bpass\\b)[\\s\\S]){0,150}?restore\\.conf",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "severity-grades",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "units",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 30 ?(min(utes?)?|s(ec(onds?)?)?)\\b[\\s\\S]*(contradict|inconsisten|mismatch|disagree)|(contradict|inconsisten|mismatch|disagree)[\\s\\S]*30 ?(min(utes?)?|s(ec(onds?)?)?)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched section 7|§ ?7",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 0.8571428571428571,
+    "passRate": 0.4,
+    "scoreWithout": 0.5428571428571429,
+    "passRateWithout": 0,
+    "delta": 0.31428571428571417
+   }
+  },
+  {
+   "name": "holdout-document-review-calibration-sop",
+   "dir": "evals/holdout-document-review-calibration-sop",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:document-review` skill (Skill tool, `skill: \"siang:document-review\"`) to review `sop-ph-meter.md` against the standard in `standard.md`. Review only: do not edit `sop-ph-meter.md`. Overwrite `review.md` with your findings, each with its location in the record.\n\nYour final message is one line saying how many findings you wrote to `review.md`, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 15,
+   "graders": [
+    {
+     "name": "buffer-b7-order",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "B-?7",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "cross-ref-section-8",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:section|sec\\.?|§)\\s*8\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "interval-contradiction",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "\\b(?:14|21)\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "missing-safety",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-all-clear",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "no (?:issues?|findings?|defects?|problems?)[^\\n]*(?:found|identified|noted)|all clear|nothing to report",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?document-review\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "stirrer-unit",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "\\b300\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.17685040000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 26,
+      "startedAt": "2026-11-11T21:28:21.576Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.18109560000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 26,
+      "startedAt": "2026-11-11T21:28:26.548Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.19805260000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 35,
+      "startedAt": "2026-11-11T21:28:34.101Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.18387520000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 29,
+      "startedAt": "2026-11-11T21:28:36.275Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.192007,
+      "judgeCostUsd": 0,
+      "durationSeconds": 30,
+      "startedAt": "2026-11-11T21:28:47.849Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.1301094,
+      "judgeCostUsd": 0,
+      "durationSeconds": 14,
+      "startedAt": "2026-11-11T21:28:52.304Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.1388956,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-11T21:29:04.811Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.14189600000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-11T21:29:06.712Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.1435654,
+      "judgeCostUsd": 0,
+      "durationSeconds": 19,
+      "startedAt": "2026-11-11T21:29:09.065Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.15695220000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 23,
+      "startedAt": "2026-11-11T21:29:18.049Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "buffer-b7-order",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched B-?7",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "cross-ref-section-8",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:section|sec\\.?|§)\\s*8\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "interval-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:14|21)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-safety",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched safety[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*safety",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "stirrer-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b300\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "holdout-document-review-change-record",
+   "dir": "evals/holdout-document-review-change-record",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:document-review` skill (Skill tool, `skill: \"siang:document-review\"`) to review the change record `change-record.md` against the standard in `standard.md`. Review only: do not edit `change-record.md`. Overwrite `review.md` with your findings, each with its location in the record.\n\nYour final message is one line saying how many findings you wrote to `review.md`, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 15,
+   "graders": [
+    {
+     "name": "group-used-before-created",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "fw-batch-b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "host-count-contradiction",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "\\b(?:12|18)\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "missing-rollback",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-all-clear",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "no (?:issues?|findings?|defects?|problems?)[^\\n]*(?:found|identified|noted)|all clear|nothing to report",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?document-review\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "unsupported-impact-claim",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "wait-unit",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "\\b45\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1742988,
+      "judgeCostUsd": 0,
+      "durationSeconds": 26,
+      "startedAt": "2026-11-11T21:29:23.201Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.16828940000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 23,
+      "startedAt": "2026-11-11T21:29:25.105Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1724944,
+      "judgeCostUsd": 0,
+      "durationSeconds": 25,
+      "startedAt": "2026-11-11T21:29:27.590Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1795324,
+      "judgeCostUsd": 0,
+      "durationSeconds": 27,
+      "startedAt": "2026-11-11T21:29:41.394Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.17979199999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 28,
+      "startedAt": "2026-11-11T21:29:48.417Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.12389340000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 14,
+      "startedAt": "2026-11-11T21:29:49.651Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.1344746,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-11T21:29:52.357Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.1258976,
+      "judgeCostUsd": 0,
+      "durationSeconds": 14,
+      "startedAt": "2026-11-11T21:30:03.194Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.1370586,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-11T21:30:08.096Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.1353828,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-11T21:30:09.834Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "group-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched fw-batch-b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "host-count-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b(?:12|18)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[ -]?back[^\\n]*(?:missing|absent|omit|lack|not (?:present|included|found)|no )|(?:missing|absent|omit|lack|not (?:present|included|found)|no )[^\\n]*roll[ -]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unsupported-impact-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched zero[ -]?(?:customer[ -]?)?impact|customer impact|earlier changes",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "wait-unit",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45\\b",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "holdout3-document-review-access-review-policy",
+   "dir": "evals/holdout3-document-review-access-review-policy",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:document-review` skill (Skill tool, `skill: \"siang:document-review\"`) to check our user access review policy, `policy.md`, against the internal control it has to satisfy, `control-standard.md`, before the auditors see it. Review only: leave `policy.md` unchanged. Put your findings ledger in `findings.md`, one row or entry per finding with the policy location (section or step), the problem, and the control clause (AC-07.x) it relates to, if any. Do not list things that are fine.\n\nYour final message is one line giving the number of findings, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 900,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "clean-monthly-not-flagged",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "findings.md"
+      },
+      "pattern": "^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "dangling-reference",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "findings.md"
+      },
+      "pattern": "(?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "missing-retention",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "findings.md"
+      },
+      "pattern": "[Rr]etention|[Rr]etain|\\b24 months\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-all-clear",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "findings.md"
+      },
+      "pattern": "^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "record-not-edited",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "policy.md"
+      },
+      "pattern": "^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "revocation-contradiction",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "findings.md"
+      },
+      "pattern": "\\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?document-review\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "step-before-created",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "findings.md"
+      },
+      "pattern": "[Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "unit-mismatch",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "findings.md"
+      },
+      "pattern": "\\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "unverifiable-claim",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "findings.md"
+      },
+      "pattern": "[Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1907326,
+      "judgeCostUsd": 0,
+      "durationSeconds": 28,
+      "startedAt": "2026-11-11T21:30:16.035Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.21036879999999997,
+      "judgeCostUsd": 0,
+      "durationSeconds": 33,
+      "startedAt": "2026-11-11T21:30:17.621Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1768776,
+      "judgeCostUsd": 0,
+      "durationSeconds": 23,
+      "startedAt": "2026-11-11T21:30:26.051Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.18695119999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 27,
+      "startedAt": "2026-11-11T21:30:27.471Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.209407,
+      "judgeCostUsd": 0,
+      "durationSeconds": 33,
+      "startedAt": "2026-11-11T21:30:43.772Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.14342380000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 20,
+      "startedAt": "2026-11-11T21:30:48.963Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.1402906,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-11T21:30:50.912Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.1394696,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-11T21:30:54.529Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.15175960000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 22,
+      "startedAt": "2026-11-11T21:31:08.899Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.13464520000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-11T21:31:09.292Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-monthly-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*\\b[Mm]onthly\\b[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|violat|non-?complian|deviat|incorrect|wrong))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:[Ss]ection|§|[Ss]ec\\.?)\\s*11\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-retention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]etention|[Rr]etain|\\b24 months\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems|gaps) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Rr]eady for (?:the )?audit\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\| Dormancy limit \\| 45 hours \\|)(?=[\\s\\S]*follows section 11)(?=[\\s\\S]*within 48 hours)(?=[\\s\\S]*within 72 hours)[\\s\\S]*Step 5\\. IT Security creates the Reviewer Matrix",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "revocation-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b48\\b[^\\n]*\\b72\\b|\\b72\\b[^\\n]*\\b48\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]eviewer [Mm]atrix|[Ss]tep\\s*5[^\\n]*[Ss]tep\\s*2|[Ss]tep\\s*2[^\\n]*[Ss]tep\\s*5",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b45[\\s-]*(?:h|hrs?|hours?)\\b|[Dd]orman[^\\n]*\\bhours?\\b|\\bhours?\\b[^\\n]*[Dd]orman",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Oo]rphan|SSO deprovisioning|[Aa]ll systems in scope",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  },
+  {
+   "name": "holdout3-document-review-backup-runbook",
+   "dir": "evals/holdout3-document-review-backup-runbook",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:document-review` skill (Skill tool, `skill: \"siang:document-review\"`) to audit `runbook.md`, our restore runbook for the orders database, against our runbook standard in `runbook-standard.md`. This is a review only: do not edit `runbook.md`. Write a findings ledger to `review.md`: one entry per finding, each with its location in the runbook (section or step number), what is wrong, and which rule of the standard it breaks, if any. Only report real problems.\n\nYour final message is one line giving the number of findings, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 900,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "clean-archive-timeout-not-flagged",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "dangling-reference",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "[Aa]ppendix\\s*C\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "missing-rollback",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "[Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-all-clear",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "record-not-edited",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "runbook.md"
+      },
+      "pattern": "^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "retention-contradiction",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "\\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?document-review\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "step-before-created",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "unit-mismatch",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "unverifiable-claim",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "\\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1970638,
+      "judgeCostUsd": 0,
+      "durationSeconds": 31,
+      "startedAt": "2026-11-11T21:31:12.797Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.21417740000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 40,
+      "startedAt": "2026-11-11T21:31:16.816Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.197015,
+      "judgeCostUsd": 0,
+      "durationSeconds": 31,
+      "startedAt": "2026-11-11T21:31:25.844Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.21677220000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 36,
+      "startedAt": "2026-11-11T21:31:31.094Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.197491,
+      "judgeCostUsd": 0,
+      "durationSeconds": 29,
+      "startedAt": "2026-11-11T21:31:43.848Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.17015740000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 28,
+      "startedAt": "2026-11-11T21:31:56.595Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.16375499999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 26,
+      "startedAt": "2026-11-11T21:31:56.666Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.18613659999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 34,
+      "startedAt": "2026-11-11T21:32:07.339Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.17180680000000004,
+      "judgeCostUsd": 0,
+      "durationSeconds": 29,
+      "startedAt": "2026-11-11T21:32:12.764Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.17301120000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 30,
+      "startedAt": "2026-11-11T21:32:22.416Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-archive-timeout-not-flagged",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)[^\\n]*(?:archive_timeout|\\b60\\s*s\\b)[^\\n]*(?:contradicts|conflicts with|inconsistent|does not match|mismatch|incorrect|wrong|violat|exceeds))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "dangling-reference",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Aa]ppendix\\s*C\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "missing-rollback",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched [Rr]ollback[^\\n]*(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|omit|not (?:present|included|found|provided))|(?:[Mm]issing|absent|\\b[Nn]o\\b|[Ll]ack|[Oo]mit)[^\\n]*[Rr]oll[- ]?back|[Bb]ack[- ]?out",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-all-clear",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:\\b[Aa]ll[- ]clear\\b|\\bLGTM\\b|\\b[Nn]o (?:issues|findings|defects|problems) (?:were )?(?:found|identified|detected)\\b(?! (?:in|for|with|under))|(?<!not )\\b[Ff]ully compliant\\b|\\b[Pp]asses (?:the )?review\\b))[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "record-not-edited",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*at least 500 MB free)(?=[\\s\\S]*Appendix C)(?=[\\s\\S]*retained for 35 days)[\\s\\S]*after 28 days",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-contradiction",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b35\\b[^\\n]*\\b28\\b|\\b28\\b[^\\n]*\\b35\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched repo-cipher|5\\.4[^\\n]*5\\.7|5\\.7[^\\n]*5\\.4",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unit-mismatch",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 500\\s*MB|\\bMB\\b[^\\n]*\\bGB\\b|\\bGB\\b[^\\n]*\\bMB\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "unverifiable-claim",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b10\\s*min|\\b[Tt]en minutes|[Ll]ast restore test",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 1,
+    "passRateWithout": 1,
+    "delta": 0
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 5,
+  "casesPassed": 4,
+  "overallScore": 0.9714285714285715,
+  "overallPassRate": 0.8800000000000001,
+  "meanDelta": 0.06285714285714283
+ }
+}

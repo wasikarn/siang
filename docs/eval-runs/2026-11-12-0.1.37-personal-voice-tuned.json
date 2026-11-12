@@ -1,0 +1,2903 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.322",
+ "startedAt": "2026-11-12T03:47:09.415Z",
+ "durationSeconds": 109,
+ "costUsd": 3.8243428,
+ "partial": false,
+ "suite": {
+  "root": "<path>",
+  "ablation": "with-without",
+  "caseFilter": "holdout4-personal-voice-*",
+  "threshold": 1,
+  "concurrency": 4,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.37",
+    "path": "<path>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "holdout4-personal-voice-dry-wit",
+   "dir": "evals/holdout4-personal-voice-dry-wit",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:personal-voice` skill (Skill tool, `skill: \"siang:personal-voice\"`) on my writing samples in `samples/` and write a draft of my update to the platform team channel about yesterday's checkout outage. Save it as `draft.md`. The facts:\n\n- Ticket: INC-5582.\n- Yesterday, 11 Nov, the checkout API returned 502 errors for 38 minutes, from 14:12 to 14:50.\n- 1,240 checkout requests failed.\n- Cause: the TLS certificate on the internal payments proxy expired. Auto-renew from our certificate vendor, CertPoint, failed without alerting anyone.\n- Priya Raman renewed the certificate by hand.\n- Reconciliation is still running. Priya thinks no orders were lost and will confirm when it finishes.\n- We added an alert that fires two weeks before any certificate expires.\n\nDo not change anything in `samples/`.\n\nYour final message is one line naming the file you wrote, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "fact-1240-requests",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?<![\\d,.])1[,.\\s]?240(?!\\d)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-14-day-alert",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-38-minutes",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\b38\\b|thirty-eight",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-priya",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\bPriya\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-ticket",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "INC-?5582",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "habit-digits",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\b(?:two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|twenty|thirty|forty|fifty|hundred|thousand)\\b|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "habit-probably",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\bprobably\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "habit-verb-first",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "^\\s*(?:[A-Z][a-z]*ed|Had|Lost|Spent|Hit|Got|Took|Ran|Saw|Put|Cut|Made|Found|Kept|Broke|Went|Sent|Paid|Shut|Set|Threw|Wrote|Built)\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-apology",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\bsorry\\b|\\b(?:we|i)(?: [a-z]+)? apologi[sz]e|\\b(?:our|my) (?:sincere |deepest )?apologies|^\\s*apologies|apologies for|\\bwe regret|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-generic-boilerplate",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\b(?:hi|hey|hello) (?:team|all|everyone|folks|there)\\b|\\bhope (?:you|this|everyone|all)\\b|let me know|feel free|any questions|thanks for (?:your|the) patience|\\bcheers\\b|stay tuned|quick update|wanted to (?:give|share|let)|excited to|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-vendor-formulas",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\bkindly\\b|do(?:n.t| not) hesitate|best regards|around the clock|rest assured|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "oneoff-no-hashtag",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?:^|[\\s(])#[A-Za-z]\\w*|^\\s*$",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "oneoff-no-ps",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?:^|\\n)[ \\t]*P\\.?[ \\t]?S\\b|^\\s*$",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?personal-voice\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 9,
+      "costUsd": 0.2627176,
+      "judgeCostUsd": 0,
+      "durationSeconds": 32,
+      "startedAt": "2026-11-12T03:47:09.586Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bprobably\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^\\s*(?:[A-Z][a-z]*ed|Had|Lost|Spent|Hit|Got|Took|Ran|Saw|Put|Cut|Made|Found|Kept|Broke|Went|Sent|Paid|Shut|Set|Threw|Wrote|Built)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 12,
+      "costUsd": 0.3071214,
+      "judgeCostUsd": 0,
+      "durationSeconds": 41,
+      "startedAt": "2026-11-12T03:47:09.586Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bprobably\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^\\s*(?:[A-Z][a-z]*ed|Had|Lost|Spent|Hit|Got|Took|Ran|Saw|Put|Cut|Made|Found|Kept|Broke|Went|Sent|Paid|Shut|Set|Threw|Wrote|Built)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.2540534,
+      "judgeCostUsd": 0,
+      "durationSeconds": 30,
+      "startedAt": "2026-11-12T03:47:09.586Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bprobably\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^\\s*(?:[A-Z][a-z]*ed|Had|Lost|Spent|Hit|Got|Took|Ran|Saw|Put|Cut|Made|Found|Kept|Broke|Went|Sent|Paid|Shut|Set|Threw|Wrote|Built)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 11,
+      "costUsd": 0.2866592,
+      "judgeCostUsd": 0,
+      "durationSeconds": 36,
+      "startedAt": "2026-11-12T03:47:09.586Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bprobably\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^\\s*(?:[A-Z][a-z]*ed|Had|Lost|Spent|Hit|Got|Took|Ran|Saw|Put|Cut|Made|Found|Kept|Broke|Went|Sent|Paid|Shut|Set|Threw|Wrote|Built)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 12,
+      "costUsd": 0.293645,
+      "judgeCostUsd": 0,
+      "durationSeconds": 38,
+      "startedAt": "2026-11-12T03:47:39.455Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bprobably\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^\\s*(?:[A-Z][a-z]*ed|Had|Lost|Spent|Hit|Got|Took|Ran|Saw|Put|Cut|Made|Found|Kept|Broke|Went|Sent|Paid|Shut|Set|Threw|Wrote|Built)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0.8461538461538461,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.11001219999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-12T03:47:41.501Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8461538461538461,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.10949840000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-12T03:47:45.924Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.7692307692307693,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.1118624,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-12T03:47:50.257Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.7692307692307693,
+      "passed": false,
+      "turns": 6,
+      "costUsd": 0.1235756,
+      "judgeCostUsd": 0,
+      "durationSeconds": 13,
+      "startedAt": "2026-11-12T03:47:50.412Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8461538461538461,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.111872,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-12T03:47:54.428Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 0.8153846153846154,
+    "passRateWithout": 0,
+    "delta": 0.18461538461538463
+   }
+  },
+  {
+   "name": "holdout4-personal-voice-ticket-notes",
+   "dir": "evals/holdout4-personal-voice-ticket-notes",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:personal-voice` skill (Skill tool, `skill: \"siang:personal-voice\"`) on my ticket notes in `samples/` and write a draft of my note for ticket PAY-2318. Save it as `draft.md`. What happened today, 12 Nov:\n\n- 2:05 pm: we deployed v4.12.0 to prod.\n- 2:12 pm: the error rate on the /refunds endpoint reached 7%.\n- 2:22 pm: Nok rolled back to v4.11.3 and the error rate went back to normal.\n- Cause: the migration that adds the refund_reason column was not in the release.\n- Next step: add a CI check that fails the build when a release is missing a migration.\n\nDo not change anything in `samples/`.\n\nYour final message is one line naming the file you wrote, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "fact-7-percent",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-nok",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-refund-reason",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "refund_reason",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-rollback-version",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "4\\.11\\.3",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-ticket",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "PAY-?2318",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "habit-hhmm-timeline",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "habit-next-last-line",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?:^|\\n)next:[^\\n]*\\s*$",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "habit-thai-with-english-terms",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-formal-thai",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "จึงเรียนมา|ขอแสดงความนับถือ|เพื่อโปรดทราบ|ความไม่สะดวก|(?:^|\\n)[ \\t]*เรียน[ \\t]|^\\s*$",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-generic-boilerplate",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "สวัสดี|ขอบคุณ|หากมีข้อสงสัย|สอบถามเพิ่มเติม|ขออภัย|ครับ|ค่ะ|\\b(?:hi|hey) (?:team|all)\\b|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-invented-date",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "พรุ่งนี้|มะรืน|สัปดาห์หน้า|อาทิตย์|จันทร์|อังคาร|พุธ|พฤหัส|ศุกร์|เสาร์|tomorrow|next week|(?:mon|tues|wednes|thurs|fri)day|(?<![\\d:.])(?:1[3-9]|2\\d|30)\\s*(?:/\\s*11|พ\\.?\\s*ย|พฤศจิกา|nov)|ธ\\.?\\s*ค\\.|ธันวา|\\bdec(?:ember)?\\b|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "oneoff-no-555",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "555|^\\s*$",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "oneoff-no-mention",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "@[A-Za-zก-๛]|^\\s*$",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?personal-voice\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 9,
+      "costUsd": 0.2416478,
+      "judgeCostUsd": 0,
+      "durationSeconds": 26,
+      "startedAt": "2026-11-12T03:47:59.730Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.24515139999999996,
+      "judgeCostUsd": 0,
+      "durationSeconds": 27,
+      "startedAt": "2026-11-12T03:48:03.233Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 9,
+      "costUsd": 0.2574526,
+      "judgeCostUsd": 0,
+      "durationSeconds": 30,
+      "startedAt": "2026-11-12T03:48:03.575Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 11,
+      "costUsd": 0.2900382,
+      "judgeCostUsd": 0,
+      "durationSeconds": 39,
+      "startedAt": "2026-11-12T03:48:17.032Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.23862960000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 27,
+      "startedAt": "2026-11-12T03:48:25.310Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0.9230769230769231,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.11906719999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-12T03:48:30.588Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.9230769230769231,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.11441180000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 8,
+      "startedAt": "2026-11-12T03:48:33.490Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.9230769230769231,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.1127302,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-12T03:48:40.894Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.9230769230769231,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.12168980000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-12T03:48:41.981Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.9230769230769231,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.11250700000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 9,
+      "startedAt": "2026-11-12T03:48:49.566Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-7-percent",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.])7\\s*(?:%|เปอร์เซ็นต์|percent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-nok",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![a-z])nok(?![a-z])|(?:^|[\\s(@])(?:คุณ|พี่|น้อง)?นก(?=[\\s,)]|$)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-refund-reason",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched refund_reason",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-rollback-version",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 4\\.11\\.3",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched PAY-?2318",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-hhmm-timeline",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)[\\s\\S]*(?<![\\d.:])(?:1[3-9]|2[0-3]):[0-5]\\d(?!\\d|[ \\t]*น)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-next-last-line",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:^|\\n)next:[^\\n]*\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-thai-with-english-terms",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:ดีพลอ|โรลแบ็?[กค]|โปรดักชั่?น|สเตจจิ้?ง|(?<!บ)ล็อ[กค]|ไมเกรชั่?น|มายเกรชั่?น|ฮอตฟิกซ์|พีอาร์))(?=[\\s\\S]*[ก-ฮ])[\\s\\S]*(?:deploy|rollback)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-formal-thai",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-invented-date",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-555",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-mention",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 0.9230769230769231,
+    "passRateWithout": 0,
+    "delta": 0.07692307692307687
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 2,
+  "casesPassed": 2,
+  "overallScore": 1,
+  "overallPassRate": 1,
+  "meanDelta": 0.13076923076923075
+ }
+}

@@ -352,7 +352,7 @@ One grader was edited before its case had ever run: `holdout4-humanize-en-incide
 
 Per skill, with-skill mean and mean Δ: `document-review` 1.00 / 0.00, `humanize` 0.98 / +0.15, `personal-voice` 0.915 / +0.03, `technical-writing` 0.955 / +0.145. No case loses, so all four skills hold the rule's two conditions on these cases. The gain is in `humanize` (Thai), `technical-writing` and, barely, `personal-voice`. `document-review` ties on both cases that were built to be hard for a plain model, so `doc_check.py` is not shown to help there. Remaining misses in the with-arm: `one-spelling-per-term` (Thai humanize), `habit-digits` (dry-wit), `oneoff-no-mention` (ticket-notes), `removed-path-flag` (cron-janitor), `step-result` (webhook-relay).
 
-Not done: results are not archived in `docs/eval-runs/`, the two older `holdout4-technical-writing-*` reruns (0.95 / 0.97 / −0.03 and 1.00 / 1.00 / 0.00) are not analysed here, and no trace was opened to check why the with-arm missed the graders above.
+A first attempt at this round stopped when the session ended, after $7.68 of partial runs; it is archived but not counted. Not done: the two older `holdout4-technical-writing-*` reruns (0.95 / 0.97 / −0.03 and 1.00 / 1.00 / 0.00) are not analysed here, and no trace was opened to check why the with-arm missed the graders above.
 
 ### `personal-voice` 0.1.37 on the fifth-round cases (2026-11-12): tuned, so not blind
 

@@ -1,0 +1,4270 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.322",
+ "startedAt": "2026-11-11T22:02:00.764Z",
+ "durationSeconds": 290,
+ "costUsd": 7.679391799999999,
+ "partial": true,
+ "partialReason": "interrupted",
+ "suite": {
+  "root": "<path>",
+  "ablation": "with-without",
+  "caseFilter": "holdout4-*",
+  "threshold": 1,
+  "concurrency": 4,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.36",
+    "path": "<path>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "holdout4-document-review-db-failover",
+   "dir": "evals/holdout4-document-review-db-failover",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:document-review` skill (Skill tool, `skill: \"siang:document-review\"`) to review `docs/db-failover-runbook.md`, our failover runbook for the orders database, against `docs/runbook-standard.md`. This is a review only: do not edit either document. Write your ledger of findings and your verdict (approve, approve-with-changes or reject) to `review.md`.\n\nYour final message is one line naming the verdict, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "acronym-ecr-unexpanded",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "drain-timeout-90-vs-120",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "heading-skips-5-3",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "impossible-date-2026-09-31",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "new-primary-used-before-set",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "promotion-claim-unsourced",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "rollback-section-missing",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?document-review\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "verdict-not-approve",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "xref-section-6-4",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+      "flags": "i",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.24607800000000005,
+      "judgeCostUsd": 0,
+      "durationSeconds": 42,
+      "startedAt": "2026-11-11T22:02:01.007Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2714188,
+      "judgeCostUsd": 0,
+      "durationSeconds": 50,
+      "startedAt": "2026-11-11T22:02:01.007Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2647336,
+      "judgeCostUsd": 0,
+      "durationSeconds": 48,
+      "startedAt": "2026-11-11T22:02:01.007Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2771572,
+      "judgeCostUsd": 0,
+      "durationSeconds": 53,
+      "startedAt": "2026-11-11T22:02:01.007Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.27734099999999995,
+      "judgeCostUsd": 0,
+      "durationSeconds": 51,
+      "startedAt": "2026-11-11T22:02:43.162Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.23000540000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 42,
+      "startedAt": "2026-11-11T22:02:48.545Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.200753,
+      "judgeCostUsd": 0,
+      "durationSeconds": 32,
+      "startedAt": "2026-11-11T22:02:51.216Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.2091346,
+      "judgeCostUsd": 0,
+      "durationSeconds": 37,
+      "startedAt": "2026-11-11T22:02:53.625Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 4,
+      "costUsd": 0.2000636,
+      "judgeCostUsd": 0,
+      "durationSeconds": 31,
+      "startedAt": "2026-11-11T22:03:23.303Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b6\\.4\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b6\\.4\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.2116062,
+      "judgeCostUsd": 0,
+      "durationSeconds": 37,
+      "startedAt": "2026-11-11T22:03:30.744Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-ecr-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bECR\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bECR\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "drain-timeout-90-vs-120",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)[\\s\\S]{0,300}(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)|(?:\\b120\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b(?:2|two)\\s*min)[\\s\\S]{0,300}(?:\\b90\\s*(?:s\\b|secs?\\b|seconds?\\b)|\\b1\\.5\\s*min)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "heading-skips-5-3",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b5\\.3\\b)[\\s\\S]{0,200}(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))|(?:(?:skip|jump|gap|missing|absent|out of sequence|not in sequence|sequence|numbering|no section|does not exist|doesn.t exist|there is no|omitted))[\\s\\S]{0,200}(?:\\b5\\.3\\b)|\\b5\\.2\\b[^\\n]{0,40}\\b5\\.4\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2026-09-31",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2026-09-31|Sep\\w*\\.?\\s+31\\b|\\b31(?:st)?\\s+(?:of\\s+)?Sep",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "new-primary-used-before-set",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:NEW_PRIMARY)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:NEW_PRIMARY)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "promotion-claim-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b8\\s*(?:s\\b|secs?\\b|seconds?\\b)|eight seconds|\\bp99\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "rollback-section-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched roll[- ]?back[\\s\\S]{0,80}(?:missing|absent|lacks|lacking|not present|not included|omitted|no section|not found|none|not met|unmet|does not (?:have|include|contain|exist)|doesn.t (?:have|include|contain|exist))|(?:missing|absent|lacks|lacking|omits|without|no|has no|does not (?:have|include|contain)|doesn.t (?:have|include|contain))\\s+(?:an?\\s+|the\\s+|any\\s+|required\\s+|dedicated\\s+)*roll[- ]?back",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-6-4",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 0.9777777777777779,
+    "passRateWithout": 0.8,
+    "delta": 0.022222222222222143
+   }
+  },
+  {
+   "name": "holdout4-document-review-vendor-onboarding",
+   "dir": "evals/holdout4-document-review-vendor-onboarding",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:document-review` skill (Skill tool, `skill: \"siang:document-review\"`) to review `docs/vendor-onboarding-procedure.md`, our procedure for setting up new suppliers, against `docs/procurement-doc-standard.md`. This is a review only: do not edit either document. Write your ledger of findings and your verdict (approve, approve-with-changes or reject) to `review.md`.\n\nYour final message is one line naming the verdict, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "acronym-vra-unexpanded",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "impossible-date-2027-02-29",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "list-4-2-skips-step-5",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "\\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "owner-missing",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "retention-7y-vs-60m",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "risk-stat-unsourced",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?document-review\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "vendor-id-used-before-created",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "verdict-not-approve",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "xref-section-8-2",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "review.md"
+      },
+      "pattern": "(?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+      "flags": "i",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2693214,
+      "judgeCostUsd": 0,
+      "durationSeconds": 47,
+      "startedAt": "2026-11-11T22:03:30.965Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.2903478,
+      "judgeCostUsd": 0,
+      "durationSeconds": 54,
+      "startedAt": "2026-11-11T22:03:34.006Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2727626,
+      "judgeCostUsd": 0,
+      "durationSeconds": 49,
+      "startedAt": "2026-11-11T22:03:54.395Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2732082,
+      "judgeCostUsd": 0,
+      "durationSeconds": 49,
+      "startedAt": "2026-11-11T22:04:07.296Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2583904,
+      "judgeCostUsd": 0,
+      "durationSeconds": 44,
+      "startedAt": "2026-11-11T22:04:18.317Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.18952839999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 29,
+      "startedAt": "2026-11-11T22:04:28.026Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.1783096,
+      "judgeCostUsd": 0,
+      "durationSeconds": 26,
+      "startedAt": "2026-11-11T22:04:43.363Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file review.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.23872359999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 45,
+      "startedAt": "2026-11-11T22:04:56.514Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.18177279999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 29,
+      "startedAt": "2026-11-11T22:04:56.566Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 5,
+      "costUsd": 0.1832376,
+      "judgeCostUsd": 0,
+      "durationSeconds": 28,
+      "startedAt": "2026-11-11T22:05:01.884Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "acronym-vra-unexpanded",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\bVRA\\b)[\\s\\S]{0,200}(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))|(?:(?:expand|expansion|spell|spelt|defin|undefined|unexplained|acronym|abbreviat|meaning|stands for|first use))[\\s\\S]{0,200}(?:\\bVRA\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "impossible-date-2027-02-29",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched 2027-02-29|Feb\\w*\\.?\\s+29\\W{0,4}2027|\\b29\\s+Feb\\w*\\.?,?\\s+2027|2027 is not a leap year",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "list-4-2-skips-step-5",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b4\\.2\\b[\\s\\S]{0,200}(?:\\bstep 5\\b|\\bno 5\\b|(?:skip|jump|gap|missing|sequence|numbering)[\\s\\S]{0,40}\\b5\\b|\\b5\\b[\\s\\S]{0,30}(?:skip|missing|absent|omitted)|\\b4\\W{1,8}6\\b|from 4 to 6)|(?:\\bstep 5\\b|from 4 to 6|\\b4 to 6\\b)[\\s\\S]{0,200}\\b4\\.2\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "owner-missing",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched owner\\w*[\\s\\S]{0,80}(?:missing|absent|not (?:named|stated|listed|given|specified|identified|assigned|defined)|unnamed|unassigned|lacks|lacking|none|not met|unmet)|(?:missing|absent|lacks|lacking|without|names no|has no|no)\\s+(?:an?\\s+|named\\s+|accountable\\s+|document\\s+|designated\\s+)*owner",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "retention-7y-vs-60m",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)[\\s\\S]{0,300}(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)|(?:\\b60\\s*-?\\s*months?\\b|sixty months|\\b5\\s*-?\\s*(?:years?|yrs?)\\b|five years)[\\s\\S]{0,300}(?:\\b7\\s*-?\\s*(?:years?|yrs?)\\b|seven years)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "risk-stat-unsourced",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b70\\s*(?:%|percent|per cent))[\\s\\S]{0,250}(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))|(?:(?:source|cite|citation|unverif|not verified|unsupported|evidence|reference|backing|substantiat|no link))[\\s\\S]{0,250}(?:\\b70\\s*(?:%|percent|per cent))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "vendor-id-used-before-created",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:vendor[ _-]?ID)[\\s\\S]{0,250}(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))|(?:(?:before (?:it is|it.s|its|being|step|section|the step|it exists|promotion|payment setup)|not yet|later step|later section|undefined|unset|empty|does not (?:yet )?exist|doesn.t (?:yet )?exist|not (?:been )?(?:set|defined|exported|created|assigned|generated|issued)|out of order|wrong order|order|used before|referenced before|precedes|ahead of|only (?:set|exported|assigned|created|generated) (?:in|at|by)))[\\s\\S]{0,250}(?:vendor[ _-]?ID)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "verdict-not-approve",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched verdict[\\s\\S]{0,40}?(?:approved?[- _,]+with[- _]+changes|reject(?:ed)?\\b)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "xref-section-8-2",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?:\\b8\\.2\\b)[\\s\\S]{0,250}(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))|(?:(?:does not exist|doesn.t exist|not exist|no such|nonexistent|non-existent|missing|dangling|broken|invalid|unresolved|not found|undefined|not defined|absent|there is no|has no|only has|only goes|only runs|ends at|stops at|points nowhere|no section|no matching))[\\s\\S]{0,250}(?:\\b8\\.2\\b)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 1,
+    "passRate": 1,
+    "scoreWithout": 0.9777777777777779,
+    "passRateWithout": 0.8,
+    "delta": 0.022222222222222143
+   }
+  },
+  {
+   "name": "holdout4-humanize-th-release-announcement",
+   "dir": "evals/holdout4-humanize-th-release-announcement",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) to rewrite `ANNOUNCEMENT.md`, a release announcement our billing team will post in the company engineering channel, so it no longer reads as machine-written. Edit the file in place and keep it in Thai. Keep every fact: numbers, ids, names, dates and versions.\n\nYour final message is one line naming the file you changed, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "clean-paragraph-and-quote-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "^(?=[\\s\\S]*ถ้าเจอ invoice ที่ยอดไม่ตรงหลังเปิด flag ให้ปิด `invoice_v2_enabled` ใน config ของ tenant นั้นก่อน แล้วแจ้งในห้อง #billing-oncall พร้อมเลข invoice ไม่ต้องรอให้ทีมเราตอบ)(?=[\\s\\S]*\"การปรับปรุงครั้งนี้ไม่ได้เป็นเพียงแค่การแก้ปัญหาความช้า แต่ยังช่วยให้ทีมบัญชีปิดงบได้เร็วขึ้นด้วย\")(?=[\\s\\S]*พิมพ์ชนก)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "facts-kept",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-calque-nominalization",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "ทำการ|ได้รับการปรับปรุง|ให้มีความ|ในส่วนของ",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-chat-closer-or-particle-run",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "หากมีข้อสงสัย|สอบถาม(?:เพิ่มเติม)?ได้(?:ตลอด|เลย)|หวังว่า[^\\n]{0,40}ประโยชน์|(?:ครับ[\\s\\S]*?){4}",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-em-dash",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "—",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-inflation-or-vague-attribution",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "ก้าวสำคัญ|ยกระดับ|อย่างมีนัยสำคัญ|ผู้เชี่ยวชาญ|หลายท่านมองว่า|หลายฝ่าย(?:มอง|เห็น)",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-not-only-frame-outside-quote",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "^(?!\\s*>).*(?:ไม่ใช่แค่|ไม่ใช่เพียง|ไม่ได้เป็นเพียง|ไม่เพียงแต่|ไม่ได้มีแค่)[^\\n]{0,120}แต่(?:ยัง|เป็น)",
+      "flags": "m",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-stacked-subordinators",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "ซึ่ง[^\\n]{0,80}(?:ซึ่ง|โดยที่)",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-thai-numerals",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "[๐-๙]",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "one-spelling-per-term",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "ANNOUNCEMENT.md"
+      },
+      "pattern": "^(?:(?=[\\s\\S]*ดีพลอย)(?=[\\s\\S]*[Dd]eploy)|(?=[\\s\\S]*แคช)(?=[\\s\\S]*(?<![A-Za-z_])[Cc]ache(?![A-Za-z_])))",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 0.9,
+      "passed": false,
+      "turns": 7,
+      "costUsd": 0.2237132,
+      "judgeCostUsd": 0,
+      "durationSeconds": 27,
+      "startedAt": "2026-11-11T22:05:09.464Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ถ้าเจอ invoice ที่ยอดไม่ตรงหลังเปิด flag ให้ปิด `invoice_v2_enabled` ใน config ของ tenant นั้นก่อน แล้วแจ้งในห้อง #billing-oncall พร้อมเลข invoice ไม่ต้องรอให้ทีมเราตอบ)(?=[\\s\\S]*\"การปรับปรุงครั้งนี้ไม่ได้เป็นเพียงแค่การแก้ปัญหาความช้า แต่ยังช่วยให้ทีมบัญชีปิดงบได้เร็วขึ้นด้วย\")(?=[\\s\\S]*พิมพ์ชนก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0.7,
+      "passed": false,
+      "turns": 8,
+      "costUsd": 0.23563979999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 28,
+      "startedAt": "2026-11-11T22:05:25.155Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file ANNOUNCEMENT.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0.7,
+      "passed": false,
+      "turns": 12,
+      "costUsd": 0.4738336,
+      "judgeCostUsd": 0,
+      "durationSeconds": 50,
+      "startedAt": "2026-11-11T22:05:29.833Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file ANNOUNCEMENT.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0.8,
+      "passed": false,
+      "turns": 7,
+      "costUsd": 0.2615118,
+      "judgeCostUsd": 0,
+      "durationSeconds": 31,
+      "startedAt": "2026-11-11T22:05:36.853Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file ANNOUNCEMENT.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0.8,
+      "passed": false,
+      "turns": 7,
+      "costUsd": 0.23338759999999997,
+      "judgeCostUsd": 0,
+      "durationSeconds": 29,
+      "startedAt": "2026-11-11T22:05:41.389Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ถ้าเจอ invoice ที่ยอดไม่ตรงหลังเปิด flag ให้ปิด `invoice_v2_enabled` ใน config ของ tenant นั้นก่อน แล้วแจ้งในห้อง #billing-oncall พร้อมเลข invoice ไม่ต้องรอให้ทีมเราตอบ)(?=[\\s\\S]*\"การปรับปรุงครั้งนี้ไม่ได้เป็นเพียงแค่การแก้ปัญหาความช้า แต่ยังช่วยให้ทีมบัญชีปิดงบได้เร็วขึ้นด้วย\")(?=[\\s\\S]*พิมพ์ชนก)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0.6,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.1435766,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-11T22:05:53.276Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file ANNOUNCEMENT.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.6,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.14396599999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 18,
+      "startedAt": "2026-11-11T22:06:07.365Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file ANNOUNCEMENT.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.7,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.147197,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-11T22:06:09.838Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file ANNOUNCEMENT.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.7,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.1399948,
+      "judgeCostUsd": 0,
+      "durationSeconds": 15,
+      "startedAt": "2026-11-11T22:06:10.431Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file ANNOUNCEMENT.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.136769,
+      "judgeCostUsd": 0,
+      "durationSeconds": 14,
+      "startedAt": "2026-11-11T22:06:20.208Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "clean-paragraph-and-quote-kept",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file ANNOUNCEMENT.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-kept",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*4\\.7\\.0)(?=[\\s\\S]*(?:(?:10|๑๐)\\s*(?:พ\\.ย\\.|พฤศจิกายน|Nov)|2026-11-10|10/11/))(?=[\\s\\S]*840)(?=[\\s\\S]*310)(?=[\\s\\S]*20\\s*(?:%|เปอร์เซ็นต์))(?=[\\s\\S]*(?:5|๕)\\s*นาที)(?=[\\s\\S]*ณัฐวุฒิ)(?=[\\s\\S]*BILL-3317)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-calque-nominalization",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-chat-closer-or-particle-run",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-em-dash",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-inflation-or-vague-attribution",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-not-only-frame-outside-quote",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stacked-subordinators",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-thai-numerals",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "one-spelling-per-term",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 0.7799999999999999,
+    "passRate": 0,
+    "scoreWithout": 0.6799999999999999,
+    "passRateWithout": 0,
+    "delta": 0.09999999999999998
+   }
+  },
+  {
+   "name": "holdout4-personal-voice-dry-wit",
+   "dir": "evals/holdout4-personal-voice-dry-wit",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:personal-voice` skill (Skill tool, `skill: \"siang:personal-voice\"`) on my writing samples in `samples/` and write a draft of my update to the platform team channel about yesterday's checkout outage. Save it as `draft.md`. The facts:\n\n- Ticket: INC-5582.\n- Yesterday, 11 Nov, the checkout API returned 502 errors for 38 minutes, from 14:12 to 14:50.\n- 1,240 checkout requests failed.\n- Cause: the TLS certificate on the internal payments proxy expired. Auto-renew from our certificate vendor, CertPoint, failed without alerting anyone.\n- Priya Raman renewed the certificate by hand.\n- Reconciliation is still running. Priya thinks no orders were lost and will confirm when it finishes.\n- We added an alert that fires two weeks before any certificate expires.\n\nDo not change anything in `samples/`.\n\nYour final message is one line naming the file you wrote, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "fact-1240-requests",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?<![\\d,.])1[,.\\s]?240(?!\\d)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-14-day-alert",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-38-minutes",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\b38\\b|thirty-eight",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-priya",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\bPriya\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "fact-ticket",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "INC-?5582",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "habit-digits",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\b(?:two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|twenty|thirty|forty|fifty|hundred|thousand)\\b|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "habit-probably",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\bprobably\\b",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "habit-verb-first",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "^\\s*(?:[A-Z][a-z]*ed|Had|Lost|Spent|Hit|Got|Took|Ran|Saw|Put|Cut|Made|Found|Kept|Broke|Went|Sent|Paid|Shut|Set|Threw|Wrote|Built)\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-apology",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\bsorry\\b|\\b(?:we|i)(?: [a-z]+)? apologi[sz]e|\\b(?:our|my) (?:sincere |deepest )?apologies|^\\s*apologies|apologies for|\\bwe regret|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-generic-boilerplate",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\b(?:hi|hey|hello) (?:team|all|everyone|folks|there)\\b|\\bhope (?:you|this|everyone|all)\\b|let me know|feel free|any questions|thanks for (?:your|the) patience|\\bcheers\\b|stay tuned|quick update|wanted to (?:give|share|let)|excited to|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-vendor-formulas",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "\\bkindly\\b|do(?:n.t| not) hesitate|best regards|around the clock|rest assured|^\\s*$",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "oneoff-no-hashtag",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?:^|[\\s(])#[A-Za-z]\\w*|^\\s*$",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "oneoff-no-ps",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "(?:^|\\n)[ \\t]*P\\.?[ \\t]?S\\b|^\\s*$",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?personal-voice\"",
+      "min": 1
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.21873040000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 23,
+      "startedAt": "2026-11-11T22:06:24.946Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bprobably\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^\\s*(?:[A-Z][a-z]*ed|Had|Lost|Spent|Hit|Got|Took|Ran|Saw|Put|Cut|Made|Found|Kept|Broke|Went|Sent|Paid|Shut|Set|Threw|Wrote|Built)\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0,
+      "passed": false,
+      "turns": 6,
+      "costUsd": 0.18491580000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 26,
+      "startedAt": "2026-11-11T22:06:25.031Z",
+      "error": "interrupted",
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: The operation was aborted.",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0.9230769230769231,
+      "passed": false,
+      "turns": 7,
+      "costUsd": 0.22959559999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 24,
+      "startedAt": "2026-11-11T22:06:26.426Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched (?<![\\d,.])1[,.\\s]?240(?!\\d)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b14[\\s-]*days?\\b|\\b(?:two|2)[\\s-]*weeks?\\b|\\bfourteen[\\s-]*days?\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\b38\\b|thirty-eight",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bPriya\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched INC-?5582",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bprobably\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.10366600000000001,
+      "judgeCostUsd": 0,
+      "durationSeconds": 16,
+      "startedAt": "2026-11-11T22:06:34.443Z",
+      "error": "interrupted",
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     },
+     {
+      "score": 0,
+      "passed": false,
+      "turns": 1,
+      "costUsd": 0.0790008,
+      "judgeCostUsd": 0,
+      "durationSeconds": 3,
+      "startedAt": "2026-11-11T22:06:48.165Z",
+      "error": "interrupted",
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0,
+      "passed": false,
+      "turns": 0,
+      "costUsd": 0,
+      "judgeCostUsd": 0,
+      "durationSeconds": 1,
+      "startedAt": "2026-11-11T22:06:50.163Z",
+      "error": "interrupted",
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "fact-1240-requests",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-14-day-alert",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-38-minutes",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-priya",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "fact-ticket",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-digits",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-probably",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "habit-verb-first",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-apology",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-generic-boilerplate",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-vendor-formulas",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-hashtag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "oneoff-no-ps",
+        "passed": false,
+        "weight": 1,
+        "explanation": "grader threw: case \"holdout4-personal-voice-dry-wit\" grader focus file \"draft.md\": path \"draft.md\" does not exist",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 0.38461538461538464,
+    "passRate": 0.2,
+    "scoreWithout": 0,
+    "passRateWithout": 0,
+    "delta": 0.38461538461538464
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 4,
+  "casesPassed": 2,
+  "overallScore": 0.7911538461538461,
+  "overallPassRate": 0.55,
+  "meanDelta": 0.13226495726495724
+ }
+}

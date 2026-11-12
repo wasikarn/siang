@@ -1,0 +1,669 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.322",
+ "startedAt": "2026-11-11T21:09:55.933Z",
+ "durationSeconds": 74,
+ "costUsd": 0.8073198,
+ "partial": false,
+ "suite": {
+  "root": "<path>",
+  "ablation": "with-without",
+  "caseFilter": "holdout2-personal-voice-terse-lower",
+  "threshold": 1,
+  "concurrency": 1,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.34",
+    "path": "<path>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "holdout2-personal-voice-terse-lower",
+   "dir": "evals/holdout2-personal-voice-terse-lower",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:personal-voice` skill (Skill tool, `skill: \"siang:personal-voice\"`) to rewrite `draft.md` in place so it sounds like Dana, who wrote the three messages in `samples/`. Keep every fact in the draft. Do not edit the samples.\n\nYour final message is one line saying the draft is rewritten, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 600,
+   "maxTurns": 20,
+   "graders": [
+    {
+     "name": "facts-name-ticket",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "^(?=[\\s\\S]*ops-2187)(?=[\\s\\S]*priya)[\\s\\S]*deploy",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "facts-when",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "^(?=[\\s\\S]*utc)(?=[\\s\\S]*(?<!\\d)40(?!\\d))(?=[\\s\\S]*(?:(?<!\\d)14(?:th)?(?!\\d)[^\\n\\d]{0,12}nov|nov[a-z]*\\.?\\s*14(?!\\d)|(?<!\\d)14/11(?!\\d)|(?<!\\d)11/14(?!\\d)))[\\s\\S]*(?:22[:.]?00|10\\s?pm)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "lowercase-starts",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "^(?![\\s\\S]*(?:(?:^|\\n)[^\\S\\n]*(?:[-*>]|\\d+[.)])?[^\\S\\n]*|[.?:;]\\s+)(?!Priya|Nair)[A-Z][a-z])(?![\\s\\S]*\\bI\\b)[\\s\\S]*[a-z]",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-caps-emphasis",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "^(?![\\s\\S]*\\b(?:NOT|DO|DONT|DON.T|NO|NEVER|DOWN|OFF|ALL|ANY|MUST|PLEASE|ONLY|NOW|STOP|WILL|ZERO)\\b)[\\s\\S]*(?:OPS|ops)-2187",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "no-exclaim-emoji",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "!|\\uD83C[\\uDF00-\\uDFFF]|\\uD83D[\\uDC00-\\uDEFF]|\\uD83E[\\uDD00-\\uDEFF]|[☀-➿]",
+      "flags": "",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "no-stiff-phrases",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "dear team|would like to inform|please be advised|kindly|do not hesitate|should you have|patience and understanding|kind regards|platform engineering team",
+      "flags": "i",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "signoff",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "~\\s?d\\.?\\s*$",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?personal-voice\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "terse",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "draft.md"
+      },
+      "pattern": "^(?!(?:\\S+\\s+){70}\\S)[\\s\\S]*\\S",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.1536238,
+      "judgeCostUsd": 0,
+      "durationSeconds": 11,
+      "startedAt": "2026-11-11T21:09:56.046Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-name-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ops-2187)(?=[\\s\\S]*priya)[\\s\\S]*deploy",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-when",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*utc)(?=[\\s\\S]*(?<!\\d)40(?!\\d))(?=[\\s\\S]*(?:(?<!\\d)14(?:th)?(?!\\d)[^\\n\\d]{0,12}nov|nov[a-z]*\\.?\\s*14(?!\\d)|(?<!\\d)14/11(?!\\d)|(?<!\\d)11/14(?!\\d)))[\\s\\S]*(?:22[:.]?00|10\\s?pm)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "lowercase-starts",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:(?:^|\\n)[^\\S\\n]*(?:[-*>]|\\d+[.)])?[^\\S\\n]*|[.?:;]\\s+)(?!Priya|Nair)[A-Z][a-z])(?![\\s\\S]*\\bI\\b)[\\s\\S]*[a-z]",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-caps-emphasis",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*\\b(?:NOT|DO|DONT|DON.T|NO|NEVER|DOWN|OFF|ALL|ANY|MUST|PLEASE|ONLY|NOW|STOP|WILL|ZERO)\\b)[\\s\\S]*(?:OPS|ops)-2187",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclaim-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stiff-phrases",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "signoff",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ~\\s?d\\.?\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "terse",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?!(?:\\S+\\s+){70}\\S)[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.1739874,
+      "judgeCostUsd": 0,
+      "durationSeconds": 17,
+      "startedAt": "2026-11-11T21:10:07.494Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-name-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ops-2187)(?=[\\s\\S]*priya)[\\s\\S]*deploy",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-when",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*utc)(?=[\\s\\S]*(?<!\\d)40(?!\\d))(?=[\\s\\S]*(?:(?<!\\d)14(?:th)?(?!\\d)[^\\n\\d]{0,12}nov|nov[a-z]*\\.?\\s*14(?!\\d)|(?<!\\d)14/11(?!\\d)|(?<!\\d)11/14(?!\\d)))[\\s\\S]*(?:22[:.]?00|10\\s?pm)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "lowercase-starts",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:(?:^|\\n)[^\\S\\n]*(?:[-*>]|\\d+[.)])?[^\\S\\n]*|[.?:;]\\s+)(?!Priya|Nair)[A-Z][a-z])(?![\\s\\S]*\\bI\\b)[\\s\\S]*[a-z]",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-caps-emphasis",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*\\b(?:NOT|DO|DONT|DON.T|NO|NEVER|DOWN|OFF|ALL|ANY|MUST|PLEASE|ONLY|NOW|STOP|WILL|ZERO)\\b)[\\s\\S]*(?:OPS|ops)-2187",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclaim-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stiff-phrases",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "signoff",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ~\\s?d\\.?\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "terse",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?!(?:\\S+\\s+){70}\\S)[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.875,
+      "passed": false,
+      "turns": 8,
+      "costUsd": 0.19247779999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 21,
+      "startedAt": "2026-11-11T21:10:24.455Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-name-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ops-2187)(?=[\\s\\S]*priya)[\\s\\S]*deploy",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-when",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*utc)(?=[\\s\\S]*(?<!\\d)40(?!\\d))(?=[\\s\\S]*(?:(?<!\\d)14(?:th)?(?!\\d)[^\\n\\d]{0,12}nov|nov[a-z]*\\.?\\s*14(?!\\d)|(?<!\\d)14/11(?!\\d)|(?<!\\d)11/14(?!\\d)))[\\s\\S]*(?:22[:.]?00|10\\s?pm)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "lowercase-starts",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:(?:^|\\n)[^\\S\\n]*(?:[-*>]|\\d+[.)])?[^\\S\\n]*|[.?:;]\\s+)(?!Priya|Nair)[A-Z][a-z])(?![\\s\\S]*\\bI\\b)[\\s\\S]*[a-z]",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-caps-emphasis",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclaim-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stiff-phrases",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "signoff",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ~\\s?d\\.?\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "terse",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?!(?:\\S+\\s+){70}\\S)[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0.875,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.09392299999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 6,
+      "startedAt": "2026-11-11T21:10:45.943Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-name-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ops-2187)(?=[\\s\\S]*priya)[\\s\\S]*deploy",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-when",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*utc)(?=[\\s\\S]*(?<!\\d)40(?!\\d))(?=[\\s\\S]*(?:(?<!\\d)14(?:th)?(?!\\d)[^\\n\\d]{0,12}nov|nov[a-z]*\\.?\\s*14(?!\\d)|(?<!\\d)14/11(?!\\d)|(?<!\\d)11/14(?!\\d)))[\\s\\S]*(?:22[:.]?00|10\\s?pm)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "lowercase-starts",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:(?:^|\\n)[^\\S\\n]*(?:[-*>]|\\d+[.)])?[^\\S\\n]*|[.?:;]\\s+)(?!Priya|Nair)[A-Z][a-z])(?![\\s\\S]*\\bI\\b)[\\s\\S]*[a-z]",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-caps-emphasis",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclaim-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stiff-phrases",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "signoff",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ~\\s?d\\.?\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "terse",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?!(?:\\S+\\s+){70}\\S)[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.875,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.093735,
+      "judgeCostUsd": 0,
+      "durationSeconds": 10,
+      "startedAt": "2026-11-11T21:10:52.055Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-name-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ops-2187)(?=[\\s\\S]*priya)[\\s\\S]*deploy",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-when",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*utc)(?=[\\s\\S]*(?<!\\d)40(?!\\d))(?=[\\s\\S]*(?:(?<!\\d)14(?:th)?(?!\\d)[^\\n\\d]{0,12}nov|nov[a-z]*\\.?\\s*14(?!\\d)|(?<!\\d)14/11(?!\\d)|(?<!\\d)11/14(?!\\d)))[\\s\\S]*(?:22[:.]?00|10\\s?pm)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "lowercase-starts",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:(?:^|\\n)[^\\S\\n]*(?:[-*>]|\\d+[.)])?[^\\S\\n]*|[.?:;]\\s+)(?!Priya|Nair)[A-Z][a-z])(?![\\s\\S]*\\bI\\b)[\\s\\S]*[a-z]",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-caps-emphasis",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclaim-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stiff-phrases",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "signoff",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ~\\s?d\\.?\\s*$",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "terse",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?!(?:\\S+\\s+){70}\\S)[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.75,
+      "passed": false,
+      "turns": 3,
+      "costUsd": 0.0995728,
+      "judgeCostUsd": 0,
+      "durationSeconds": 7,
+      "startedAt": "2026-11-11T21:11:02.361Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "facts-name-ticket",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*ops-2187)(?=[\\s\\S]*priya)[\\s\\S]*deploy",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "facts-when",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*utc)(?=[\\s\\S]*(?<!\\d)40(?!\\d))(?=[\\s\\S]*(?:(?<!\\d)14(?:th)?(?!\\d)[^\\n\\d]{0,12}nov|nov[a-z]*\\.?\\s*14(?!\\d)|(?<!\\d)14/11(?!\\d)|(?<!\\d)11/14(?!\\d)))[\\s\\S]*(?:22[:.]?00|10\\s?pm)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "lowercase-starts",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:(?:^|\\n)[^\\S\\n]*(?:[-*>]|\\d+[.)])?[^\\S\\n]*|[.?:;]\\s+)(?!Priya|Nair)[A-Z][a-z])(?![\\s\\S]*\\bI\\b)[\\s\\S]*[a-z]",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-caps-emphasis",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-exclaim-emoji",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "no-stiff-phrases",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "signoff",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file draft.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "terse",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?!(?:\\S+\\s+){70}\\S)[\\s\\S]*\\S",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 0.9583333333333334,
+    "passRate": 0.6666666666666666,
+    "scoreWithout": 0.8333333333333334,
+    "passRateWithout": 0,
+    "delta": 0.125
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 1,
+  "casesPassed": 0,
+  "overallScore": 0.9583333333333334,
+  "overallPassRate": 0.6666666666666666,
+  "meanDelta": 0.125
+ }
+}

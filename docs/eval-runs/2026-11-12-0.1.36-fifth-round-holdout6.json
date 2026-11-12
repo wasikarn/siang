@@ -1,0 +1,2151 @@
+{
+ "schemaVersion": 1,
+ "claudeVersion": "2.1.322",
+ "startedAt": "2026-11-12T03:26:47.359Z",
+ "durationSeconds": 199,
+ "costUsd": 4.3647013999999995,
+ "partial": false,
+ "suite": {
+  "root": "<path>",
+  "ablation": "with-without",
+  "caseFilter": "holdout6-*",
+  "threshold": 1,
+  "concurrency": 4,
+  "plugins": [
+   {
+    "name": "siang",
+    "version": "0.1.36",
+    "path": "<path>"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "name": "holdout6-technical-writing-cron-janitor",
+   "dir": "evals/holdout6-technical-writing-cron-janitor",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:technical-writing` skill (Skill tool, `skill: \"siang:technical-writing\"`). This folder holds `janitor.py`, the script our upload hosts run from cron to delete old files, and its `README.md`, which nobody has touched in a while. `demo/` has some sample files. Rewrite `README.md` in place for an on-call engineer who has never seen the script: they have to install it on a new upload host, check it with a run that deletes nothing, then add it to cron, and they need to know what each failure looks like. Do not edit `janitor.py` or anything in `demo/`.\n\nYour final message is one line saying what you changed, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 900,
+   "maxTurns": 30,
+   "graders": [
+    {
+     "name": "code-only-keep",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "--keep\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "default-max-age",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "exit-code-lock",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+      "flags": "im",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "expected-output",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "removed-path-flag",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "janitor\\.py[^\\n]*--path\\b|^[ \\t]*(?:[-*]|\\|)[ \\t]*`?--path\\b",
+      "flags": "m",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "required-env",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "\\bJANITOR_ROOT\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "schedule-unverified",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|no longer|moved off|used to))[^\\n]*\\b0 3 \\* \\* \\*)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:schedule|cron|time|slot|hour)|(?:schedule|cron|crontab|slot)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?technical-writing\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "step-result",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+      "flags": "m",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "working-command",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.23554300000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 39,
+      "startedAt": "2026-11-12T03:26:47.610Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|no longer|moved off|used to))[^\\n]*\\b0 3 \\* \\* \\*)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:schedule|cron|time|slot|hour)|(?:schedule|cron|crontab|slot)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 7,
+      "costUsd": 0.236525,
+      "judgeCostUsd": 0,
+      "durationSeconds": 43,
+      "startedAt": "2026-11-12T03:26:47.610Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|no longer|moved off|used to))[^\\n]*\\b0 3 \\* \\* \\*)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:schedule|cron|time|slot|hour)|(?:schedule|cron|crontab|slot)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.2629534,
+      "judgeCostUsd": 0,
+      "durationSeconds": 48,
+      "startedAt": "2026-11-12T03:26:47.610Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|no longer|moved off|used to))[^\\n]*\\b0 3 \\* \\* \\*)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:schedule|cron|time|slot|hour)|(?:schedule|cron|crontab|slot)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 6,
+      "costUsd": 0.20707240000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 34,
+      "startedAt": "2026-11-12T03:26:47.610Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|no longer|moved off|used to))[^\\n]*\\b0 3 \\* \\* \\*)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:schedule|cron|time|slot|hour)|(?:schedule|cron|crontab|slot)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 7,
+      "costUsd": 0.2431662,
+      "judgeCostUsd": 0,
+      "durationSeconds": 44,
+      "startedAt": "2026-11-12T03:27:21.114Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|no longer|moved off|used to))[^\\n]*\\b0 3 \\* \\* \\*)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:schedule|cron|time|slot|hour)|(?:schedule|cron|crontab|slot)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0.7777777777777778,
+      "passed": false,
+      "turns": 6,
+      "costUsd": 0.21428260000000002,
+      "judgeCostUsd": 0,
+      "durationSeconds": 37,
+      "startedAt": "2026-11-12T03:27:26.971Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.19577239999999999,
+      "judgeCostUsd": 0,
+      "durationSeconds": 32,
+      "startedAt": "2026-11-12T03:27:30.529Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.7777777777777778,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.1935422,
+      "judgeCostUsd": 0,
+      "durationSeconds": 32,
+      "startedAt": "2026-11-12T03:27:35.664Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.6666666666666666,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.2038616,
+      "judgeCostUsd": 0,
+      "durationSeconds": 34,
+      "startedAt": "2026-11-12T03:28:02.856Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.6666666666666666,
+      "passed": false,
+      "turns": 6,
+      "costUsd": 0.2138418,
+      "judgeCostUsd": 0,
+      "durationSeconds": 39,
+      "startedAt": "2026-11-12T03:28:04.402Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-keep",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --keep\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-max-age",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched default[^\\n]{0,60}\\b21\\b|\\b21\\b[^\\n]{0,40}(?:days|default)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-lock",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b4\\b[^\\n]{0,80}(?:lock|another run|already running)|(?:lock|another run|already running)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b4\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?4`?[ \\t]*[|:][^\\n]*(?:lock|another run|already running)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched janitor: \\d+ of \\d+ files older than \\d+ days, \\d+ deleted",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-path-flag",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern found (expected absent)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-env",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bJANITOR_ROOT\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "schedule-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bJANITOR_ROOT=\\S)[\\s\\S]*janitor\\.py(?![^\\n]*--path)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 0.9333333333333332,
+    "passRate": 0.4,
+    "scoreWithout": 0.7555555555555554,
+    "passRateWithout": 0,
+    "delta": 0.1777777777777778
+   }
+  },
+  {
+   "name": "holdout6-technical-writing-webhook-relay",
+   "dir": "evals/holdout6-technical-writing-webhook-relay",
+   "source": "mixed",
+   "promptMarkdown": "Use the `siang:technical-writing` skill (Skill tool, `skill: \"siang:technical-writing\"`). This folder holds `relay.py`, which forwards queued webhook events from `spool/` to a receiver, and its `README.md`, which is out of date. A developer on the billing team is about to run the relay for the first time: they will try it against the staging receiver, then point it at production, and they need to know what a failed delivery looks like and where the failed events end up. Rewrite `README.md` in place as a how-to for that developer. Do not edit `relay.py` or anything in `spool/`.\n\nYour final message is one line saying what you changed, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+   "runsPerCase": 1,
+   "timeoutSeconds": 900,
+   "maxTurns": 30,
+   "graders": [
+    {
+     "name": "code-only-dead-dir",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "--dead-dir\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "default-retries",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "--retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "exit-code-delivery",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+      "flags": "im",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "expected-output",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "removed-insecure-flag",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "relay\\.py[^\\n]*--insecure\\b|^[ \\t]*(?:[-*]|\\|)[ \\t]*`?--insecure\\b",
+      "flags": "m",
+      "match": "not_contains"
+     }
+    },
+    {
+     "name": "required-secret",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "\\bRELAY_SECRET\\b",
+      "flags": "",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "skill-fired",
+     "type": "tool_used",
+     "weight": 1,
+     "config": {
+      "tool": "Skill",
+      "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?technical-writing\"",
+      "min": 1
+     }
+    },
+    {
+     "name": "staging-unverified",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|retired|no longer))[^\\n]*staging-hooks\\.example\\.com)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:staging|URL|endpoint|receiver)|(?:staging|URL|endpoint|receiver)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+      "flags": "i",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "step-result",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+      "flags": "m",
+      "match": "contains"
+     }
+    },
+    {
+     "name": "working-command",
+     "type": "regex",
+     "weight": 1,
+     "config": {
+      "target": {
+       "source": "file",
+       "path": "README.md"
+      },
+      "pattern": "^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+      "flags": "",
+      "match": "contains"
+     }
+    }
+   ],
+   "arms": {
+    "with": [
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.22914640000000003,
+      "judgeCostUsd": 0,
+      "durationSeconds": 39,
+      "startedAt": "2026-11-12T03:28:05.204Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "staging-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|retired|no longer))[^\\n]*staging-hooks\\.example\\.com)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:staging|URL|endpoint|receiver)|(?:staging|URL|endpoint|receiver)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 8,
+      "costUsd": 0.2597394,
+      "judgeCostUsd": 0,
+      "durationSeconds": 46,
+      "startedAt": "2026-11-12T03:28:07.399Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "staging-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|retired|no longer))[^\\n]*staging-hooks\\.example\\.com)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:staging|URL|endpoint|receiver)|(?:staging|URL|endpoint|receiver)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 6,
+      "costUsd": 0.21739599999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 36,
+      "startedAt": "2026-11-12T03:28:36.441Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "staging-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|retired|no longer))[^\\n]*staging-hooks\\.example\\.com)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:staging|URL|endpoint|receiver)|(?:staging|URL|endpoint|receiver)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 7,
+      "costUsd": 0.2361508,
+      "judgeCostUsd": 0,
+      "durationSeconds": 39,
+      "startedAt": "2026-11-12T03:28:43.449Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "staging-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|retired|no longer))[^\\n]*staging-hooks\\.example\\.com)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:staging|URL|endpoint|receiver)|(?:staging|URL|endpoint|receiver)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 1,
+      "passed": true,
+      "turns": 6,
+      "costUsd": 0.2289386,
+      "judgeCostUsd": 0,
+      "durationSeconds": 39,
+      "startedAt": "2026-11-12T03:28:44.475Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "skill-fired",
+        "passed": true,
+        "weight": 1,
+        "explanation": "Skill called 1x (expected 1..∞)",
+        "withOnly": true,
+        "scored": false
+       },
+       {
+        "name": "staging-unverified",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?![\\s\\S]*(?:^|\\n)(?![^\\n]*(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known|retired|no longer))[^\\n]*staging-hooks\\.example\\.com)[\\s\\S]*?(?:(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known)[^\\n]{0,120}(?:staging|URL|endpoint|receiver)|(?:staging|URL|endpoint|receiver)[^\\n]{0,120}(?:\\bTODO\\b|\\bTBD\\b|unverified|not verified|could ?n[o']t (?:confirm|verify|find)|cannot (?:confirm|verify|be confirmed)|\\bunknown\\b|not (?:yet )?known))",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ],
+    "without": [
+     {
+      "score": 0.7777777777777778,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.21522639999999998,
+      "judgeCostUsd": 0,
+      "durationSeconds": 39,
+      "startedAt": "2026-11-12T03:28:53.262Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "staging-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.1919876,
+      "judgeCostUsd": 0,
+      "durationSeconds": 31,
+      "startedAt": "2026-11-12T03:29:12.666Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "staging-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 4,
+      "costUsd": 0.1832994,
+      "judgeCostUsd": 0,
+      "durationSeconds": 29,
+      "startedAt": "2026-11-12T03:29:22.834Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "staging-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.2007776,
+      "judgeCostUsd": 0,
+      "durationSeconds": 36,
+      "startedAt": "2026-11-12T03:29:23.131Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "staging-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     },
+     {
+      "score": 0.8888888888888888,
+      "passed": false,
+      "turns": 5,
+      "costUsd": 0.1954786,
+      "judgeCostUsd": 0,
+      "durationSeconds": 34,
+      "startedAt": "2026-11-12T03:29:32.687Z",
+      "error": null,
+      "tracePath": "<path>",
+      "skippedPaidGraders": false,
+      "graders": [
+       {
+        "name": "code-only-dead-dir",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --dead-dir\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "default-retries",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched --retries[^\\n]{0,80}default[^\\n]{0,15}\\b2\\b|default[^\\n]{0,40}\\b2\\b[^\\n]{0,30}retr|retr(?:y|ies|ied)[^\\n]{0,40}\\b2\\b|\\btwo (?:more |extra )?retries|retried twice",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "exit-code-delivery",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched exit(?:s|ed)?(?: with)?(?: code| status)?[^\\n]{0,40}\\b6\\b[^\\n]{0,80}(?:fail|deliver|dead|unreachable)|(?:fail|deliver|dead|unreachable)[^\\n]{0,100}(?:exit|status|code|return)[^\\n]{0,30}\\b6\\b|^[ \\t]*(?:[-*][ \\t]*)?\\|?[ \\t]*`?6`?[ \\t]*[|:][^\\n]*(?:fail|deliver|dead|unreachable)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "expected-output",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "removed-insecure-flag",
+        "passed": true,
+        "weight": 1,
+        "explanation": "pattern absent as expected",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "required-secret",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched \\bRELAY_SECRET\\b",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "staging-unverified",
+        "passed": false,
+        "weight": 1,
+        "explanation": "pattern not found in file README.md",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "step-result",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^[ \\t]*\\d+[.)][ \\t][\\s\\S]{0,300}?--dry-run[\\s\\S]{0,600}?relay: \\d+ event\\(s\\) ready, 0 sent \\(dry run\\)",
+        "withOnly": false,
+        "scored": true
+       },
+       {
+        "name": "working-command",
+        "passed": true,
+        "weight": 1,
+        "explanation": "matched ^(?=[\\s\\S]*\\bRELAY_URL=\\S)(?=[\\s\\S]*\\bRELAY_SECRET=\\S)[\\s\\S]*relay\\.py(?![^\\n]*--insecure)[^\\n]*--dry-run",
+        "withOnly": false,
+        "scored": true
+       }
+      ]
+     }
+    ]
+   },
+   "aggregates": {
+    "score": 0.9777777777777779,
+    "passRate": 0.8,
+    "scoreWithout": 0.8666666666666666,
+    "passRateWithout": 0,
+    "delta": 0.11111111111111127
+   }
+  }
+ ],
+ "aggregates": {
+  "casesTotal": 2,
+  "casesPassed": 0,
+  "overallScore": 0.9555555555555555,
+  "overallPassRate": 0.6000000000000001,
+  "meanDelta": 0.14444444444444454
+ }
+}
