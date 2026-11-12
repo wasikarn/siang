@@ -397,3 +397,19 @@ seeing a case voids it for that version, so this is a rerun on known cases, not 
 `personal-voice` stays the 0.1.37 one above (0.975, +0.017). The only miss is again `habit-signoff-infra` (with-arm 1
 of 5, without-arm 5 of 5, against 3 of 5 and 5 of 5 on 0.1.37), a difference of two runs that is within run-to-run
 noise, so this does not show the fix widens the gap over plain Claude. A blind check of 0.1.39 needs a new pair.
+
+## Blind pair for `personal-voice` 0.1.39 (2026-11-12, before the run, graders frozen at `6f5d5a1be3b2afea`)
+
+An agent told not to read `skills/`, `docs/`, this file, `evals/results/`, any README, `GLOSSARY.md` or any
+`personal-voice` case chose its own topics and wrote `holdout6-personal-voice-db-maintenance` (English SRE channel
+post) and `holdout6-personal-voice-bakery-closure` (Thai Facebook post). It was not told what `voice_stats.py`
+measures. Slip it reported: two early `grep` runs over `*/graders/*.md` also matched the `personal-voice` cases and
+returned their grader file names and counts, not contents; it excluded them after that. Graders are split by name:
+`outcome-*` judge the finished `draft.md` (facts, recurring habits, one-offs not copied, no added points),
+`process-skill-fired` judges how. Hash: first 16 hex of `find <the two dirs> -type f | sort | xargs shasum -a 256 |
+shasum -a 256`, repo root.
+
+Rule, fixed before the run: 5 runs per arm; `personal-voice` 0.1.39 passes if the with-skill mean (all graders) is
+above 0.90 and no case loses to the no-skill arm by more than 0.05. Reported beside it, not part of the verdict: the
+outcome-only score per arm (process grader left out), which says whether the skill changes the draft, not just the
+route. No bare-only pilot was run; the no-skill arm is the bare measurement. Nothing changes after the run starts.
