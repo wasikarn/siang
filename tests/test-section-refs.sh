@@ -24,6 +24,12 @@ for f in files:
             if n not in defs: bad.append(f"{f}:{i}: §{n} is not a section")
         for n in re.findall(r'cue #(\d+)', line, re.I):
             if n not in cues: bad.append(f"{f}:{i}: cue #{n} is not in cue-sheet.md")
+        for name, n in re.findall(r'`?([\w-]+\.md)`? +§(\d+(?:\.\d+)*)', line):  # "<file> §N" must name the defining file
+            if f.startswith('evals/'): break  # graders stay frozen once run; their prose is not read by the skill
+            if n in defs and os.path.basename(defs[n]) != name: bad.append(f"{f}:{i}: §{n} is in {defs[n]}, not {name}")
+for f in skill + sorted(glob.glob('skills/humanize/scripts/*.py')):  # the skill has no README.md since it became a skill again
+    for i, line in enumerate(open(f), 1):
+        if 'README.md' in line: bad.append(f"{f}:{i}: names README.md; the skill's main file is SKILL.md")
 for b in bad: print('FAIL', b)
 if bad: sys.exit(1)
 print(f"section refs: {len(defs)} sections, {len(cues)} cues, all references resolve")

@@ -22,7 +22,7 @@
 - 58. Hidden characters and marks
 - 43-52: sentence and paragraph structure, in `patterns-thai-structure.md`
 
-> This file extends the catalog in `patterns-universal.md` with Thai-only patterns (§31-§42, §53-§58; §43-§52 live in `patterns-thai-structure.md`) that only Thai text needs: terminology & calque, anti-fabrication, connectives, register matrix, code-switching tells, AI-leaked closers. Read `SKILL.md` §0 (register and language gate) first, then come back here.
+> This file extends the catalog in `patterns-universal.md` with Thai-only patterns (§31-§42, §53-§58; §43-§52 live in `patterns-thai-structure.md`) that only Thai text needs: terminology & calque, anti-fabrication, connectives, register matrix, code-switching tells, AI-leaked closers. Read `register.md` §0 (register and language gate) first, then come back here.
 >
 > ❌/✅ below is the notation for bad/good examples (like code // BAD / // GOOD), not the decorative emoji that §18 in `cue-sheet.md` says to cut from real writing.
 

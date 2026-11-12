@@ -3,7 +3,7 @@
 
 Usage: python3 scan.py [FILE]   (reads stdin when FILE is omitted or "-")
 
-A first pass for step 3 and a recount for step 6 of README.md, not the scan itself: a hit is a
+A first pass for step 3 and a recount for step 6 of SKILL.md, not the scan itself: a hit is a
 candidate to judge (a technical sense such as "robust estimator" is fine), and most tells
 (forced triads, structure, register) need a reader. Fenced and indented code blocks, blockquotes
 and YAML frontmatter are skipped, since the skill rewrites prose only; the em dash count covers

@@ -1,4 +1,4 @@
-# Worked Examples (extends README.md)
+# Worked Examples (extends SKILL.md)
 
 ## Contents
 

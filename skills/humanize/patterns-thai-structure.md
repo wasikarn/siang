@@ -2,7 +2,7 @@
 
 Adapted from chakrit/kien-thai (MIT, Copyright (c) 2026 Chakrit Wichian): `skills/kien-thai/SKILL.md` (Frames 1–7), `references/ai-tells.md`, `references/style-rules.md`, `references/grammar.md`. Rules paraphrased; all examples written fresh for dev/tech text.
 
-**Load when:** the draft is Thai and longer than one sentence (README.md step 3). The full frames fit genre D (blog, ADR, README, strategy, explainer) and genre B when a PR description runs to real paragraphs. In genre A (chat), C (UI strings, replies, errors) and short B (a standup, a one-line commit), which kien-thai itself excludes, apply only the sentence-order rule (§44: condition and time before the main clause) and leave the register frames alone. kien-thai register mapping: Explainer, News/reference and Personal blog all land in D; Marketing and Official/minutes are out of scope here.
+**Load when:** the draft is Thai and longer than one sentence (`SKILL.md` step 3). The full frames fit genre D (blog, ADR, README, strategy, explainer) and genre B when a PR description runs to real paragraphs. In genre A (chat), C (UI strings, replies, errors) and short B (a standup, a one-line commit), which kien-thai itself excludes, apply only the sentence-order rule (§44: condition and time before the main clause) and leave the register frames alone. kien-thai register mapping: Explainer, News/reference and Personal blog all land in D; Marketing and Official/minutes are out of scope here.
 
 `patterns-thai.md` §31–§42 catch words. These sections catch sentence shape: Thai written with English clause order, which reads as translated even when every word is fine. Many lexical tells (§33, §37) disappear once the shape is right, so run these first on D prose.
 
