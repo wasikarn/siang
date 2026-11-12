@@ -1,0 +1,2715 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.322",
+  "startedAt": "2026-11-12T06:01:26.305Z",
+  "durationSeconds": 97,
+  "costUsd": 3.5827649999999998,
+  "partial": false,
+  "suite": {
+    "root": "<path>",
+    "ablation": "with-without",
+    "caseFilter": "holdout7-humanize-*",
+    "threshold": 1,
+    "concurrency": 4,
+    "plugins": [
+      {
+        "name": "siang",
+        "version": "0.1.41",
+        "path": "<path>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "holdout7-humanize-db-upgrade-notice",
+      "dir": "evals/holdout7-humanize-db-upgrade-notice",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) to rewrite `db-upgrade-notice.md` so it reads like a person on our DBA team wrote it, not a chatbot. The readers are engineers across all product teams, who will see it posted in our company's engineering announcements channel and need to know what breaks, when, and what to do before the day.\n\nEdit `db-upgrade-notice.md` in place. Keep it in Thai, with the English tech terms as our engineers use them. Keep every fact: versions, cluster and ticket ids, the date and times, durations, service names, the command and the error line people will grep their logs for. Do not add anything that is not in the file.\n\nYour final message is one line naming the file you changed, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 600,
+      "maxTurns": 20,
+      "graders": [
+        {
+          "name": "outcome-command-verbatim",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-error-line-verbatim",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-ids",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-readonly",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "(?<!\\d)40\\s*นาที",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-services",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-versions",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-window",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-no-added-summary",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-no-em-dash",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "—",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "outcome-no-emoji",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "\\p{Extended_Pictographic}",
+            "flags": "u",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "outcome-no-opener-frame",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "ในยุคที่|ในโลกของ|ก้าวสำคัญ|ไม่ใช่แค่[^\\n]{0,60}แต่|ขับเคลื่อน[^\\n]{0,40}อนาคต",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "outcome-no-stock-phrases",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "db-upgrade-notice.md"
+            },
+            "pattern": "ทำการ|ยิ่งไปกว่านั้น|อย่างมีนัยสำคัญ|อย่าลังเล",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "process-skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 8,
+            "costUsd": 0.20441120000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 27,
+            "startedAt": "2026-11-12T06:01:26.442Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 13,
+            "costUsd": 0.3275286,
+            "judgeCostUsd": 0,
+            "durationSeconds": 38,
+            "startedAt": "2026-11-12T06:01:26.442Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 14,
+            "costUsd": 0.3884262,
+            "judgeCostUsd": 0,
+            "durationSeconds": 39,
+            "startedAt": "2026-11-12T06:01:26.442Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 9,
+            "costUsd": 0.2361954,
+            "judgeCostUsd": 0,
+            "durationSeconds": 28,
+            "startedAt": "2026-11-12T06:01:26.442Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 12,
+            "costUsd": 0.3660022,
+            "judgeCostUsd": 0,
+            "durationSeconds": 33,
+            "startedAt": "2026-11-12T06:01:53.278Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.12129519999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 13,
+            "startedAt": "2026-11-12T06:01:54.857Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.120432,
+            "judgeCostUsd": 0,
+            "durationSeconds": 13,
+            "startedAt": "2026-11-12T06:02:04.258Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.11725100000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 12,
+            "startedAt": "2026-11-12T06:02:05.471Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.131801,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-11-12T06:02:07.920Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.121636,
+            "judgeCostUsd": 0,
+            "durationSeconds": 13,
+            "startedAt": "2026-11-12T06:02:17.254Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-command-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```bash\\n?psql \"\\$ORDERS_RO_URL\" -c \"SELECT version\\(\\);\"\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-error-line-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ERROR: cannot execute INSERT in a read-only transaction(?![^\\s`])",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*pg-orders-prod-01)(?=[\\s\\S]*OPS-2291)(?=[\\s\\S]*#db-maint\\b)(?=[\\s\\S]*พิมพ์ชนก)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-readonly",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?<!\\d)40\\s*นาที",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-services",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*orders-api[^\\n]*503|[\\s\\S]*503[^\\n]*orders-api)(?=[\\s\\S]*POST /orders)(?=[\\s\\S]*billing-worker)(?=[\\s\\S]*report-cron)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-versions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])14\\.11(?!\\d))(?=[\\s\\S]*(?<![\\d.])16\\.4(?!\\d))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*เสาร์)(?=[\\s\\S]*(?<!\\d)21\\s*(?:พ\\.\\s?ย\\.|พฤศจิกายน|/11|Nov))(?=[\\s\\S]*(?<!\\d)0?1[:.]00)(?=[\\s\\S]*(?<!\\d)0?3[:.]30)(?=[\\s\\S]*(?<!\\d)0?2[:.]45)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:โดยสรุป|สรุปคือ|สรุปสั้น\\s?ๆ|\\bTL;?DR\\b))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-opener-frame",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-phrases",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 1,
+        "passRateWithout": 1,
+        "delta": 0
+      }
+    },
+    {
+      "name": "holdout7-humanize-search-ratelimit-pr",
+      "dir": "evals/holdout7-humanize-search-ratelimit-pr",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:humanize` skill (Skill tool, `skill: \"siang:humanize\"`) to rewrite `PR_DESCRIPTION.md` so it reads like the engineer who wrote the code, not a chatbot. The readers are the backend reviewers on my team, who know the codebase and want to see what changed, why, how it rolls out and what is tested.\n\nEdit `PR_DESCRIPTION.md` in place. Keep it in English. Keep every fact: numbers, dates, ids, flag, metric and key names, the config block and the testing checklist as it stands. Do not add anything that is not in the file.\n\nYour final message is one line naming the file you changed, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 600,
+      "maxTurns": 20,
+      "graders": [
+        {
+          "name": "outcome-fact-429",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-ids",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-incident",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-limits",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-fact-rollout",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-no-added-summary",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-no-em-dash",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "—",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "outcome-no-emoji",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "\\p{Extended_Pictographic}",
+            "flags": "u",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "outcome-no-puffery",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "\\b(?:delve|robust|comprehensive|seamless(?:ly)?|leverag(?:e|es|ed|ing)|game-?changer|significant step|more important than ever)\\b",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "outcome-no-stock-frames",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "In today's|worth noting|\\bNot only\\b|In conclusion|ongoing commitment",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "outcome-testing-checklist",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "outcome-yaml-verbatim",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_DESCRIPTION.md"
+            },
+            "pattern": "```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "process-skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?humanize\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.173885,
+            "judgeCostUsd": 0,
+            "durationSeconds": 19,
+            "startedAt": "2026-11-12T06:02:17.444Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.2163598,
+            "judgeCostUsd": 0,
+            "durationSeconds": 23,
+            "startedAt": "2026-11-12T06:02:23.428Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.17927260000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-11-12T06:02:26.479Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.1678658,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-11-12T06:02:30.551Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.15228339999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-11-12T06:02:36.242Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "process-skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.110751,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-11-12T06:02:42.221Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1114064,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-11-12T06:02:46.037Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.10949279999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 9,
+            "startedAt": "2026-11-12T06:02:50.180Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.113199,
+            "judgeCostUsd": 0,
+            "durationSeconds": 11,
+            "startedAt": "2026-11-12T06:02:51.911Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1132704,
+            "judgeCostUsd": 0,
+            "durationSeconds": 11,
+            "startedAt": "2026-11-12T06:02:52.079Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "outcome-fact-429",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b429\\b[^\\n]*Retry-After|[\\s\\S]*Retry-After[^\\n]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-ids",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*rl:search:\\{api_key_id\\})(?=[\\s\\S]*\\b120[- ]?(?:s\\b|sec|second))(?=[\\s\\S]*search\\.rate_limit\\.enabled)(?=[\\s\\S]*search_ratelimit_rejected_total)(?=[\\s\\S]*#4150\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-incident",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?<![\\d.])4\\.8 ?s(?:ec|econds)?\\b)(?=[\\s\\S]*(?:2026-11-03|Nov(?:ember|\\.)? 3\\b))(?=[\\s\\S]*(?<![\\d,])9,?000 requests)(?=[\\s\\S]*\\b(?:two|2) ?min)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-limits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*\\b(?:per|each) (?:user|IP|account|client)\\b)(?=[\\s\\S]*(?<![\\d.])120 ?(?:requests?|req)? ?(?:per|a|/) ?min)(?=[\\s\\S]*burst[^\\n:]{0,15}(?<![\\d.])30\\b)(?=[\\s\\S]*\\bper API key\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-fact-rollout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)[^\\n]*(?<![\\d.])5 ?%|(?<![\\d.])5 ?%[^\\n]*(?:2026-11-17|Nov(?:ember|\\.)? 17\\b)))(?=[\\s\\S]*(?:(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)[^\\n]*(?<![\\d.])50 ?%|(?<![\\d.])50 ?%[^\\n]*(?:2026-11-19|Nov(?:ember|\\.)? 19\\b)))(?=[\\s\\S]*(?:(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)[^\\n]*(?<![\\d.])100 ?%|(?<![\\d.])100 ?%[^\\n]*(?:2026-11-24|Nov(?:ember|\\.)? 24\\b)))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-added-summary",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?![\\s\\S]*(?:\\bTL;?DR\\b|\\bIn summary\\b|\\bTo summarize\\b|\\bOverall,|\\bIn short,))[\\s\\S]+",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-em-dash",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-emoji",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-puffery",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-no-stock-frames",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-testing-checklist",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*- \\[x\\][^\\n]*`go test \\./internal/ratelimit/\\.\\.\\.`)(?=[\\s\\S]*- \\[x\\][^\\n]*121st[^\\n]*429)(?=[\\s\\S]*- \\[ \\][^\\n]*INFRA-77)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "outcome-yaml-verbatim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ```yaml\\n?search:\\n?  rate_limit:\\n?    enabled: false\\n?    requests_per_minute: 120\\n?    burst: 30\\n?```",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 1,
+        "passRateWithout": 1,
+        "delta": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 2,
+    "casesPassed": 2,
+    "overallScore": 1,
+    "overallPassRate": 1,
+    "meanDelta": 0
+  }
+}

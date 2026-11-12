@@ -504,3 +504,12 @@ Rule, fixed before the run: 5 runs per arm; `humanize` 0.1.41 stays a skill if t
 no case loses to the no-skill arm by more than 0.05. If it fails, `humanize` becomes a plain doc like
 `document-review` (scripts and pattern files kept), with no tuning and no rerun on these cases; the move itself waits
 for the operator's go. Also reported, not part of the verdict: cost and turns per run.
+
+### Result (2026-11-12, plugin 0.1.41, graders frozen at `5312418fe12f0619`, commit 6a09edc)
+
+5 runs per arm, $3.58, no errors. With-skill / without / Δ: `holdout7-humanize-db-upgrade-notice` 1.00 / 1.00 /
+0.00, `holdout7-humanize-search-ratelimit-pr` 1.00 / 1.00 / 0.00. With-skill mean 1.00, no case loses: `humanize`
+0.1.41 passes the rule. No grader missed in either arm, and the skill fired in all 10 with-arm runs. Plain Claude
+already removes these tells and keeps these facts, so the pair shows no gain, like most blind `humanize` cases; the
+only blind gain on record is the fifth-round Thai case (+0.30 on 0.1.36). Cost per run with / without: Thai
+$0.305 / $0.122 (turns 11.2 / 4.2), English $0.178 / $0.112 (turns 7.0 / 3.8).

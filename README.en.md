@@ -108,13 +108,12 @@ Latest round per skill (details in `evals/README.md`):
 | skill | round (version) | with-skill mean | mean Δ | worst case Δ |
 |---|---|---|---|---|
 | `personal-voice` | blind `holdout6` pair (0.1.39) | 0.987 | +0.04 | 0.00 |
-| `humanize` | `holdout4` pair rerun, short text (0.1.40) | 0.91 | +0.09 | 0.00 |
+| `humanize` | blind `holdout7` pair (0.1.41) | 1.00 | 0.00 | 0.00 |
 | `technical-writing` | fifth round (0.1.36) | 0.956 | +0.144 | +0.11 |
 
 The fifth round also reran an older `technical-writing` case outside the round, which lost by −0.025.
-The `humanize` row reruns the fifth-round pair: the cases were written blind and did not drive the rewrite, but
-the skill changed after their 0.1.36 results were seen, so it is not a fresh blind result (fifth round, long text:
-0.98, +0.15).
+On the `holdout7` pair plain Claude also scored 1.00, so `humanize` passes but shows no gain there; its only blind
+gain so far is the Thai case of the fifth round (+0.30 on 0.1.36).
 A rerun of the earlier `personal-voice` pair on 0.1.39 (0.992, +0.033) is not counted as blind: one 0.1.39 fix
 (ปล. as a P.S.) came after a reviewer pointed at a line in that pair.
 
