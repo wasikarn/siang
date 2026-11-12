@@ -482,8 +482,9 @@ interrupted one (5 valid runs each), so the short text's 0.82 is inside the long
 the score shows no change either way. Cost per with-arm run on the Thai case rose from $0.26-0.29 to $0.41 and turns
 from 8 to 11.4; on the English case it was $0.19 before and $0.18 after. The with-arm misses on the Thai case are the
 same three graders as the interrupted long-text run (`clean-paragraph-and-quote-kept` 4 of 5, `one-spelling-per-term`
-3 of 5, `no-chat-closer-or-particle-run` 2 of 5). As the mh pilot found, the short text is easier to read but not
-cheaper. The extra turns on the Thai case are probably reads of the sibling files, but the archive keeps no
+3 of 5, `no-chat-closer-or-particle-run` 2 of 5). The short text is easier to read but not cheaper. The mh pilot
+showed no lower cost either (pooled 1.58 to 1.84 USD, down on one case and up on the other, 3 runs per arm, no traces
+kept, so no cause). The extra turns on the Thai case are probably reads of the sibling files, but the archive keeps no
 traces to show it, and with-arm turns on the English case fell slightly (6.6 to 6.4).
 
 ## Blind pair for `humanize` 0.1.41 (2026-11-12, before the run, graders frozen at `5312418fe12f0619`)
