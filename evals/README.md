@@ -551,3 +551,12 @@ separate draft, critic and revise loop)? Decision: keep it a single skill. Reaso
 
 Worth testing only if a new blind pair of long Thai text (where plain Claude scores below 1.00) is written: three
 arms (no plugin, skill, skill plus a fresh-context critic subagent), with the critic kept only if it wins there.
+
+That three-arm test was designed and attacked (`mh:attack-proposal`, two cycles, about 2M subagent tokens) but not
+run, and is closed: both cycles ended NO-GO with breaks still open, it would need its own build plus about $40 of
+eval runs, and the evidence above gives a critic little room to win. Two findings outlive it:
+- **Batch effect.** The same `humanize` text scored 0.96 in one `claude plugin eval` invocation and 0.78 in another
+  (permutation p = 0.012), so any comparison must run every arm in one invocation.
+- **`--restricted` does not pin a resume.** `claude -p --restricted` refuses file paths outside its cwd, but a
+  `--resume` takes the cwd it is launched from: a resume started in the repo read `SKILL.md`. An isolated writer
+  must run once, from its own temp dir, with no resume.
