@@ -446,3 +446,22 @@ The gains sit in few cases: `humanize` in the Thai release announcement (+0.30),
 blind cases tie because plain Claude already scores 1.00 on them, so they cannot show a gain. Every skill costs more
 per run (1.2x to 2.0x, from extra turns spent reading the skill and running its script), which is a few US cents per
 run in absolute terms. `thai-pua-repair` has no archived with/without run, so it is not in the table.
+
+## `humanize` rewritten short (0.1.40, 2026-11-12, before the run)
+
+Operator decision relayed by a peer session: write skills in the mattpocock-skills style (main file holds only the
+ordered steps, each ending on a "Done when" line; reference in sibling files behind pointers). `humanize/SKILL.md`
+went from 2,119 to 799 words: §0 moved verbatim to `register.md`, the Grit Gate and Voice to `grit.md`; the cue
+summary that repeated `cue-sheet.md` and some exposition were cut; the steps, guardrails, `scan.py` command, §
+numbers and the Deliver contract were kept. The other skills already fit the style (319 to 518 words, Done-when
+lines) and were left alone.
+
+Before: the `humanize` text was unchanged from 0.1.33 to 0.1.39, so its blind results stand as the before numbers
+(`holdout4-humanize-th-release-announcement` 0.96 / 0.66 / +0.30 and `holdout4-humanize-en-incident-review` 1.00 /
+1.00 / 0.00 on 0.1.36; cost per with-arm run $0.26 and $0.19, turns 8 and 7). After: the same `holdout4-humanize-*`
+pair on 0.1.40, graders still at `f9caf6323dccf031`, 5 runs per arm. These cases were written blind and the rewrite
+was not driven by their results; this session knew one with-arm miss name there (`one-spelling-per-term`).
+
+Rule, fixed before the run: 0.1.40 keeps `humanize` as a skill if the with-skill mean is above 0.90 and no case loses
+to the no-skill arm by more than 0.05. Also reported, not part of the verdict: with-arm score and cost per run against
+the before numbers. Expectation from the mh pilot: same score, no lower cost.

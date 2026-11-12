@@ -87,7 +87,7 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 
 | path | contents |
 |---|---|
-| `skills/humanize/` | `SKILL.md`, cue sheet, universal and Thai patterns, examples, references, `scripts/scan.py` |
+| `skills/humanize/` | `SKILL.md` (steps), register and grit notes, cue sheet, universal and Thai patterns, examples, references, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` |

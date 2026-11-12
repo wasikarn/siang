@@ -84,7 +84,7 @@ python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้
 
 | path | เนื้อหา |
 |---|---|
-| `skills/humanize/` | `SKILL.md`, cue sheet, pattern สากลและไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
+| `skills/humanize/` | `SKILL.md` (ลำดับขั้น), โน้ต register กับ grit, cue sheet, pattern สากลและไทย, ตัวอย่าง, แหล่งอ้างอิง, `scripts/scan.py` |
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` ไฟล์เดียว |

@@ -59,7 +59,7 @@
 
 ## Grit Gate: Soulless vs Alive
 
-Same facts, neutral report → real voice. Illustrates `README.md`'s Grit Gate (surface the grit,
+Same facts, neutral report → real voice. Illustrates `grit.md`'s Grit Gate (surface the grit,
 commit to a point of view):
 
 > ❌ การทดสอบ canary สองวันให้ผลลัพธ์ที่น่าสนใจ error rate ไม่เปลี่ยน latency p50 เพิ่มขึ้น 4 ms ทีมบางส่วนพร้อม rollout ขณะที่บางส่วนต้องการรออีกหนึ่งสัปดาห์
@@ -71,7 +71,7 @@ The point of view ("ผมยังไม่แน่ใจ") came from the auth
 
 ## Per-Register Worked Examples (v2.2)
 
-How the register selection gate (README.md §0) + per-register patterns apply.
+How the register selection gate (`register.md`, §0) + per-register patterns apply.
 
 ### Example A — Chat / LINE (Register A)
 
