@@ -484,3 +484,23 @@ same three graders as the interrupted long-text run (`clean-paragraph-and-quote-
 3 of 5, `no-chat-closer-or-particle-run` 2 of 5). As the mh pilot found, the short text is easier to read but not
 cheaper. The extra turns on the Thai case are probably reads of the sibling files, but the archive keeps no
 traces to show it, and with-arm turns on the English case fell slightly (6.6 to 6.4).
+
+## Blind pair for `humanize` 0.1.41 (2026-11-12, before the run, graders frozen at `5312418fe12f0619`)
+
+A deep audit of 0.1.40 found that the short rewrite dropped three instructions ("vary sentence length", "merging
+fragments is fine", "read the final aloud") and inverted the em-dash guardrail ("a count is not a claim"), and that
+four reference files still pointed at `README.md` or at `SKILL.md` §0. 0.1.41 restores the three lines, rewords the
+guardrail ("saying the dashes are cut is not the same as counting zero") and fixes the pointers. Any skill edit voids
+the 0.1.40 result, and that result was a rerun on known cases, so 0.1.41 is judged on a fresh pair.
+
+An agent told not to read `skills/`, `docs/`, this file, any README, `CLAUDE.md`, `GLOSSARY.md`, `evals/results/` or
+any `humanize` case chose its own topics and wrote `holdout7-humanize-db-upgrade-notice` (Thai upgrade announcement)
+and `holdout7-humanize-search-ratelimit-pr` (English PR description). It reported no slip. Graders are regex only:
+12 `outcome-*` graders per case judge the finished file (facts, protected code and quoted lines, tells removed, no
+added summary line); `process-skill-fired` judges the route and is unscored in with/without runs. Hash: first 16 hex
+of `find <the two dirs> -type f | sort | xargs shasum -a 256 | shasum -a 256`, repo root.
+
+Rule, fixed before the run: 5 runs per arm; `humanize` 0.1.41 stays a skill if the with-skill mean is above 0.90 and
+no case loses to the no-skill arm by more than 0.05. If it fails, `humanize` becomes a plain doc like
+`document-review` (scripts and pattern files kept), with no tuning and no rerun on these cases; the move itself waits
+for the operator's go. Also reported, not part of the verdict: cost and turns per run.
