@@ -75,9 +75,74 @@ printf '1. a\n1. b\n1. c\n' > "$work/lazy.md"
 python3 "$dc" "$work/lazy.md" > "$work/out.json"
 check "lazy numbering (all 1.) is accepted"      "not any(f['check']=='list-number' for f in j['findings'])"
 
-if python3 "$dc" "$work/missing.md" > /dev/null 2>"$work/err"; then
-  echo "FAIL missing file should exit non-zero"; fail=1
-elif grep -q "cannot read" "$work/err"; then echo "PASS missing file exits non-zero with a message"
-else echo "FAIL missing file message"; fail=1; fi
+printf 'Revised 2026-10-02. Reviewed 3 May 2026.\n' > "$work/dates2.md"
+python3 "$dc" "$work/dates2.md" > "$work/out.json"
+check "ISO and month-name dates are mixed"       "$(has date "'more than one date format' in f['detail']")"
+printf 'Revised 2026-10-02. Reviewed 3 MAY 2026. Our CAFÉ menu.\n' > "$work/dates3.md"
+python3 "$dc" "$work/dates3.md" > "$work/out.json"
+check "all-caps month name is a date"            "$(has date "'more than one date format' in f['detail']")"
+check "CAFÉ is not the acronym CAF"              "not any(f['check']=='acronym' and f['quote'].startswith('CAF') for f in j['findings'])"
+
+# ordinary words are not month names; decimals and thousands keep their unit; a nested list returning to the outer
+# level continues it; Thai and inline-code headings make working anchors; a year heading is not section 2026;
+# "Section 3: Scope" resolves "see section 3"; an acronym glued to Thai text is still found
+cat > "$work/fp.md" <<'MD'
+# Runbook
+
+Revised 2026-10-02.
+
+## 2026 roadmap
+
+## Section 3: Scope
+
+## Run `deploy`
+
+## ขั้นตอน
+
+1. Step 2 may fail; keep 3 decimals and 2 separate copies.
+   1. Wait 1.5 seconds.
+   2. Retry every 10,000 requests.
+2. See section 3, [deploy](#run-deploy) and [ขั้นตอน](#ขั้นตอน).
+3. ใช้ APIที่มีอยู่
+MD
+python3 "$dc" "$work/fp.md" > "$work/out.json"
+check "may/decimals/separate are not dates"      "not any(f['check']=='date' for f in j['findings'])"
+check "1.5 seconds and 10,000 requests have units" "not any(f['check']=='duration-no-unit' for f in j['findings'])"
+check "nested list back to outer level is fine"  "not any(f['check']=='list-number' for f in j['findings'])"
+check "Thai and inline-code anchors resolve"     "not any('anchor' in f['detail'] for f in j['findings'])"
+check "year heading is not a section number"     "not any(f['check']=='heading-number' and f['quote'].startswith('2026') for f in j['findings'])"
+check "Section 3 heading resolves section 3"     "not any('section 3' in f['detail'] for f in j['findings'])"
+check "acronym next to Thai is found"            "$(has acronym "f['quote']=='API'")"
+
+printf '1. a\n   1. b\n   3. c\n2. d\n' > "$work/nest.md"
+python3 "$dc" "$work/nest.md" > "$work/out.json"
+check "a skip inside a nested list is flagged"   "$(has list-number "'item 3 follows 1' in f['detail']")"
+
+printf 'Wait 1,500 ms for the lock.\n\nWait 500 ms for the lock.\n\nThen wait 1.5 s for the lock.\n' > "$work/thou.md"
+python3 "$dc" "$work/thou.md" > "$work/out.json"
+check "1,500 ms vs 500 ms is a conflict"         "$(has quantity-conflict "'1,500 ms' in f['detail'] and '500 ms' in f['detail'].replace('1,500 ms', '')")"
+check "1,500 ms equals 1.5 s"                    "not any(f['check']=='quantity-conflict' and '1.5 s' in f['detail'] and '1,500 ms' in f['detail'] for f in j['findings'])"
+printf '# A\n\n## Section 1: Scope\n\n## Section 1: Rules\n\n## Section 4: Notes\n\n## 5. Section 9 rules\n\nSee section 9.\n' > "$work/secnum.md"
+python3 "$dc" "$work/secnum.md" > "$work/out.json"
+check "repeated Section 1 heading is flagged"    "$(has heading-number "f['quote'].startswith('1 ')")"
+check "Section 9 inside a numbered title is not a section" "$(has xref "'section 9' in f['detail']")"
+printf 'Revised 2026-10-02. Reviewed 3 jan 2026.\n' > "$work/lowmonth.md"
+python3 "$dc" "$work/lowmonth.md" > "$work/out.json"
+check "lowercase month with a year is a date"    "$(has date "'more than one date format' in f['detail']")"
+printf 'Reviewed 3 MAY 2026.\n' > "$work/capmonth.md"
+python3 "$dc" "$work/capmonth.md" > "$work/out.json"
+check "an all-caps month is not an acronym"      "not any(f['check']=='acronym' for f in j['findings'])"
+
+printf '# X\n\n## Procedure\n\n## Purpose\n' > "$work/order.md"
+python3 "$dc" "$work/order.md" --sections "Purpose,Procedure" > "$work/out.json"
+check "sections out of order are flagged"        "$(has section "'out of the required order' in f['detail']")"
+
+rc=0; python3 "$dc" "$work/missing.md" > /dev/null 2>"$work/err" || rc=$?
+if [ "$rc" -eq 1 ] && grep -q "cannot read" "$work/err"; then echo "PASS missing file exits 1 with a message"
+else echo "FAIL missing file: exit $rc, $(cat "$work/err")"; fail=1; fi
+printf '\xff\xfe bad bytes\n' > "$work/latin1.md"
+rc=0; python3 "$dc" "$work/latin1.md" > /dev/null 2>"$work/err" || rc=$?
+if [ "$rc" -eq 1 ] && grep -q "cannot read" "$work/err"; then echo "PASS non-UTF-8 file exits 1 with a message"
+else echo "FAIL non-UTF-8 file: exit $rc, $(tail -1 "$work/err")"; fail=1; fi
 
 exit $fail

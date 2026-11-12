@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Mechanical checks on a Markdown record (SOP, runbook, policy, spec), as candidates for a reviewer.
 
-Usage: doc_check.py DOC.md [--sections "Purpose,Prerequisites,Procedure"]   (DOC may be - for stdin)
+Usage: doc_check.py DOC.md [--sections "Purpose,Prerequisites,Procedure"]   (DOC may be - for stdin; relative
+links are then checked against the current folder, so pass the file path when the document has them)
 
 Prints JSON {"file", "counts", "findings": [{"check", "line", "quote", "detail"}]}. Checks:
   xref             "section N", "§N" or "step N" that matches no numbered heading or list item; Markdown links
@@ -15,11 +16,12 @@ Prints JSON {"file", "counts", "findings": [{"check", "line", "quote", "detail"}
   date             impossible ISO dates, and more than one date format in one document
   section          with --sections: a required heading that is missing or out of order
 
-It finds candidates only; a human or the skill decides which are real. Code blocks and inline code are skipped.
-Limits (shortcut: line-based, no real Markdown parse; upgrade to a parser if nested lists matter): lazy list
-numbering (every item "1.") is accepted; a quantity pairs by shared neighbouring word, so unrelated numbers
-next to the same word can pair up.
-Exit: 0 ok, 2 bad arguments or unreadable file.
+It finds candidates only; a reviewer decides which are real. Fenced code blocks and inline code are skipped.
+Limits (shortcut: line-based, no real Markdown parse; upgrade to a parser if lists or code blocks get missed):
+nesting is read from indentation; indented (4-space) code blocks are not skipped; lazy list numbering (every
+item "1.") is accepted; a quantity pairs by shared neighbouring word, so unrelated numbers next to the same
+word can pair up.
+Exit: 0 ok, 1 bad arguments or unreadable file.
 """
 import datetime
 import json
@@ -34,23 +36,28 @@ TIME = {"ms": .001, "s": 1, "sec": 1, "secs": 1, "second": 1, "seconds": 1, "min
 SIZE = {"b": 1, "kb": 1e3, "mb": 1e6, "gb": 1e9, "tb": 1e12}
 UNITS = {**{u: ("time", v) for u, v in TIME.items()}, **{u: ("size", v) for u, v in SIZE.items()}}
 UNIT_RX = "|".join(sorted(UNITS, key=len, reverse=True))
-QTY = re.compile(rf"(?<![\w.-])(\d+(?:\.\d+)?)\s*({UNIT_RX})\b", re.I)
+QTY = re.compile(rf"(?<![\w.,-])(\d{{1,3}}(?:,\d{{3}})+(?:\.\d+)?|\d+(?:\.\d+)?)\s*({UNIT_RX})\b", re.I)  # 1,500 ms
 STOP = set("the a an of to for and or in on at is are be then after before about every each up by with from "
            "this that it its into".split())
-HEADING = re.compile(r"^(#{1,6})\s+(?:(\d+(?:\.\d+)*)\.?\s+)?(.*?)\s*#*\s*$")
+HEADING = re.compile(r"^(#{1,6})\s+(?:(\d{1,3}(?:\.\d+)*)\.?\s+)?(.*?)\s*#*\s*$")  # 4 digits: a year
 ITEM = re.compile(r"^(\s*)(\d+)[.)]\s")
 SECTION_REF = re.compile(r"(?:\bsections?|\bsec\.|§)\s*(\d+(?:\.\d+)*)", re.I)
 STEP_REF = re.compile(r"\bsteps?\s+(\d+)\b", re.I)
 LINK = re.compile(r"\]\(([^)\s]+)\)")
-ACRO = re.compile(r"\b[A-Z]{2,6}\b")
-MONTHS = "jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
+ACRO = re.compile(r"(?<![^\W\u0e00-\u0e7f])[A-Z]{2,6}(?![^\W\u0e00-\u0e7f])")  # a Thai letter is a boundary, É is not
+# capitalised or all caps, whole word: "2 may fail", "3 decimals" are not dates
+MONTHS = ("Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|"
+          "Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?")
+MONTHS_ANY = f"{MONTHS}|{MONTHS.upper()}"
+MONTH_WORDS = re.compile(rf"(?:{MONTHS.upper()})")  # an all-caps month is not an acronym
 DATE_KINDS = {"ISO": re.compile(r"\b\d{4}-\d{2}-\d{2}\b"), "slash": re.compile(r"\b\d{1,2}/\d{1,2}/\d{2,4}\b"),
-              "month name": re.compile(rf"\b\d{{1,2}}\s+(?:{MONTHS})[a-z]*\b|\b(?:{MONTHS})[a-z]*\s+\d{{1,2}}\b", re.I)}
-NO_UNIT = re.compile(r"\b(wait|timeout|within|every|delay|sleep)\s+(?:of\s+|for\s+)?(\d+)\s*(?:$|[.,;:)])", re.I)
+              "month name": re.compile(rf"\b\d{{1,2}}\s+(?:{MONTHS_ANY})\.?(?!\w)|\b(?:{MONTHS_ANY})\.?\s+\d{{1,2}}\b"
+                                       rf"|\b\d{{1,2}}\s+(?:{MONTHS.lower()})\s+\d{{4}}\b")}  # lowercase: only with a year
+NO_UNIT = re.compile(r"\b(wait|timeout|within|every|delay|sleep)\s+(?:of\s+|for\s+)?(\d+(?:[.,]\d+)*)\s*(?:$|[.,;:)](?!\d))", re.I)
 
 
 def slug(text):
-    return re.sub(r"\s", "-", re.sub(r"[^\w\s-]", "", text.lower()).strip())
+    return re.sub(r"\s", "-", re.sub(r"[^\w\s\u0e00-\u0e7f-]", "", text.lower()).strip())  # keep Thai marks
 
 
 def prose(text):
@@ -71,15 +78,19 @@ def analyse(text, docdir, sections):
     def add(check, no, quote, detail):
         found.append({"check": check, "line": no, "quote": quote.strip()[:120], "detail": detail})
 
-    headings, item_nums, anchors = [], set(), set()
+    raw = text.splitlines()
+    headings, item_nums, anchors, head_nums = [], set(), set(), set()
     for no, ln in lines:
         m = HEADING.match(ln)
         if m:
-            headings.append((no, len(m.group(1)), m.group(2), m.group(3)))
-            anchors.add(slug(ln.lstrip("# ").strip()))
+            num = m.group(2)
+            if not num and (s := re.match(r"(?:section|sec\.|§)\s*(\d+(?:\.\d+)*)", m.group(3), re.I)):
+                num = s.group(1)  # "## Section 3: Scope" is numbered 3
+            headings.append((no, len(m.group(1)), num, m.group(3)))
+            anchors.add(slug(raw[no - 1].strip().strip("#").strip()))  # raw: inline code is part of the anchor
+            head_nums |= {num} if num else set()
         if (m := ITEM.match(ln)):
             item_nums.add(int(m.group(2)))
-    head_nums = {h[2] for h in headings if h[2]}
 
     last = {}  # parent prefix -> last sibling number
     for no, _, num, title in headings:
@@ -92,20 +103,21 @@ def analyse(text, docdir, sections):
             add("heading-number", no, f"{num} {title}", f"expected {(parent + '.' if parent else '') + str(want)}")
         last[parent] = n
 
-    prev = None  # (indent, last number) of the list being read
+    open_lists = {}  # indent -> last number of the list open at that indent
     for no, ln in lines:
         m = ITEM.match(ln)
         if HEADING.match(ln) or (ln.strip() and not m and not ln.startswith((" ", "\t"))):
-            prev = None
+            open_lists = {}
         if not m:
             continue
         indent, n = len(m.group(1)), int(m.group(2))
-        if prev is None or prev[0] != indent:
+        open_lists = {i: v for i, v in open_lists.items() if i <= indent}  # deeper lists closed
+        if indent not in open_lists:
             if n != 1:
                 add("list-number", no, ln, f"list starts at {n}, not 1")
-        elif n != prev[1] + 1 and not (n == 1 and prev[1] == 1):
-            add("list-number", no, ln, f"item {n} follows {prev[1]}")
-        prev = (indent, n)
+        elif n != open_lists[indent] + 1 and not (n == 1 and open_lists[indent] == 1):
+            add("list-number", no, ln, f"item {n} follows {open_lists[indent]}")
+        open_lists[indent] = n
 
     for no, ln in lines:
         for m in SECTION_REF.finditer(ln):
@@ -131,7 +143,7 @@ def analyse(text, docdir, sections):
             before = re.findall(r"[A-Za-z]+", ln[:m.start()])[-1:]
             after = re.findall(r"[A-Za-z]+", ln[m.end():])[:1]
             ctx = {w.lower() for w in before + after} - STOP
-            qtys.append((no, ln, dim, float(m.group(1)) * mult, ctx, m.group(0)))
+            qtys.append((no, ln, dim, float(m.group(1).replace(",", "")) * mult, ctx, m.group(0)))
     for j, b in enumerate(qtys):
         for a in qtys[:j]:
             if a[2] == b[2] and a[4] & b[4] and abs(a[3] - b[3]) > 1e-9:
@@ -145,7 +157,8 @@ def analyse(text, docdir, sections):
     seen, expanded = {}, set(re.findall(r"\(([A-Z]{2,6})\)", text))
     for no, ln in lines:
         for m in ACRO.finditer(ln):
-            seen.setdefault(m.group(0), no)
+            if not MONTH_WORDS.fullmatch(m.group(0)):
+                seen.setdefault(m.group(0), no)
             if re.match(r"\s*\(", ln[m.end():]):
                 expanded.add(m.group(0))
     for a, no in seen.items():
@@ -193,8 +206,8 @@ def main(argv):
     path = argv[0]
     try:
         text = sys.stdin.read() if path == "-" else open(path, encoding="utf-8").read()
-    except OSError as e:
-        sys.exit(f"doc_check.py: cannot read {path}: {e.strerror}")
+    except (OSError, UnicodeDecodeError) as e:
+        sys.exit(f"doc_check.py: cannot read {path}: {getattr(e, 'strerror', None) or e}")
     found = analyse(text, "." if path == "-" else os.path.dirname(os.path.abspath(path)), sections)
     print(json.dumps({"file": path, "counts": dict(Counter(f["check"] for f in found)), "findings": found},
                      ensure_ascii=False, indent=2))
