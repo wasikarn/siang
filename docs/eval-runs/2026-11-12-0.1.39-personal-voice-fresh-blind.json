@@ -1,0 +1,2715 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.322",
+  "startedAt": "2026-11-12T05:03:01.982Z",
+  "durationSeconds": 78,
+  "costUsd": 3.2869615999999997,
+  "partial": false,
+  "suite": {
+    "root": "<path>",
+    "ablation": "with-without",
+    "caseFilter": "holdout5-personal-voice-*",
+    "threshold": 1,
+    "concurrency": 4,
+    "plugins": [
+      {
+        "name": "siang",
+        "version": "0.1.39",
+        "path": "<path>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "holdout5-personal-voice-review-comments",
+      "dir": "evals/holdout5-personal-voice-review-comments",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:personal-voice` skill (Skill tool, `skill: \"siang:personal-voice\"`) on the writing samples in `samples/` and write my review comments on PR #231 (a new retry helper in the Go client) in my voice. Save them to `draft.md`. Word it however fits my voice, but every point below must be in the draft, and do not add any point I did not list:\n\n- Blocking. On line 58 of client/retry.go, you must put a ceiling on the backoff. Right now the delay keeps doubling with no limit.\n- Blocking. You should not retry on a 400 response. Please only retry 5xx and 429.\n- Not blocking. Line 12 of client/retry_test.go uses time.Sleep, so the test takes 8 seconds. You need to switch to a fake clock.\n- Question. Where does the default of 3 attempts come from? Is it from the design doc?\n\nYour final message is one line naming the file you wrote, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 600,
+      "maxTurns": 20,
+      "graders": [
+        {
+          "name": "fact-backoff-cap",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fact-no-retry-on-400",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fact-sleep-fake-clock",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fact-three-attempts-question",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "habit-backticked-file-line",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "`(?:client/)?retry\\.go:58`",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "habit-lowercase-labels",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "habit-we-suggestions",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "no-cc-mention",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "@[A-Za-z]|\\bcc\\b|^(?![\\s\\S])",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-fwiw",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\bFWIW\\b|for what it'?s worth|^(?![\\s\\S])",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-generic-boilerplate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\bgreat (?:work|job|pr|stuff|change)|\\bnice (?:work|job)\\b|\\bthanks for (?:the|this|your)\\b|\\boverall,? (?:this |it )?looks good|\\blet me know if\\b|\\bhope this helps\\b|\\bhappy to (?:chat|discuss)\\b|^(?![\\s\\S])",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-jitter",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "jitter|^(?![\\s\\S])",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-marco-habits",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "\\bIMHO\\b|\\bLGTM\\b|🚀|^(?![\\s\\S])",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?personal-voice\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.22309760000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 18,
+            "startedAt": "2026-11-12T05:03:02.156Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.19146499999999997,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-12T05:03:02.156Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.1918336,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-12T05:03:02.156Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.211852,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-12T05:03:02.156Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.1881238,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-11-12T05:03:15.820Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1088064,
+            "judgeCostUsd": 0,
+            "durationSeconds": 8,
+            "startedAt": "2026-11-12T05:03:16.137Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1088282,
+            "judgeCostUsd": 0,
+            "durationSeconds": 8,
+            "startedAt": "2026-11-12T05:03:16.334Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.1089608,
+            "judgeCostUsd": 0,
+            "durationSeconds": 9,
+            "startedAt": "2026-11-12T05:03:20.298Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.1125336,
+            "judgeCostUsd": 0,
+            "durationSeconds": 11,
+            "startedAt": "2026-11-12T05:03:24.365Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.1113704,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-11-12T05:03:24.722Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-backoff-cap",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*backoff)(?=[\\s\\S]*\\b58\\b)(?=[\\s\\S]*(?:\\b(?:cap|caps|capped|uncapped|ceiling|max|maximum|limit|limits|bound|bounded|unbounded)\\b|no upper))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-no-retry-on-400",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*\\b400\\b)(?=[\\s\\S]*\\b429\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-sleep-fake-clock",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*sleep)(?=[\\s\\S]*(?:fake|mock|mocked|stub|stubbed|injected|virtual|test|manual) ?clock)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-three-attempts-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*design doc)(?=[\\s\\S]*(?:\\b(?:3|three)\\b[^\\n]{0,40}(?:attempt|retr|tries)|(?:attempt|retr|tries)[^\\n]{0,40}\\b(?:3|three)\\b))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-backticked-file-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched `(?:client/)?retry\\.go:58`",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-lowercase-labels",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*?(?:^|[\\s*-])blocking:)(?=[\\s\\S]*?(?:^|[\\s*-])q:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-we-suggestions",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b(?:could|can|should|shall) we\\b|\\bwe should\\b|\\blet'?s\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-cc-mention",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-fwiw",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-jitter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-marco-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 1,
+        "passRateWithout": 1,
+        "delta": 0
+      }
+    },
+    {
+      "name": "holdout5-personal-voice-thai-announce",
+      "dir": "evals/holdout5-personal-voice-thai-announce",
+      "source": "mixed",
+      "promptMarkdown": "Use the `siang:personal-voice` skill (Skill tool, `skill: \"siang:personal-voice\"`) on the writing samples in `samples/` and write, in my voice, the announcement I will post in our team channel about next week's release. Save it to `draft.md`. Word it however fits my voice, but every fact below must be in the draft, and do not add anything I did not list:\n\n- ทางทีมจะดีพลอย payment-service ขึ้นโปรดักชัน ในวันพฤหัสบดีที่ 19 พฤศจิกายน เวลา 14.00 นาฬิกา\n- ตั้งแต่เวลา 14.00 ถึง 14.30 นาฬิกา ขอให้ทุกท่านงดเมิร์จโค้ดเข้า main\n- มีไมเกรชันเพิ่มคอลัมน์ในตาราง payments ใช้เวลาประมาณ 10 นาที\n- หากเอเรอร์เรตเกิน 2% ทางทีมจะโรลแบ็กทันที\n\nYour final message is one line naming the file you wrote, nothing else.\n\nIf the Skill tool reports the skill as unknown or unavailable, do the same task yourself and still end with the final message described above.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 600,
+      "maxTurns": 20,
+      "graders": [
+        {
+          "name": "fact-deploy-date-time",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fact-merge-freeze",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fact-migration-ten-minutes",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fact-rollback-two-percent",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "habit-short-date-colon-time",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "habit-signoff-infra",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "ติดอะไร[^\\n]{0,20}ทัก[^\\n]{0,20}#infra",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "no-downtime-claim",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "downtime|down ?time|ดาวน์ไทม์|outage|ใช้งานไม่ได้|ไม่สามารถใช้งาน|หยุดให้บริการ|ระบบล่ม|กระทบลูกค้า|ผลกระทบต่อลูกค้า|^(?![\\s\\S])",
+            "flags": "i",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-generic-boilerplate",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "หากมีข้อสงสัย|สอบถามเพิ่มเติม|ขอบคุณ(?:ทุกคน|ทุกท่าน)?(?:ที่|สำหรับ)|ขอความร่วมมือ|สวัสดี(?:ครับ|ค่ะ)? ?ทุก(?:คน|ท่าน)|ขอแจ้งให้ทราบ|^(?![\\s\\S])",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-hr-formal-habits",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "เรียน ?(?:พนักงาน|ทุกท่าน|ทีม|ทุกคน)|จึงเรียนมา|เพื่อโปรดทราบ|ขออภัยในความไม่สะดวก|มา ณ โอกาสนี้|ขอแสดงความนับถือ|^(?![\\s\\S])",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-laugh-555",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "555|^(?![\\s\\S])",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-ps-line",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "(?:^|\\n)[ \\t]*(?:ปล|ป\\.ล|P\\.S|PS)[.:]|^(?![\\s\\S])",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "no-transliterated-terms",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "draft.md"
+            },
+            "pattern": "ดีพลอ|ดีพลอย|โปรดักชั่น|โปรดักชัน|เมิร์จ|เมิร์ก|ไมเกรช|ไมเกรต|โรลแบ|เอเรอร์|เออเร่อ|เออเรอร์|^(?![\\s\\S])",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?personal-voice\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 9,
+            "costUsd": 0.2122694,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "startedAt": "2026-11-12T05:03:29.121Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ติดอะไร[^\\n]{0,20}ทัก[^\\n]{0,20}#infra",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.21846100000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 19,
+            "startedAt": "2026-11-12T05:03:31.346Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ติดอะไร[^\\n]{0,20}ทัก[^\\n]{0,20}#infra",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 0.9166666666666666,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.2296188,
+            "judgeCostUsd": 0,
+            "durationSeconds": 24,
+            "startedAt": "2026-11-12T05:03:34.845Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.24784399999999995,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "startedAt": "2026-11-12T05:03:34.908Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ติดอะไร[^\\n]{0,20}ทัก[^\\n]{0,20}#infra",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.2399454,
+            "judgeCostUsd": 0,
+            "durationSeconds": 24,
+            "startedAt": "2026-11-12T05:03:49.883Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ติดอะไร[^\\n]{0,20}ทัก[^\\n]{0,20}#infra",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.9166666666666666,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.1116496,
+            "judgeCostUsd": 0,
+            "durationSeconds": 9,
+            "startedAt": "2026-11-12T05:03:55.339Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.9166666666666666,
+            "passed": false,
+            "turns": 5,
+            "costUsd": 0.1161296,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-11-12T05:03:58.775Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.9166666666666666,
+            "passed": false,
+            "turns": 5,
+            "costUsd": 0.12103320000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 10,
+            "startedAt": "2026-11-12T05:04:00.612Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.9166666666666666,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.11154479999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 9,
+            "startedAt": "2026-11-12T05:04:04.010Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.9166666666666666,
+            "passed": false,
+            "turns": 5,
+            "costUsd": 0.12159439999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 11,
+            "startedAt": "2026-11-12T05:04:08.713Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "fact-deploy-date-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*payment)(?=[\\s\\S]*(?:19 ?พ\\.ย\\.|19 พฤศจิกายน|19/11))(?=[\\s\\S]*(?:14[:.]00|บ่ายสอง))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-merge-freeze",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:merge|เมิร์จ|เมิร์ก))(?=[\\s\\S]*14[:.]30)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-migration-ten-minutes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:migration|migrate|ไมเกรช|ไมเกรต))(?=[\\s\\S]*\\b10 ?(?:นาที|min))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fact-rollback-two-percent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*(?:rollback|roll back|rolled back|โรลแบ))(?=[\\s\\S]*\\b2 ?%)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-short-date-colon-time",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ^(?=[\\s\\S]*พ\\.ย\\.)(?=[\\s\\S]*\\b14:00\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "habit-signoff-infra",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file draft.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-downtime-claim",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-generic-boilerplate",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-hr-formal-habits",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-laugh-555",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-ps-line",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-transliterated-terms",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.9833333333333332,
+        "passRate": 0.8,
+        "scoreWithout": 0.9166666666666666,
+        "passRateWithout": 0,
+        "delta": 0.06666666666666654
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 2,
+    "casesPassed": 1,
+    "overallScore": 0.9916666666666666,
+    "overallPassRate": 0.9,
+    "meanDelta": 0.03333333333333327
+  }
+}

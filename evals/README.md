@@ -370,7 +370,7 @@ On blind cases, then, `personal-voice` 0.1.37 ties plain Claude or wins by a hai
 
 On every blind case `document-review` tied plain Claude: `holdout-*`, `holdout3-*` and the two hard `holdout4-*` cases built for it all scored 1.00 / 1.00, and only the non-blind `document-review-planted-sop` showed a gain (+0.31). It passes the rule, but nothing shows it beats plain Claude, and a with-skill run costs more. Following the operator's decision, 0.1.38 moved `SKILL.md` to `docs/document-review/README.md` and `doc_check.py` to `docs/document-review/doc_check.py` (still covered by `tests/test-doc-check.sh`). The `*document-review*` cases stay as a record; with the skill gone, running them measures plain Claude only and the `skill-fired` graders fail.
 
-## `voice_stats.py` false matches fixed (0.1.39, 2026-11-12, not measured)
+## `voice_stats.py` false matches fixed (0.1.39, 2026-11-12)
 
 A deep audit after 0.1.38 found that `voice_stats.py` matched Thai particles and hedges, and English hedges, as
 substrings: และ counted as the particle ละ, สิ่ง as สิ, อาจารย์ as the hedge อาจ, "every" as "very" and "adjust" as
@@ -386,4 +386,11 @@ starts` (2 samples) and the planted ปล. as a `symbol: ps` one-off, and `hold
 lowercase style as a one-off. The lost one-offs `particle: ละ` and `holdout-personal-voice-chatty`'s `hedge: very`
 were false.
 แล้ว used as a conjunction before a space still counts (`migration แล้ว deploy`). The `personal-voice` numbers
-above were measured on 0.1.37; 0.1.39 has not been rerun, so they describe the earlier script.
+above were measured on 0.1.37.
+
+Rerun of the fresh blind pair on 0.1.39 (graders still at `58898ea161642a39`, 5 runs per arm, $3.29): `review-comments`
+1.00 / 1.00 / 0.00, `thai-announce` 0.98 / 0.92 / +0.07. With-skill mean 0.992, mean Δ +0.033, no case loses: the
+rule holds. The only miss is again `habit-signoff-infra` (with-arm 1 of 5, without-arm 5 of 5, against 3 of 5 and 5 of
+5 on 0.1.37). The fix was driven by the audit, not by this pair's scores, but this session had read the pair's sample
+habit lists while checking the fix, so the pair is weaker evidence than a fresh one. Two cases at 5 runs is a small
+sample: the gain over 0.1.37 (+0.017 to +0.033) is within run-to-run noise.
