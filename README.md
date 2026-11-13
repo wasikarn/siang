@@ -16,8 +16,8 @@ siang รวม skill 4 ตัวที่แก้สองเรื่อง�
 ## ติดตั้ง
 
 ```bash
-claude plugin marketplace add wasikarn/siang
-claude plugin install siang@siang
+claude plugin marketplace add wasikarn/method-harness
+claude plugin install siang@wasikarn
 ```
 
 ติดตั้งแล้ว restart Claude Code เรียก skill ด้วย slash command (`/siang:humanize`) หรือสั่งเป็นประโยคก็ได้
