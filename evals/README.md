@@ -1,5 +1,15 @@
 # Evals
 
+## What a result can show
+
+A skill's claim rests on a few independent cases. The runs per arm repeat one case; they do not add cases. For a
+pass/fail outcome with n independent cases per arm, a two-sided test at 80% power detects a gap of only about 0.99 at
+n=4, 0.63 at n=10 and 0.48 at n=17 (worst case: pass rate 0.5, arms unpaired; paired scoring on the same cases does
+better, but that is not computed here). So a with-skill mean above 0.90 with no case losing by more than 0.05 shows
+the skill is not worse on the cases tested. A small positive delta (for example +0.08 at 3 runs per arm) is within
+noise and is reported as inconclusive, not as lift. Normal approximation, computed 2026-11-14; this README reports
+means only, so no per-run interval exists.
+
 Cases for `siang:humanize` (removed in 0.1.28), `siang:document-review` (removed in 0.1.26), `siang:technical-writing` (removed in 0.1.27) and `siang:personal-voice` (removed in 0.1.32) are described below as a record of what was measured. Their cases were removed with the skills and restored in 0.1.33, so they are in the tree again.
 
 **0.1.33 (2026-11-10):** `humanize`, `document-review`, `technical-writing` and `personal-voice` were restored as skills under the revised rule. Measured text: `humanize` and `document-review` and `technical-writing` are the `SKILL.md` files from the commits before their removals (b20f58a, eb32e68, bf055b4); `personal-voice` is the 0.1.32 text (no cue-sheet step), whose frontmatter comes from the commit before 7fe87e7. Their eval cases were restored from the same commits. The restored text was then measured on new blind cases: see the second and third held-out rounds below.
