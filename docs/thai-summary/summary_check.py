@@ -2,8 +2,9 @@
 """Checks that a Thai summary follows the fixed template in README.md.
 Usage: summary_check.py SUMMARY.md   (- for stdin)
 Prints JSON {"file", "findings": [{"check", "detail"}]}. Exit 0 when clean, 1 when there are findings, 2 on bad input.
-Checks: missing / extra / out-of-order "##" headings, conclusion over 3 lines, key points not 2-4 bullets,
-an action item not shaped "who — what — when", length over MAX_CHARS.
+Checks: missing / extra (any heading level) / out-of-order headings, an empty section, text before the first
+heading, a fenced code block, conclusion over 3 lines, key points not 2-4 bullets, an action item not shaped
+"who — what — when", length over MAX_CHARS.
 Limits (shortcut: line-based, no real Markdown parse; upgrade if fenced code in a summary matters):
 length counts non-space characters, since Thai has no spaces between words.
 """
@@ -20,13 +21,15 @@ def sections(text):
     """Return ([H2 titles in order], {title: [non-empty body lines]})."""
     order, body, cur = [], {}, None
     for line in text.splitlines():
-        m = re.match(r"##\s+(.+?)\s*$", line)
-        if m:
-            cur = m.group(1)
+        m = re.match(r"(#{1,6})\s+(.+?)\s*$", line)
+        if m:  # only "##" is a section; any other level becomes an extra heading, shown with its hashes
+            cur = m.group(2) if m.group(1) == "##" else f"{m.group(1)} {m.group(2)}"
             order.append(cur)
             body.setdefault(cur, [])
         elif cur is not None and line.strip():
             body[cur].append(line.strip())
+        elif cur is None and line.strip():
+            body.setdefault(None, []).append(line.strip())
     return order, body
 
 
@@ -40,6 +43,13 @@ def check(text):
     for h in order:
         if h not in HEADINGS:
             add("extra-heading", h)
+    for h in HEADINGS:
+        if h in body and not body[h]:
+            add("empty-section", h)
+    if body.get(None):
+        add("preamble", body[None][0])
+    if re.search(r"^\s*(```|~~~)", text, re.M):
+        add("code-fence", "fenced block; write the summary as plain Markdown")
     known = [h for h in order if h in HEADINGS]
     if known != [h for h in HEADINGS if h in known]:
         add("heading-order", " > ".join(known))

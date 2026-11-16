@@ -30,4 +30,8 @@ expect "four-line conclusion is too long"      conclusion-length 's.replace("## 
 expect "one key point is too few"              key-points-count  's.replace("- ลูกค้า 1 รายรอฟีเจอร์ export แต่ยอมรอได้\n","").replace("- ทีม QA ต้องการเวลาเพิ่มอีก 3 วันเพื่อ regression test\n","")'
 expect "action without owner/date is bad shape" action-shape     's.replace("- มาลี — แจ้งลูกค้าเรื่องวันใหม่ — วันนี้","- แจ้งลูกค้าเรื่องวันใหม่")'
 expect "over 1500 characters is too long"      too-long          's+"ก"*1600'
+expect "empty section is flagged"              empty-section     's.replace("- เลื่อน release จากวันศุกร์ไปวันศุกร์หน้า (ตัดสินใจโดยหัวหน้าทีม)\n","")'
+expect "H1 title is an extra heading"          extra-heading     '"# สรุปประชุม\n"+s'
+expect "text before first heading is flagged"  preamble          '"เอกสารนี้พูดถึงการประชุม\n"+s'
+expect "summary wrapped in a code fence"       code-fence        '"```markdown\n"+s+"```\n"'
 exit $fail
