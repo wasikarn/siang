@@ -12,7 +12,7 @@ bullets of exactly equal length, a Thai notice that ends every sentence in ค�
 then stop trusting the rest. The other problem is a Thai PDF that copies out as garbage characters, so search
 and RAG fail.
 
-siang bundles four skills for these two problems. เสียง means "voice".
+siang bundles five skills for these problems. เสียง means "voice".
 
 ## Install
 
@@ -32,6 +32,7 @@ a sentence. If the task matches a skill's description, Claude picks it on its ow
 | `siang:humanize` | a chat message, standup, PR, commit, UI string, ADR or README reads like AI | scans for tells by pattern and rewrites; English, Thai and mixed |
 | `siang:personal-voice` | you want writing that sounds like you | builds a voice profile from your own samples, then drafts in it |
 | `siang:technical-writing` | you need a README, how-to, tutorial, reference page, runbook, ADR or release note | writes so the reader can finish the task; facts come from code and real command output |
+| `siang:thai-summary` | you ask for a meeting, document or work session summarised in Thai | writes the same five sections in the same order every time, then checks them with `summary_check.py` |
 
 Example prompts:
 
@@ -91,7 +92,8 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` |
-| `evals/` | 68 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
+| `skills/thai-summary/` | `SKILL.md` (the five-section template), `scripts/summary_check.py` |
+| `evals/` | 76 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
 | `docs/document-review/` | the document-review procedure (formerly a skill) and `doc_check.py` |
 | `docs/eval-runs/` | archived eval run results ([README](docs/eval-runs/README.md)) |
 | `tests/` | free checks that CI runs on every push |

@@ -46,6 +46,9 @@ jobs:
       - name: doc_check.py finds planted document defects
         run: bash tests/test-doc-check.sh
 
+      - name: summary_check.py flags Thai summary template defects
+        run: bash tests/test-summary-check.sh
+
       - name: voice_stats.py measures samples and drafts
         run: bash tests/test-voice.sh
 
