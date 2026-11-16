@@ -31,6 +31,7 @@ claude plugin install siang@wasikarn
 | `siang:humanize` | แก้ chat, standup, PR, commit, ข้อความใน UI, ADR, README ให้ไม่เหมือน AI เขียน | ไล่ tell ตาม pattern แล้วเขียนใหม่ ทั้งอังกฤษ ไทย และไทยปนอังกฤษ |
 | `siang:personal-voice` | อยากให้งานเขียนฟังเหมือนคุณ | สร้าง profile เสียงจากตัวอย่างงานของคุณ แล้วร่างตาม profile |
 | `siang:technical-writing` | ร่างหรือปรับ README, how-to, tutorial, reference, runbook, ADR, release note | เขียนให้ผู้อ่านทำงานจนเสร็จได้ ข้อมูลมาจาก code และผลคำสั่งจริง |
+| `siang:thai-summary` | ให้สรุปประชุม เอกสาร หรือการทำงานเป็นภาษาไทย | เขียนสรุป 5 หัวข้อเรียงเหมือนเดิมทุกครั้ง แล้วตรวจด้วย `summary_check.py` |
 
 ตัวอย่าง prompt:
 
@@ -88,7 +89,8 @@ python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้
 | `skills/thai-pua-repair/` | `SKILL.md`, `scripts/pua_fix.py`, `scripts/pua_pdf.py` |
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` ไฟล์เดียว |
-| `evals/` | 68 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
+| `skills/thai-summary/` | `SKILL.md` (template สรุป 5 หัวข้อ), `scripts/summary_check.py` |
+| `evals/` | 76 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
 | `docs/document-review/` | ขั้นตอนตรวจเอกสาร (เดิมเป็น skill) และ `doc_check.py` |
 | `docs/eval-runs/` | ผลรัน eval ที่เก็บไว้ ([README](docs/eval-runs/README.md)) |
 | `tests/` | เช็กฟรีที่ CI รันทุก push |

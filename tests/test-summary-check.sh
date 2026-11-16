@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# docs/thai-summary/summary_check.py accepts the README example and flags each planted template defect.
+# skills/thai-summary/scripts/summary_check.py accepts the SKILL.md example and flags each planted template defect.
 # Run: bash tests/test-summary-check.sh
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
-sc="$root/docs/thai-summary/summary_check.py"
+sc="$root/skills/thai-summary/scripts/summary_check.py"
 work=$(mktemp -d)
 trap 'python3 -c "import shutil,sys; shutil.rmtree(sys.argv[1])" "$work"' EXIT
 fail=0
-python3 - "$root/docs/thai-summary/README.md" "$work/ok.md" <<'PY'
+python3 - "$root/skills/thai-summary/SKILL.md" "$work/ok.md" <<'PY'
 import re, sys
 text = open(sys.argv[1], encoding="utf-8").read().split("## Example", 1)[1]
 open(sys.argv[2], "w", encoding="utf-8").write(re.search(r"```markdown\n(.*?)```", text, re.S).group(1))
@@ -22,7 +22,7 @@ expect() {  # expect <label> <check name or "clean"> <python snippet turning s i
     if [ "$code" = 1 ] && grep -q "\"check\": \"$2\"" "$work/out.json"; then echo "PASS $1"; else echo "FAIL $1: exit $code, want $2"; fail=1; fi
   fi
 }
-expect "README example passes"                 clean             's'
+expect "SKILL.md example passes"                 clean             's'
 expect "dropped heading is missing"            missing-heading   's.replace("## ที่ยังค้าง","## หมายเหตุ").replace("## หมายเหตุ","")'
 expect "swapped headings are out of order"     heading-order     's.replace("## ประเด็นหลัก","## @@").replace("## การตัดสินใจ","## ประเด็นหลัก").replace("## @@","## การตัดสินใจ")'
 expect "added heading is extra"                extra-heading     's+"\n## ภาคผนวก\nx\n"'

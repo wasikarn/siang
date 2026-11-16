@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Checks that a Thai summary follows the fixed template in README.md.
+"""Checks that a Thai summary follows the fixed template in SKILL.md.
 Usage: summary_check.py SUMMARY.md   (- for stdin)
 Prints JSON {"file", "findings": [{"check", "detail"}]}. Exit 0 when clean, 1 when there are findings, 2 on bad input.
 Checks: missing / extra (any heading level) / out-of-order headings, an empty section, text before the first
