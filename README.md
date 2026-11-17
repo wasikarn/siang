@@ -90,7 +90,7 @@ python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` ไฟล์เดียว |
 | `skills/thai-summary/` | `SKILL.md` (template สรุป 5 หัวข้อ), `scripts/summary_check.py` |
-| `evals/` | 77 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
+| `evals/` | 78 เคสรูปแบบ `claude plugin eval` อธิบายใน [`evals/README.md`](evals/README.md) |
 | `docs/document-review/` | ขั้นตอนตรวจเอกสาร (เดิมเป็น skill) และ `doc_check.py` |
 | `docs/eval-runs/` | ผลรัน eval ที่เก็บไว้ ([README](docs/eval-runs/README.md)) |
 | `tests/` | เช็กฟรีที่ CI รันทุก push |
