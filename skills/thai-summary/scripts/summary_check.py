@@ -3,8 +3,8 @@
 Usage: summary_check.py SUMMARY.md   (- for stdin)
 Prints JSON {"file", "findings": [{"check", "detail"}]}. Exit 0 when clean, 1 when there are findings, 2 on bad input (unreadable or not UTF-8).
 Checks: missing / extra (any heading level) / out-of-order headings, an empty section, text before the first
-heading, a fenced code block, conclusion over 3 lines, key points not 2-4 bullets, an action item not shaped
-"who — what — when", length over MAX_CHARS.
+heading, a fenced code block, conclusion over 3 lines, key points not 2-4 bullets or numbered items, an action item not shaped
+"who — what — when" (a lone "ไม่มี" is fine, but not beside an action), length over MAX_CHARS.
 Limits (shortcut: line-based, no real Markdown parse; upgrade if fenced code in a summary matters):
 length counts non-space characters, since Thai has no spaces between words.
 """
@@ -56,11 +56,18 @@ def check(text):
     if len(body.get("ข้อสรุป", [])) > 3:
         add("conclusion-length", f"{len(body['ข้อสรุป'])} lines, max 3")
     if "ประเด็นหลัก" in body:
-        bullets = [x for x in body["ประเด็นหลัก"] if x.startswith(("-", "*"))]
+        bullets = [x for x in body["ประเด็นหลัก"] if re.match(r"(?:[-*]|\d+[.)])\s", x)]
         if not 2 <= len(bullets) <= 4:
             add("key-points-count", f"{len(bullets)} bullets, need 2-4")
-    for line in body.get("สิ่งที่ต้องทำต่อ", []):
-        if line.lstrip("-* ") != NONE and line.count(" — ") != 2:  # "ไม่มี" may be bulleted, like the other sections
+    actions = body.get("สิ่งที่ต้องทำต่อ", [])
+    for line in actions:
+        item = re.sub(r"^(?:[-*+]|\d+[.)])\s+", "", line).strip('"“”')  # drop a list marker and the template's quotes
+        if item == NONE:
+            if len(actions) > 1:  # "ไม่มี" means the section is empty, so it cannot sit beside an action
+                add("action-shape", line)
+            continue
+        parts = item.split(" — ")
+        if len(parts) != 3 or not all(re.search(r"\w", x) for x in parts):  # each of who, what, when needs a word; "ไม่ระบุ" is one
             add("action-shape", line)
     n = len(re.sub(r"\s", "", text))
     if n > MAX_CHARS:
@@ -73,7 +80,8 @@ def main():
         print(__doc__, file=sys.stderr)
         return 2
     try:
-        text = sys.stdin.read() if sys.argv[1] == "-" else open(sys.argv[1], encoding="utf-8").read()
+        raw = sys.stdin.buffer.read() if sys.argv[1] == "-" else open(sys.argv[1], "rb").read()
+        text = raw.decode("utf-8-sig")  # a byte order mark is not part of the heading
     except (OSError, UnicodeDecodeError) as e:
         print(e, file=sys.stderr)
         return 2

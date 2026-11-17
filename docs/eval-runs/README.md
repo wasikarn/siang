@@ -38,5 +38,5 @@ current cases.
 | `2026-11-16-0.1.41-thai-summary-template-ablation.json`, `-memo-rerun.json`, `-memo-diagnostic.json` | `thai-summary`: template-in-prompt compliance, 4 cases x 5 runs ($3.19), the `memo-no-decisions` rerun after the grader was loosened ($0.70) and its diagnostic ($0.28) |
 | `2026-11-16-0.1.41-thai-summary-variance.json` | `thai-summary`: no skill, no template, 3 cases x 3 runs, 5 distinct shape signatures, $1.47 |
 | `2026-11-16-0.1.41-thai-summary-trigger-lab.json`, `2026-11-16-0.1.42-thai-summary-trigger-real-plugin.json` | `thai-summary` trigger tests on a lab plugin ($2.46) and in the real plugin at 0.1.42 (18 of 18, 0 of 6, $3.96); voided for 0.1.43 by the deep audit |
-| `2026-11-17-0.1.43-thai-summary-trigger-real-plugin.json` | `thai-summary` at 0.1.43, 9 cases x 3 runs: 21 of 21 positive, `no-file` 3 of 3, 0 of 6 negative, $4.77 |
-
+| `2026-11-17-0.1.43-thai-summary-trigger-real-plugin.json` | `thai-summary` at 0.1.43, 9 cases x 3 runs: 21 of 21 positive, `no-file` 3 of 3, 0 of 6 negative, $4.77; voided for 0.1.44 (its `no-file` grader matched an appended summary too, since it only looked for the marker) |
+| `2026-11-17-0.1.44-thai-summary-trigger-real-plugin.json` | `thai-summary` at 0.1.44 after the second audit, 9 cases x 3 runs: 21 of 21 positive, `no-file` 3 of 3 (anchored grader), 0 of 6 negative, $4.80 |
