@@ -61,7 +61,7 @@ def check(text):
             add("key-points-count", f"{len(bullets)} bullets, need 2-4")
     actions = body.get("สิ่งที่ต้องทำต่อ", [])
     for line in actions:
-        item = line.lstrip("-* ")
+        item = re.sub(r"^(?:[-*+]|\d+[.)])\s+", "", line).strip('"“”')  # drop a list marker and the template's quotes
         if item == NONE:
             if len(actions) > 1:  # "ไม่มี" means the section is empty, so it cannot sit beside an action
                 add("action-shape", line)
@@ -81,7 +81,7 @@ def main():
         return 2
     try:
         raw = sys.stdin.buffer.read() if sys.argv[1] == "-" else open(sys.argv[1], "rb").read()
-        text = raw.decode("utf-8")
+        text = raw.decode("utf-8-sig")  # a byte order mark is not part of the heading
     except (OSError, UnicodeDecodeError) as e:
         print(e, file=sys.stderr)
         return 2

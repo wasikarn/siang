@@ -39,6 +39,10 @@ expect "bulleted ไม่มี in an action section is clean" clean '__import_
 expect "ไม่มี plus a real action is bad shape" action-shape '__import__("re").sub(r"(## สิ่งที่ต้องทำต่อ\n)", r"\1- ไม่มี\n", s)'
 expect "action with a dash placeholder for when is bad shape" action-shape 's.replace("- มาลี — แจ้งลูกค้าเรื่องวันใหม่ — วันนี้","- มาลี — แจ้งลูกค้าเรื่องวันใหม่ — -")'
 expect "numbered key points count like bullets" clean '__import__("re").sub(r"- (migration|ลูกค้า|ทีม QA)", lambda m: "1. "+m.group(1), s)'
+expect "numbered action with no owner is bad shape" action-shape 's.replace("- มาลี — แจ้งลูกค้าเรื่องวันใหม่ — วันนี้","1. — แจ้งลูกค้าเรื่องวันใหม่ — วันนี้")'
+expect "numbered ไม่มี alone in an action section is clean" clean '__import__("re").sub(r"(## สิ่งที่ต้องทำต่อ\n)(?:- .*\n)+", r"\g<1>1. ไม่มี\n", s)'
+expect "quoted ไม่มี alone in an action section is clean" clean '__import__("re").sub(r"(## สิ่งที่ต้องทำต่อ\n)(?:- .*\n)+", lambda m: m.group(1)+"- "+chr(34)+"ไม่มี"+chr(34)+"\n", s)'
+expect "a UTF-8 byte order mark does not break the first heading" clean '"\ufeff"+s'
 printf 'ok\n\xe0\xff\n' > "$work/bin.md"  # bytes that are not UTF-8
 set +e; python3 "$sc" "$work/bin.md" > "$work/out.json" 2> "$work/err.txt"; code=$?; set -e
 if [ "$code" = 2 ] && ! grep -q Traceback "$work/err.txt"; then echo "PASS non-UTF-8 input exits 2 without a traceback"; else echo "FAIL non-UTF-8 input: exit $code"; fail=1; fi

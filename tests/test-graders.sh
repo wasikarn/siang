@@ -48,7 +48,10 @@ for (const g of fs.readdirSync(gdir).sort()) {
   // '# must-pass: <text>' / '# must-fail: <text>' lines are outputs the grader has to judge right.
   const passes = t => /^match: not_contains$/m.test(fm) ? !re.test(t) : re.test(t);
   for (const [, kind, t] of fm.matchAll(/^# must-(pass|fail): (.*)$/gm)) {
-    if (passes(t) !== (kind === 'pass')) { console.log(`FAIL ${c}/${g}: must-${kind} sample judged wrong: ${t}`); bad = 1; }
+    // The sample is judged as written and with each literal \n turned into a real line break, so an anchor that only fails on the backslash cannot hide.
+    for (const v of [t, t.replace(/\\n/g, '\n')]) {
+      if (passes(v) !== (kind === 'pass')) { console.log(`FAIL ${c}/${g}: must-${kind} sample judged wrong: ${v}`); bad = 1; }
+    }
   }
   const file = (fm.match(/path: ([^}\s]+)/) || [])[1];
   // A file the model must create (out.pdf) is absent from the fixture: read it as empty.

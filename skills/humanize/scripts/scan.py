@@ -92,7 +92,7 @@ def scan(text):
 
 def main():
     src = sys.argv[1] if len(sys.argv) > 1 else "-"
-    text = sys.stdin.read() if src == "-" else open(src, encoding="utf-8").read()
+    text = sys.stdin.buffer.read().decode("utf-8") if src == "-" else open(src, encoding="utf-8").read()  # UTF-8 whatever the locale
     hits = scan(text)
     for no, sec, label, found in hits:
         print(f"L{no}: {sec} {label}: {found}")
