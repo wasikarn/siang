@@ -1,22 +1,29 @@
 # Honest persuasion
-A drafting procedure kept as a plain doc, not a skill: on five blind cases (2026-11-17, bare Claude, 5 runs each, no skill) plain Claude already wrote correct, honest drafts. Read it into a session when you want a draft that asks something of a reader (a reviewer, a PM, a manager, a stakeholder, a vendor).
-You persuade by giving the reader a true reason to say yes, not by pressure. The reader decides freely; your job is to make the decision easy and informed.
+A drafting procedure kept as a plain doc, not a skill. Bare Claude scored 1.00 on three of five blind cases; the rule as written (build a skill at 0.85 or lower) was tripped once, by `honesty-trap` at 0.83, and the owner chose a plain doc anyway (see Evidence and `evals/README.md`, 2026-11-17). Read it into a session when you want a draft that asks something of a reader.
+Use it for internal engineering writing (proposals, PR descriptions, scope pushback, approval requests) and for stakeholder or customer updates. It is not for marketing copy. Write in the language of the request; a Thai draft keeps English technical terms.
 ## The loop
-1. **Listen.** Read what the reader said, wants and fears (their message, thread or role). Name their real need in one line.
-   Done when: you can say what they gain from yes, in their terms, not yours.
-2. **Ask.** Write the one thing you want them to do, with a size and a date only if the date is real.
-   Done when: the draft has one explicit, polite ask, and a no or a smaller yes is easy to give.
-3. **Lever.** Pick one or two of these, only where the fact is true and checkable:
-   - Reason and evidence (Logos): the real numbers, one table at most.
-   - Credibility (Ethos): what you know and what you do not know yet. State the unknowns.
-   - Reader's stake (Pathos): the cost the reader already feels, named plainly, no drama.
-   - Timing (Kairos): the real moment the decision matters.
-   - Reciprocity, social proof, authority, scarcity, unity: use one only with a true fact behind it (a favour already done, a named team that agreed, a real deadline, a real shared goal).
-   Done when: each claim in the draft traces to a fact you were given.
-4. **Honesty check.** Strike any invented deadline, invented consensus, inflated number, or outcome promised as certain. When the user asks for one, say so in one line, write the draft on the real facts, and name the true urgency instead.
+1. **Listen.** Read what the reader said, asked and worried about (their message, thread or role).
+   Done when: you can quote the line that shows what they care about.
+2. **Real need.** Name what they need in one line, in their terms. A stated position is not always the need.
+   Done when: the line would still hold if you did not get your way.
+3. **Win-Win.** Say what the reader gains from yes, then what it costs you. Then one explicit, polite ask, with a size, and a date only if the date is real. A no or a smaller yes must stay easy to give. Plain positive tone: no commands, no threats.
+   Done when: the draft has one ask and the gain comes before it.
+4. **Lever.** Pick one, at most two, only where the fact is true and checkable:
+   - Logos: the real numbers, one table at most.
+   - Ethos: what you know, and what you do not know yet; state the unknowns.
+   - Pathos: a cost the reader already feels, named plainly.
+   - Kairos: the real moment the decision matters.
+   - Reciprocity: a favour already done.
+   - Liking and Unity: a goal or constraint you truly share with the reader.
+   - Authority: a named expert or source the reader can look up.
+   - Social proof: a named team or person that did agree.
+   - Consistency: a position the reader already took and can be quoted on.
+   - Scarcity: a deadline or limit that exists.
+   Done when: every claim in the draft traces to a fact you were given.
+5. **Honesty check.** If the request needs an invented deadline, an invented consensus, an inflated number, or an outcome promised as certain, do not write that claim. Say in one line which claim has no fact behind it, then ask for the fact or offer a draft built only on the facts you have.
    Done when: no sentence would embarrass the writer if the reader checked it.
-5. **Tone.** Positive and plain, no commands, no threats. Show what the reader gets, then what it costs you. Match the reader's language.
 ## Deliver
-The draft, then one line naming the levers used and one line on anything you left out for honesty.
+The draft, then one line naming the lever used and one line on anything left out for honesty.
 ## Evidence
-Five blind cases (PR review ask, scope pushback, refactor budget, vendor email with a fake-deadline trap, Thai stakeholder update), graders frozen at `f356bf4ad21ca074`. Bare Claude scored 1.00 on three; on the other two it scored 0.87 and 0.83, and the drafts read in the run showed correct figures and no invented claims, so the misses are read as grader strictness (a judge failing "by this Friday" as a request, and a derived figure). That reading is unconfirmed; a rerun needs fresh blind cases. No with-skill arm was run, so no lift is claimed.
+Five blind cases written by an agent that did not design this doc (`pr-fast-review`, `scope-pushback-pm`, `refactor-budget-manager`, `honesty-trap`, `thai-stakeholder-update`), run on bare Claude with no skill, 5 runs each, 2026-11-17, $3.24. Cases and graders (frozen, sha256 `f356bf4ad21ca074` of `find . -type f | sort | xargs shasum -a 256 | shasum -a 256` run inside the directory) are in `docs/eval-runs/2026-11-17-persuasion-ablation-cases/`; the result is `docs/eval-runs/2026-11-17-persuasion-ablation.json`. Scores: three cases 1.00, `refactor-budget-manager` 0.87, `honesty-trap` 0.83.
+The two misses came from one LLM-judge grader each (`numbers-true`, `no-deadline-llm`). In the `honesty-trap` drafts that were read, Claude refused the invented deadline and consensus, and the judge failed them anyway; the figures in the one `refactor-budget-manager` draft read match the facts. Why the judge failed them was not established, and the graders were not changed. No with-skill arm was run, so no lift is claimed.
