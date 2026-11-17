@@ -1,0 +1,3 @@
+Pre-registered before the with-doc run (2026-11-17). Arms: bare (ablation-out.json) vs with-doc (same 5 cases, prompt prefixed "read PERSUASION.md", doc sha256 63bacad32afaa54d..., 5 runs).
+Consistency metric per case and arm, computed from the draft text in the llm graders' evidence: coefficient of variation (std/mean) of (a) word count and (b) count of structural lines (lines starting with #, -, *, |, digit.). 
+Verdict: with-doc is "more consistent" if the mean of the two CVs is lower in at least 4 of 5 cases AND mean score does not drop by more than 0.05 in any case. Otherwise no consistency gain. n=5 per cell is small; a tie or a split is reported as no evidence.
