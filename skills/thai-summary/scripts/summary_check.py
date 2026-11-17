@@ -3,8 +3,8 @@
 Usage: summary_check.py SUMMARY.md   (- for stdin)
 Prints JSON {"file", "findings": [{"check", "detail"}]}. Exit 0 when clean, 1 when there are findings, 2 on bad input (unreadable or not UTF-8).
 Checks: missing / extra (any heading level) / out-of-order headings, an empty section, text before the first
-heading, a fenced code block, conclusion over 3 lines, key points not 2-4 bullets or numbered items, an action item not shaped
-"who — what — when" (a lone "ไม่มี" is fine, but not beside an action), length over MAX_CHARS.
+heading, a fenced code block, conclusion over 3 lines, key points not 2-4 top-level bullets or numbered items (a nested sub-bullet is not counted), an action item not shaped
+"who — what — when" (the separator is the three-part split on " — ", so a spaced em dash inside a part fails), "ไม่มี" beside another entry in the decision, action or open-question section, length over MAX_CHARS.
 Limits (shortcut: line-based, no real Markdown parse; upgrade if fenced code in a summary matters):
 length counts non-space characters, since Thai has no spaces between words.
 """
@@ -15,6 +15,7 @@ import sys
 HEADINGS = ["ข้อสรุป", "ประเด็นหลัก", "การตัดสินใจ", "สิ่งที่ต้องทำต่อ", "ที่ยังค้าง"]
 NONE = "ไม่มี"
 MAX_CHARS = 1500  # about 500 English words
+MARKER = r"(?:[-*+]|\d+[.)])\s+"  # a Markdown list marker: -, *, + or 1. / 1)
 
 
 def sections(text):
@@ -27,7 +28,7 @@ def sections(text):
             order.append(cur)
             body.setdefault(cur, [])
         elif cur is not None and line.strip():
-            body[cur].append(line.strip())
+            body[cur].append(line.rstrip())  # keep the indent: a nested bullet is not a key point
         elif cur is None and line.strip():
             body.setdefault(None, []).append(line.strip())
     return order, body
@@ -56,12 +57,13 @@ def check(text):
     if len(body.get("ข้อสรุป", [])) > 3:
         add("conclusion-length", f"{len(body['ข้อสรุป'])} lines, max 3")
     if "ประเด็นหลัก" in body:
-        bullets = [x for x in body["ประเด็นหลัก"] if re.match(r"(?:[-*]|\d+[.)])\s", x)]
+        bullets = [x for x in body["ประเด็นหลัก"] if re.match(MARKER, x)]  # top-level only
         if not 2 <= len(bullets) <= 4:
             add("key-points-count", f"{len(bullets)} bullets, need 2-4")
     actions = body.get("สิ่งที่ต้องทำต่อ", [])
     for line in actions:
-        item = re.sub(r"^(?:[-*+]|\d+[.)])\s+", "", line).strip('"“”')  # drop a list marker and the template's quotes
+        line = line.strip()
+        item = re.sub("^" + MARKER, "", line).strip('"“”')  # drop a list marker and the template's quotes
         if item == NONE:
             if len(actions) > 1:  # "ไม่มี" means the section is empty, so it cannot sit beside an action
                 add("action-shape", line)
@@ -69,6 +71,10 @@ def check(text):
         parts = item.split(" — ")
         if len(parts) != 3 or not all(re.search(r"\w", x) for x in parts):  # each of who, what, when needs a word; "ไม่ระบุ" is one
             add("action-shape", line)
+    for h in ("การตัดสินใจ", "ที่ยังค้าง"):  # "ไม่มี" means the section is empty, so it cannot sit beside an entry
+        items = [re.sub("^" + MARKER, "", x.strip()).strip('"“”') for x in body.get(h, [])]
+        if NONE in items and len(items) > 1:
+            add("none-with-content", h)
     n = len(re.sub(r"\s", "", text))
     if n > MAX_CHARS:
         add("too-long", f"{n} chars, max {MAX_CHARS}")
