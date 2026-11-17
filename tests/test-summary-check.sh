@@ -54,6 +54,9 @@ expect "ไม่มี with a full stop beside a question is flagged" none-with
 expect "bold ไม่มี alone in an action section is clean" clean '__import__("re").sub(r"(## สิ่งที่ต้องทำต่อ\n)(?:- .*\n)+", r"\g<1>- **ไม่มี**\n", s)'
 expect "heading indented three spaces is still a heading" clean 's.replace("## ที่ยังค้าง","   ## ที่ยังค้าง")'
 expect "closing hashes on a heading are not part of its title" clean 's.replace("## ที่ยังค้าง","## ที่ยังค้าง ##")'
+expect "sub-bullets under a later key point, first marker indented, are nested" clean 's.replace("- migration ล้มเหลวบน staging 2 ครั้งจาก 3 ครั้ง\n- ลูกค้า 1 รายรอฟีเจอร์ export แต่ยอมรอได้\n- ทีม QA ต้องการเวลาเพิ่มอีก 3 วันเพื่อ regression test"," - ก\n- ข\n- ค\n  - ค1\n  - ค2")'
+expect "key points indented four spaces are code, not a list" key-points-count 's.replace("- migration ล้มเหลวบน staging 2 ครั้งจาก 3 ครั้ง\n- ลูกค้า 1 รายรอฟีเจอร์ export แต่ยอมรอได้\n- ทีม QA ต้องการเวลาเพิ่มอีก 3 วันเพื่อ regression test","    - ก\n    - ข")'
+expect "a section holding only an empty bullet is empty" empty-section 's.replace("- เลื่อน release จากวันศุกร์ไปวันศุกร์หน้า (ตัดสินใจโดยหัวหน้าทีม)\n","-\n")'
 printf 'ok\n\xe0\xff\n' > "$work/bin.md"  # bytes that are not UTF-8
 set +e; python3 "$sc" "$work/bin.md" > "$work/out.json" 2> "$work/err.txt"; code=$?; set -e
 if [ "$code" = 2 ] && ! grep -q Traceback "$work/err.txt"; then echo "PASS non-UTF-8 input exits 2 without a traceback"; else echo "FAIL non-UTF-8 input: exit $code"; fail=1; fi

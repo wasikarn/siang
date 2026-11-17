@@ -3,7 +3,7 @@
 Usage: summary_check.py SUMMARY.md   (- for stdin)
 Prints JSON {"file", "findings": [{"check", "detail"}]}. Exit 0 when clean, 1 when there are findings, 2 on bad input (unreadable or not UTF-8).
 Checks: missing / extra (any heading level) / out-of-order headings, an empty section, text before the first
-heading, a fenced code block, conclusion over 3 lines, key points not 2-4 top-level bullets or numbered items (a sub-bullet indented two or more columns deeper is not counted), an action item not shaped
+heading, a fenced code block, conclusion over 3 lines, key points not 2-4 top-level bullets or numbered items (a sub-bullet indented to its parent item's text is not counted; four spaces make code), an action item not shaped
 "who — what — when" (the separator is the three-part split on " — ", so a spaced em dash inside a part fails), "ไม่มี" beside another entry in the decision, action or open-question section, length over MAX_CHARS.
 Limits (shortcut: line-based, no real Markdown parse; upgrade if fenced code in a summary matters):
 length counts non-space characters, since Thai has no spaces between words.
@@ -14,6 +14,7 @@ import sys
 
 HEADINGS = ["ข้อสรุป", "ประเด็นหลัก", "การตัดสินใจ", "สิ่งที่ต้องทำต่อ", "ที่ยังค้าง"]
 NONE = "ไม่มี"
+WRAP = "\"“”'`*_ .。"  # quotes, backticks, bold, full stop around an entry
 MAX_CHARS = 1500  # about 500 English words
 MARKER = r"(?:[-*+]|\d+[.)])\s+"  # a Markdown list marker: -, *, + or 1. / 1)
 
@@ -21,22 +22,25 @@ MARKER = r"(?:[-*+]|\d+[.)])\s+"  # a Markdown list marker: -, *, + or 1. / 1)
 def is_none(line):
     """True when a line is only the word ไม่มี, whatever list marker, quotes, bold, backticks or full stop wrap it."""
     item = re.sub("^" + MARKER, "", line.strip())
-    return item.strip("\"“”'`*_ .。") == NONE
+    return item.strip(WRAP) == NONE
 
 
 def top_level(lines):
-    """Lines that start a list item at the top level: the first marker sets the indent, and a marker indented
-    two or more columns deeper is a nested sub-bullet (CommonMark: it sits inside the item's content)."""
-    base, out = None, []
+    """Lines that start a top-level list item. A marker is nested when it is indented to or past the content
+    column of the last top-level item (where that item's text starts); a first marker indented four or more
+    columns is code, not a list. Approximates CommonMark."""
+    content, out = None, []
     for x in lines:
         x = x.expandtabs(4)
-        if not re.match(r"\s*" + MARKER, x):
+        m = re.match(r"(\s*)(" + MARKER + ")", x)
+        if not m:
             continue
-        indent = len(x) - len(x.lstrip())
-        if base is None:
-            base = indent
-        if indent < base + 2:
+        indent = len(m.group(1))
+        if content is None and indent >= 4:
+            continue
+        if content is None or indent < content:
             out.append(x)
+            content = indent + len(m.group(2))
     return out
 
 
@@ -67,7 +71,7 @@ def check(text):
         if h not in HEADINGS:
             add("extra-heading", h)
     for h in HEADINGS:
-        if h in body and not body[h]:
+        if h in body and not any(re.sub(r"^(?:[-*+]|\d+[.)])(?:\s+|$)", "", x.strip()).strip(WRAP) for x in body[h]):  # a bare marker is no content
             add("empty-section", h)
     if body.get(None):
         add("preamble", body[None][0])
