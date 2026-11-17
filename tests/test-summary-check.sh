@@ -47,6 +47,13 @@ expect "plus-sign key points count like bullets" clean 's.replace("- migration",
 expect "a nested sub-bullet is not a key point" key-points-count 's.replace("## ประเด็นหลัก\n- migration ล้มเหลวบน staging 2 ครั้งจาก 3 ครั้ง\n- ลูกค้า 1 รายรอฟีเจอร์ export แต่ยอมรอได้\n- ทีม QA ต้องการเวลาเพิ่มอีก 3 วันเพื่อ regression test","## ประเด็นหลัก\n- ข้อเดียว\n  - รายละเอียดย่อย\n  - อีกอัน")'
 expect "ไม่มี beside a decision is flagged" none-with-content 's.replace("## การตัดสินใจ\n","## การตัดสินใจ\n- ไม่มี\n")'
 expect "ไม่มี beside an open question is flagged" none-with-content 's.replace("## ที่ยังค้าง\n","## ที่ยังค้าง\n- ไม่มี\n")'
+expect "key points indented one space still count" clean 's.replace("## ประเด็นหลัก\n- migration","## ประเด็นหลัก\n - migration").replace("\n- ลูกค้า","\n - ลูกค้า").replace("\n- ทีม QA","\n - ทีม QA")'
+expect "five points with the last three indented one space is too many" key-points-count 's.replace("- migration ล้มเหลวบน staging 2 ครั้งจาก 3 ครั้ง\n- ลูกค้า 1 รายรอฟีเจอร์ export แต่ยอมรอได้\n- ทีม QA ต้องการเวลาเพิ่มอีก 3 วันเพื่อ regression test","- ก\n- ข\n - ค\n - ง\n - จ")'
+expect "bold ไม่มี beside a decision is flagged" none-with-content 's.replace("## การตัดสินใจ\n","## การตัดสินใจ\n- **ไม่มี**\n")'
+expect "ไม่มี with a full stop beside a question is flagged" none-with-content 's.replace("## ที่ยังค้าง\n","## ที่ยังค้าง\n- ไม่มี.\n")'
+expect "bold ไม่มี alone in an action section is clean" clean '__import__("re").sub(r"(## สิ่งที่ต้องทำต่อ\n)(?:- .*\n)+", r"\g<1>- **ไม่มี**\n", s)'
+expect "heading indented three spaces is still a heading" clean 's.replace("## ที่ยังค้าง","   ## ที่ยังค้าง")'
+expect "closing hashes on a heading are not part of its title" clean 's.replace("## ที่ยังค้าง","## ที่ยังค้าง ##")'
 printf 'ok\n\xe0\xff\n' > "$work/bin.md"  # bytes that are not UTF-8
 set +e; python3 "$sc" "$work/bin.md" > "$work/out.json" 2> "$work/err.txt"; code=$?; set -e
 if [ "$code" = 2 ] && ! grep -q Traceback "$work/err.txt"; then echo "PASS non-UTF-8 input exits 2 without a traceback"; else echo "FAIL non-UTF-8 input: exit $code"; fail=1; fi

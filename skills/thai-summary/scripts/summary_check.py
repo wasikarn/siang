@@ -3,7 +3,7 @@
 Usage: summary_check.py SUMMARY.md   (- for stdin)
 Prints JSON {"file", "findings": [{"check", "detail"}]}. Exit 0 when clean, 1 when there are findings, 2 on bad input (unreadable or not UTF-8).
 Checks: missing / extra (any heading level) / out-of-order headings, an empty section, text before the first
-heading, a fenced code block, conclusion over 3 lines, key points not 2-4 top-level bullets or numbered items (a nested sub-bullet is not counted), an action item not shaped
+heading, a fenced code block, conclusion over 3 lines, key points not 2-4 top-level bullets or numbered items (a sub-bullet indented two or more columns deeper is not counted), an action item not shaped
 "who — what — when" (the separator is the three-part split on " — ", so a spaced em dash inside a part fails), "ไม่มี" beside another entry in the decision, action or open-question section, length over MAX_CHARS.
 Limits (shortcut: line-based, no real Markdown parse; upgrade if fenced code in a summary matters):
 length counts non-space characters, since Thai has no spaces between words.
@@ -18,11 +18,33 @@ MAX_CHARS = 1500  # about 500 English words
 MARKER = r"(?:[-*+]|\d+[.)])\s+"  # a Markdown list marker: -, *, + or 1. / 1)
 
 
+def is_none(line):
+    """True when a line is only the word ไม่มี, whatever list marker, quotes, bold, backticks or full stop wrap it."""
+    item = re.sub("^" + MARKER, "", line.strip())
+    return item.strip("\"“”'`*_ .。") == NONE
+
+
+def top_level(lines):
+    """Lines that start a list item at the top level: the first marker sets the indent, and a marker indented
+    two or more columns deeper is a nested sub-bullet (CommonMark: it sits inside the item's content)."""
+    base, out = None, []
+    for x in lines:
+        x = x.expandtabs(4)
+        if not re.match(r"\s*" + MARKER, x):
+            continue
+        indent = len(x) - len(x.lstrip())
+        if base is None:
+            base = indent
+        if indent < base + 2:
+            out.append(x)
+    return out
+
+
 def sections(text):
     """Return ([H2 titles in order], {title: [non-empty body lines]})."""
     order, body, cur = [], {}, None
     for line in text.splitlines():
-        m = re.match(r"(#{1,6})\s+(.+?)\s*$", line)
+        m = re.match(r" {0,3}(#{1,6})\s+(.+?)(?:\s+#+)?\s*$", line)  # up to 3 spaces of indent, optional closing hashes
         if m:  # only "##" is a section; any other level becomes an extra heading, shown with its hashes
             cur = m.group(2) if m.group(1) == "##" else f"{m.group(1)} {m.group(2)}"
             order.append(cur)
@@ -57,14 +79,14 @@ def check(text):
     if len(body.get("ข้อสรุป", [])) > 3:
         add("conclusion-length", f"{len(body['ข้อสรุป'])} lines, max 3")
     if "ประเด็นหลัก" in body:
-        bullets = [x for x in body["ประเด็นหลัก"] if re.match(MARKER, x)]  # top-level only
+        bullets = top_level(body["ประเด็นหลัก"])
         if not 2 <= len(bullets) <= 4:
             add("key-points-count", f"{len(bullets)} bullets, need 2-4")
     actions = body.get("สิ่งที่ต้องทำต่อ", [])
     for line in actions:
         line = line.strip()
         item = re.sub("^" + MARKER, "", line).strip('"“”')  # drop a list marker and the template's quotes
-        if item == NONE:
+        if is_none(line):
             if len(actions) > 1:  # "ไม่มี" means the section is empty, so it cannot sit beside an action
                 add("action-shape", line)
             continue
@@ -72,8 +94,8 @@ def check(text):
         if len(parts) != 3 or not all(re.search(r"\w", x) for x in parts):  # each of who, what, when needs a word; "ไม่ระบุ" is one
             add("action-shape", line)
     for h in ("การตัดสินใจ", "ที่ยังค้าง"):  # "ไม่มี" means the section is empty, so it cannot sit beside an entry
-        items = [re.sub("^" + MARKER, "", x.strip()).strip('"“”') for x in body.get(h, [])]
-        if NONE in items and len(items) > 1:
+        items = body.get(h, [])
+        if any(is_none(x) for x in items) and len(items) > 1:
             add("none-with-content", h)
     n = len(re.sub(r"\s", "", text))
     if n > MAX_CHARS:
