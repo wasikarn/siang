@@ -130,6 +130,16 @@ check "a one-off term copied into the draft"     'j["draft"]["latin_one_offs_in_
 python3 "$vs" "$work/t1.txt" "$work/t2.txt" "$work/t3.txt" --draft "$work/t1.txt" > "$work/out.json"
 check "a sample as draft has no term misses"     'j["draft"]["latin_case_mismatch"] == [] and j["draft"]["latin_one_offs_in_draft"] == []'
 
+# a capital at a sentence start is not a casing mismatch; quotes and a trailing hyphen are not part of a term, so
+# 'kubernetes' in one sample and kubernetes in another count as the same habit term
+printf "we run 'kubernetes' here\n" > "$work/q1.txt"
+printf 'kubernetes- is fine\n' > "$work/q2.txt"
+printf 'Kubernetes is up. Deploy done.\n' > "$work/qd.txt"
+python3 "$vs" "$work/q1.txt" "$work/q2.txt" --draft "$work/qd.txt" > "$work/out.json"
+check "a sentence-start capital is not a mismatch" 'j["draft"]["latin_case_mismatch"] == []'
+check "quoted and hyphen-trailing terms are one word" '[k for k, v in j["samples"][[s for s in j["samples"] if s.endswith("q1.txt")][0]]["latin_words"].items() if "kubernetes" in k] == ["kubernetes"]'
+check "kubernetes is a habit term, so not a one-off" 'j["draft"]["latin_one_offs_in_draft"] == []'
+
 rc=0; python3 "$vs" "$work/missing.txt" > /dev/null 2>"$work/err" || rc=$?
 if [ "$rc" -eq 1 ] && grep -q "cannot read" "$work/err"; then echo "PASS missing file exits 1 with a message"
 else echo "FAIL missing file: exit $rc, $(cat "$work/err")"; fail=1; fi

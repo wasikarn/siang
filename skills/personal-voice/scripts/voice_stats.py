@@ -64,7 +64,7 @@ def particles(text):
             out.update(parts)
     return out
 LATIN = re.compile("[A-Za-z]")
-LATIN_WORD = re.compile(r"[A-Za-z][A-Za-z'-]{2,}")
+LATIN_WORD = re.compile(r"[A-Za-z](?:[A-Za-z]|['-](?=[A-Za-z])){2,}")  # 3+ letters, no quote or hyphen at the ends
 
 
 def sentences(text):
@@ -169,8 +169,10 @@ def main(argv):
         for f in feats.values():
             for w in f["latin_forms"]:
                 forms.setdefault(w.lower(), set()).add(w)
+        # a capital first letter is fine when the samples have the lowercase form (a sentence start)
         case_bad = [{"draft": w, "samples": sorted(forms[w.lower()])} for w in d["latin_forms"]
-                    if users[w.lower()] >= 2 and w not in forms[w.lower()]]
+                    if users[w.lower()] >= 2 and w not in forms[w.lower()]
+                    and not (w == w.capitalize() and w.lower() in forms[w.lower()])]
         one_off_terms = sorted(w for w in d["latin_words"] if users[w] == 1)
         result["draft"] = {"features": d, "out_of_range": miss, "habits_absent": absent,
                            "latin_case_mismatch": case_bad, "latin_one_offs_in_draft": one_off_terms,
