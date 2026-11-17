@@ -9,4 +9,4 @@ target: {source: file, path: SUMMARY.md}
 # must-fail: ## ข้อสรุป\nผลหลัก\n## การตัดสินใจ\nไม่มี\n## ประเด็นหลัก\n- a\n## สิ่งที่ต้องทำต่อ\nไม่มี\n## ที่ยังค้าง\nไม่มี
 # must-fail: ## สรุป\nผลหลัก\n## ประเด็นหลัก\n- a\n## การตัดสินใจ\nไม่มี\n## สิ่งที่ต้องทำต่อ\nไม่มี\n## ที่ยังค้าง\nไม่มี
 ---
-The five required `##` headings (ข้อสรุป, ประเด็นหลัก, การตัดสินใจ, สิ่งที่ต้องทำต่อ, ที่ยังค้าง) all appear with exactly these names, each with some content, in this order. Extra or repeated headings are caught by no-extra-headings. Example lines write a line break as a literal \n.
+The five required `##` headings (ข้อสรุป, ประเด็นหลัก, การตัดสินใจ, สิ่งที่ต้องทำต่อ, ที่ยังค้าง) all appear with exactly these names in this order. It checks presence and order only: empty sections, extra headings and repeated headings are not detected here (summary_check.py covers those). Example lines write a line break as a literal \n.

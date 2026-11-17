@@ -1,12 +1,12 @@
 ---
 name: thai-summary
-description: "Write a summary in Thai in one fixed five-section shape. Use when asked to summarize a meeting, document or work session in Thai: 'สรุป', 'สรุปที่คุยกัน', 'สรุปงานที่ทำ'."
+description: "Summarize a meeting, document or work session in Thai (สรุป), in one fixed five-section shape. Use when the user asks for such a summary."
 ---
 # Thai summary
-A requested summary takes the same five sections in the same order every time, so a reader finds the same thing in the same place. A closing recap at the end of an ordinary reply is not a requested summary.
+A requested summary takes the same five sections in the same order every time, so a reader finds the same thing in the same place. A request for one sentence or another explicit length or format gets exactly that, outside this shape. A closing recap at the end of an ordinary reply is not a requested summary.
 ## The loop
 1. **Read** the source end to end.
-2. **Write** the summary (to the file the user named, else `SUMMARY.md`) in exactly this shape:
+2. **Write** the summary where the user asked: the file they named, else the reply. Create or overwrite no file the user did not name. Use exactly this shape:
 ```markdown
 ## ข้อสรุป
 <1-3 บรรทัด: ผลลัพธ์ที่ผู้อ่านต้องรู้มากที่สุด>
@@ -27,10 +27,9 @@ A requested summary takes the same five sections in the same order every time, s
    - Open with the conclusion.
    - Write `ไม่ระบุ` for an owner or date the source leaves out.
    - Every claim traces to the source; whatever the source leaves unclear goes under `ที่ยังค้าง` as a question.
-   - Keep dates and quoted words exactly as the source writes them.
    - At most 1500 non-space characters. Technical terms stay in English; the sentences around them are Thai.
-3. **Check.** Run `python3 ${CLAUDE_SKILL_DIR}/scripts/summary_check.py <file>` and fix every finding. Then run `python3 ${CLAUDE_PLUGIN_ROOT}/skills/humanize/scripts/scan.py <file>` and read every hit.
-   Done when: the checker prints no findings and you have read each scan hit.
+3. **Check.** Run `python3 "${CLAUDE_SKILL_DIR}/scripts/summary_check.py" <file>` and fix every finding; for a summary in the reply, pass `-` and feed the text on stdin. Then run `python3 "${CLAUDE_PLUGIN_ROOT}/skills/humanize/scripts/scan.py" <file>` and read every hit. The ` — ` separators in action items belong to the template, so the scan's em-dash hits on those lines are expected; read the other hits.
+   Done when: the checker prints no findings and you have read each other scan hit.
 The checker covers headings, order, empty sections, key-point count, action shape and length. It cannot judge rules about the source or wording: read those yourself.
 ## Example
 ```markdown
