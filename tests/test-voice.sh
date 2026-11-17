@@ -117,6 +117,19 @@ printf '123 started\n456 done\n' > "$work/digits.txt"
 python3 "$vs" "$work/digits.txt" > "$work/out.json"
 check "no letter-initial sentence is not lowercase style" "$(w digits.txt)['all_lowercase_start'] is False"
 
+# English terms: casing follows the samples (Kubernetes, not kubernetes); a term only one sample uses is a one-off a
+# draft must not copy in; a casing any sample uses (Deploy at a sentence start) is not a mismatch
+printf 'fyi deploy Kubernetes ok\n' > "$work/t1.txt"
+printf 'Deploy the Kubernetes config\n' > "$work/t2.txt"
+printf 'fyi rollback config done\n' > "$work/t3.txt"
+printf 'fyi Deploy kubernetes เสร็จ rollback ด้วย\n' > "$work/td.txt"
+python3 "$vs" "$work/t1.txt" "$work/t2.txt" "$work/t3.txt" --draft "$work/td.txt" > "$work/out.json"
+check "wrong casing of a habit term is flagged"  'j["draft"]["latin_case_mismatch"] == [{"draft": "kubernetes", "samples": ["Kubernetes"]}]'
+check "a casing a sample uses is not a mismatch" 'all(m["draft"] != "Deploy" for m in j["draft"]["latin_case_mismatch"])'
+check "a one-off term copied into the draft"     'j["draft"]["latin_one_offs_in_draft"] == ["rollback"]'
+python3 "$vs" "$work/t1.txt" "$work/t2.txt" "$work/t3.txt" --draft "$work/t1.txt" > "$work/out.json"
+check "a sample as draft has no term misses"     'j["draft"]["latin_case_mismatch"] == [] and j["draft"]["latin_one_offs_in_draft"] == []'
+
 rc=0; python3 "$vs" "$work/missing.txt" > /dev/null 2>"$work/err" || rc=$?
 if [ "$rc" -eq 1 ] && grep -q "cannot read" "$work/err"; then echo "PASS missing file exits 1 with a message"
 else echo "FAIL missing file: exit $rc, $(cat "$work/err")"; fail=1; fi
