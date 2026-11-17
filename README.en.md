@@ -93,7 +93,7 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 | `skills/personal-voice/` | `SKILL.md`, `scripts/voice_stats.py` |
 | `skills/technical-writing/` | `SKILL.md` |
 | `skills/thai-summary/` | `SKILL.md` (the five-section template), `scripts/summary_check.py` |
-| `evals/` | 76 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
+| `evals/` | 77 cases in `claude plugin eval` format, described in [`evals/README.md`](evals/README.md) |
 | `docs/document-review/` | the document-review procedure (formerly a skill) and `doc_check.py` |
 | `docs/eval-runs/` | archived eval run results ([README](docs/eval-runs/README.md)) |
 | `tests/` | free checks that CI runs on every push |

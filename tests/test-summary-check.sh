@@ -34,4 +34,10 @@ expect "empty section is flagged"              empty-section     's.replace("- �
 expect "H1 title is an extra heading"          extra-heading     '"# สรุปประชุม\n"+s'
 expect "text before first heading is flagged"  preamble          '"เอกสารนี้พูดถึงการประชุม\n"+s'
 expect "summary wrapped in a code fence"       code-fence        '"```markdown\n"+s+"```\n"'
+expect "ไม่มี alone in an action section is clean"  clean   '__import__("re").sub(r"(## สิ่งที่ต้องทำต่อ\n)(?:- .*\n)+", r"\1ไม่มี\n", s)'
+expect "bulleted ไม่มี in an action section is clean" clean '__import__("re").sub(r"(## สิ่งที่ต้องทำต่อ\n)(?:- .*\n)+", r"\1- ไม่มี\n", s)'
+expect "ไม่มี plus another action is bad shape" action-shape '__import__("re").sub(r"(## สิ่งที่ต้องทำต่อ\n)", r"\1- ไม่มี\n- ทำอะไรสักอย่าง\n", s)'
+printf 'ok\n\xe0\xff\n' > "$work/bin.md"  # bytes that are not UTF-8
+set +e; python3 "$sc" "$work/bin.md" > "$work/out.json" 2> "$work/err.txt"; code=$?; set -e
+if [ "$code" = 2 ] && ! grep -q Traceback "$work/err.txt"; then echo "PASS non-UTF-8 input exits 2 without a traceback"; else echo "FAIL non-UTF-8 input: exit $code"; fail=1; fi
 exit $fail

@@ -35,3 +35,8 @@ current cases.
 | `2026-11-12-0.1.39-personal-voice-holdout6-blind.json` | blind `holdout6-personal-voice-*` pair on 0.1.39, 5 per arm, $3.53 |
 | `2026-11-12-0.1.40-humanize-short.json` | `holdout4-humanize-*` pair on the short 0.1.40 `humanize` (rerun on known cases, not fresh blind), 5 per arm, $4.28 |
 | `2026-11-12-0.1.41-humanize-holdout7-blind.json` | blind `holdout7-humanize-*` pair on 0.1.41, 5 per arm, $3.58 |
+| `2026-11-16-0.1.41-thai-summary-template-ablation.json`, `-memo-rerun.json`, `-memo-diagnostic.json` | `thai-summary`: template-in-prompt compliance, 4 cases x 5 runs ($3.19), the `memo-no-decisions` rerun after the grader was loosened ($0.70) and its diagnostic ($0.28) |
+| `2026-11-16-0.1.41-thai-summary-variance.json` | `thai-summary`: no skill, no template, 3 cases x 3 runs, 5 distinct shape signatures, $1.47 |
+| `2026-11-16-0.1.41-thai-summary-trigger-lab.json`, `2026-11-16-0.1.42-thai-summary-trigger-real-plugin.json` | `thai-summary` trigger tests on a lab plugin ($2.46) and in the real plugin at 0.1.42 (18 of 18, 0 of 6, $3.96); voided for 0.1.43 by the deep audit |
+| `2026-11-17-0.1.43-thai-summary-trigger-real-plugin.json` | `thai-summary` at 0.1.43, 9 cases x 3 runs: 21 of 21 positive, `no-file` 3 of 3, 0 of 6 negative, $4.77 |
+

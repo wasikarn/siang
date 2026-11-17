@@ -1,0 +1,1352 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.325",
+  "startedAt": "2026-11-16T17:17:36.486Z",
+  "durationSeconds": 159,
+  "costUsd": 1.4700312000000002,
+  "partial": false,
+  "suite": {
+    "root": "<path>",
+    "ablation": "none",
+    "threshold": 1,
+    "concurrency": 1,
+    "plugins": [
+      {
+        "name": "variance-host",
+        "version": "0.0.1",
+        "path": "<path>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "variance-agent-session",
+      "dir": "evals/variance-agent-session",
+      "source": "mixed",
+      "promptMarkdown": "`SOURCE.md` เป็นเอกสารของทีมเรา ช่วยสรุปสิ่งที่คุยและทำกันใน session นี้ เป็นภาษาไทย แล้วเขียนลง `SUMMARY.md`\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "five-headings-in-order",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)##[ \\t]+ข้อสรุป[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+ประเด็นหลัก[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+การตัดสินใจ[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+ที่ยังค้าง[ \\t]*(?:\\r?\\n|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-action",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ต้องทำ|Next|next|Action|action|ขั้นตอนต่อไป)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-boldline",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)\\*\\*[^*\\n]+\\*\\*[ :]*(?:\\n|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-decision",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-h1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)# ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-h2",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)## ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-h3",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)### ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-numbered",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)[0-9]+\\. ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-open",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ค้าง|คำถาม|Open|open|ข้อสงสัย)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-table",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)\\|[^\\n]*\\|",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.4,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.1361958,
+            "judgeCostUsd": 0,
+            "durationSeconds": 13,
+            "startedAt": "2026-11-16T17:17:36.606Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-action",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-boldline",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-decision",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)# ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)## ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-numbered",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)[0-9]+\\. ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-open",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-table",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.4,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.132834,
+            "judgeCostUsd": 0,
+            "durationSeconds": 12,
+            "startedAt": "2026-11-16T17:17:49.171Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-action",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-boldline",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-decision",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)# ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)## ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-numbered",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)[0-9]+\\. ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-open",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-table",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.4,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.13511220000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 12,
+            "startedAt": "2026-11-16T17:18:01.004Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-action",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-boldline",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-decision",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)# ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)## ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-numbered",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)[0-9]+\\. ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-open",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-table",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.4000000000000001,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "variance-long-mixed",
+      "dir": "evals/variance-long-mixed",
+      "source": "mixed",
+      "promptMarkdown": "`SOURCE.md` เป็นเอกสารของทีมเรา ช่วยสรุปเอกสารเหตุการณ์นี้ เป็นภาษาไทย แล้วเขียนลง `SUMMARY.md`\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "five-headings-in-order",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)##[ \\t]+ข้อสรุป[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+ประเด็นหลัก[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+การตัดสินใจ[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+ที่ยังค้าง[ \\t]*(?:\\r?\\n|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-action",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ต้องทำ|Next|next|Action|action|ขั้นตอนต่อไป)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-boldline",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)\\*\\*[^*\\n]+\\*\\*[ :]*(?:\\n|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-decision",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-h1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)# ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-h2",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)## ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-h3",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)### ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-numbered",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)[0-9]+\\. ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-open",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ค้าง|คำถาม|Open|open|ข้อสงสัย)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-table",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)\\|[^\\n]*\\|",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.7,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.20888,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "startedAt": "2026-11-16T17:18:12.562Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-action",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ต้องทำ|Next|next|Action|action|ขั้นตอนต่อไป)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-boldline",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-decision",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)# ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)## ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-numbered",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)[0-9]+\\. ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-open",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ค้าง|คำถาม|Open|open|ข้อสงสัย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-table",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)\\|[^\\n]*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.7,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.2017958,
+            "judgeCostUsd": 0,
+            "durationSeconds": 25,
+            "startedAt": "2026-11-16T17:18:38.781Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-action",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ต้องทำ|Next|next|Action|action|ขั้นตอนต่อไป)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-boldline",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-decision",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)# ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)## ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-numbered",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)[0-9]+\\. ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-open",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ค้าง|คำถาม|Open|open|ข้อสงสัย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-table",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)\\|[^\\n]*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.7,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.20025059999999997,
+            "judgeCostUsd": 0,
+            "durationSeconds": 24,
+            "startedAt": "2026-11-16T17:19:04.053Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-action",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ต้องทำ|Next|next|Action|action|ขั้นตอนต่อไป)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-boldline",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-decision",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)# ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)## ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-numbered",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)[0-9]+\\. ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-open",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ค้าง|คำถาม|Open|open|ข้อสงสัย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-table",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)\\|[^\\n]*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6999999999999998,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "variance-meeting",
+      "dir": "evals/variance-meeting",
+      "source": "mixed",
+      "promptMarkdown": "`SOURCE.md` เป็นเอกสารของทีมเรา ช่วยสรุปการประชุมนี้ เป็นภาษาไทย แล้วเขียนลง `SUMMARY.md`\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "five-headings-in-order",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)##[ \\t]+ข้อสรุป[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+ประเด็นหลัก[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+การตัดสินใจ[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*\\r?\\n[\\s\\S]*?\\n##[ \\t]+ที่ยังค้าง[ \\t]*(?:\\r?\\n|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-action",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ต้องทำ|Next|next|Action|action|ขั้นตอนต่อไป)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-boldline",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)\\*\\*[^*\\n]+\\*\\*[ :]*(?:\\n|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-decision",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-h1",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)# ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-h2",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)## ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-h3",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)### ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-numbered",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)[0-9]+\\. ",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-open",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ค้าง|คำถาม|Open|open|ข้อสงสัย)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "sig-table",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|\\n)\\|[^\\n]*\\|",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.150889,
+            "judgeCostUsd": 0,
+            "durationSeconds": 15,
+            "startedAt": "2026-11-16T17:19:28.106Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-action",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ต้องทำ|Next|next|Action|action|ขั้นตอนต่อไป)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-boldline",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-decision",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)# ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)## ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-numbered",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-open",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-table",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)\\|[^\\n]*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.153293,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-11-16T17:19:43.259Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-action",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ต้องทำ|Next|next|Action|action|ขั้นตอนต่อไป)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-boldline",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-decision",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)# ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)## ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-numbered",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-open",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ค้าง|คำถาม|Open|open|ข้อสงสัย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-table",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)\\|[^\\n]*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.6,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.1507808,
+            "judgeCostUsd": 0,
+            "durationSeconds": 15,
+            "startedAt": "2026-11-16T17:20:00.265Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-action",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ต้องทำ|Next|next|Action|action|ขั้นตอนต่อไป)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-boldline",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-decision",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ตัดสินใจ|Decision|decision|มติ)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h1",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)# ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h2",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)## ",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-h3",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-numbered",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file SUMMARY.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-open",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)(?:#{1,6}|\\*\\*)[^\\n]*(?:ค้าง|คำถาม|Open|open|ข้อสงสัย)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "sig-table",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|\\n)\\|[^\\n]*\\|",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5333333333333333,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 3,
+    "casesPassed": 0,
+    "overallScore": 0.5444444444444444,
+    "overallPassRate": 0
+  }
+}

@@ -1,0 +1,1022 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.325",
+  "startedAt": "2026-11-16T17:25:46.030Z",
+  "durationSeconds": 356,
+  "costUsd": 3.9572971999999997,
+  "partial": false,
+  "suite": {
+    "root": "<path>",
+    "ablation": "none",
+    "tagFilters": [
+      "thai-summary"
+    ],
+    "threshold": 1,
+    "concurrency": 1,
+    "plugins": [
+      {
+        "name": "siang",
+        "version": "0.1.42",
+        "path": "<path>"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "trigger-thai-summary-agent-session",
+      "dir": "evals/trigger-thai-summary-agent-session",
+      "source": "mixed",
+      "promptMarkdown": "`SOURCE.md` เป็นเอกสารของทีมเรา ช่วยสรุปสิ่งที่คุยและทำกันใน session นี้ เป็นภาษาไทย แล้วเขียนลง `SUMMARY.md`\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "five-headings-in-order",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?thai-summary\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.15918720000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 15,
+            "startedAt": "2026-11-16T17:25:46.824Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.1575382,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-16T17:26:01.415Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.15412240000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 13,
+            "startedAt": "2026-11-16T17:26:15.418Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "trigger-thai-summary-long-mixed",
+      "dir": "evals/trigger-thai-summary-long-mixed",
+      "source": "mixed",
+      "promptMarkdown": "`SOURCE.md` เป็นเอกสารของทีมเรา ช่วยสรุปเอกสารเหตุการณ์นี้ เป็นภาษาไทย แล้วเขียนลง `SUMMARY.md`\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "five-headings-in-order",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?thai-summary\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 13,
+            "costUsd": 0.247316,
+            "judgeCostUsd": 0,
+            "durationSeconds": 29,
+            "startedAt": "2026-11-16T17:26:28.409Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.19065540000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-11-16T17:26:57.084Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.22201739999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-11-16T17:27:13.900Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "trigger-thai-summary-meeting",
+      "dir": "evals/trigger-thai-summary-meeting",
+      "source": "mixed",
+      "promptMarkdown": "`SOURCE.md` เป็นเอกสารของทีมเรา ช่วยสรุปการประชุมนี้ เป็นภาษาไทย แล้วเขียนลง `SUMMARY.md`\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "five-headings-in-order",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?thai-summary\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.16429539999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 15,
+            "startedAt": "2026-11-16T17:27:34.273Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.1671332,
+            "judgeCostUsd": 0,
+            "durationSeconds": 15,
+            "startedAt": "2026-11-16T17:27:49.425Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.1650818,
+            "judgeCostUsd": 0,
+            "durationSeconds": 15,
+            "startedAt": "2026-11-16T17:28:04.871Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "trigger-thai-summary-neg-english",
+      "dir": "evals/trigger-thai-summary-neg-english",
+      "source": "mixed",
+      "promptMarkdown": "Summarize `NOTES.md` in two sentences, in English, and write it to `SUMMARY.md`.\nYour final message is one line naming the file you wrote.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "skill-not-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?thai-summary\"",
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.0997236,
+            "judgeCostUsd": 0,
+            "durationSeconds": 5,
+            "startedAt": "2026-11-16T17:28:19.961Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-not-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.0990098,
+            "judgeCostUsd": 0,
+            "durationSeconds": 5,
+            "startedAt": "2026-11-16T17:28:24.759Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-not-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.0995088,
+            "judgeCostUsd": 0,
+            "durationSeconds": 5,
+            "startedAt": "2026-11-16T17:28:29.744Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-not-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "trigger-thai-summary-neg-oneline",
+      "dir": "evals/trigger-thai-summary-neg-oneline",
+      "source": "mixed",
+      "promptMarkdown": "ช่วยสรุป `SOURCE.md` เป็นประโยคเดียวสั้นๆ แล้วเขียนลง `SUMMARY.md`\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "skill-not-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?thai-summary\"",
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.11926339999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 7,
+            "startedAt": "2026-11-16T17:28:34.953Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-not-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.1187376,
+            "judgeCostUsd": 0,
+            "durationSeconds": 7,
+            "startedAt": "2026-11-16T17:28:42.205Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-not-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.1211082,
+            "judgeCostUsd": 0,
+            "durationSeconds": 7,
+            "startedAt": "2026-11-16T17:28:49.121Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-not-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "trigger-thai-summary-para-agent-session",
+      "dir": "evals/trigger-thai-summary-para-agent-session",
+      "source": "mixed",
+      "promptMarkdown": "ขอ recap session ทำงานใน `SOURCE.md` หน่อย เขียนเป็นบันทึกสั้นๆ ลง `SUMMARY.md` เผื่อพรุ่งนี้กลับมาทำต่อจะได้ไม่ต้องไล่อ่านใหม่\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "five-headings-in-order",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?thai-summary\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.152035,
+            "judgeCostUsd": 0,
+            "durationSeconds": 12,
+            "startedAt": "2026-11-16T17:28:55.831Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.159194,
+            "judgeCostUsd": 0,
+            "durationSeconds": 14,
+            "startedAt": "2026-11-16T17:29:08.012Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.15295319999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 13,
+            "startedAt": "2026-11-16T17:29:22.263Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "trigger-thai-summary-para-long-mixed",
+      "dir": "evals/trigger-thai-summary-para-long-mixed",
+      "source": "mixed",
+      "promptMarkdown": "`SOURCE.md` เป็นเอกสาร postmortem incident เมื่อสัปดาห์ก่อน ยาวเกินจะอ่านไหว ช่วยย่อให้เหลือแต่สาระ แล้วเขียนไว้ที่ `SUMMARY.md`\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "five-headings-in-order",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?thai-summary\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.1920752,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-11-16T17:29:35.512Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 14,
+            "costUsd": 0.25994520000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 30,
+            "startedAt": "2026-11-16T17:29:52.115Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 9,
+            "costUsd": 0.2560982,
+            "judgeCostUsd": 0,
+            "durationSeconds": 31,
+            "startedAt": "2026-11-16T17:30:22.230Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "trigger-thai-summary-para-meeting",
+      "dir": "evals/trigger-thai-summary-para-meeting",
+      "source": "mixed",
+      "promptMarkdown": "ช่วยย่อ `SOURCE.md` ซึ่งเป็น transcript ประชุมทีมเมื่อเช้านี้ แล้วเขียนลง `SUMMARY.md` ให้หน่อย ผมไม่ได้เข้าประชุมเลยอยากรู้แค่ว่าตกลงอะไรกันไป\nข้อความสุดท้ายตอบเป็นบรรทัดเดียวบอกชื่อไฟล์ที่เขียน",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 15,
+      "graders": [
+        {
+          "name": "five-headings-in-order",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "SUMMARY.md"
+            },
+            "pattern": "(?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "skill-fired",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:siang:)?thai-summary\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.16543860000000002,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-11-16T17:30:52.947Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.167741,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-11-16T17:31:08.820Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.1671184,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-11-16T17:31:25.824Z",
+            "error": null,
+            "tracePath": "<path>",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "five-headings-in-order",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:^|(?:\\r?\\n|\\\\n))##[ \\t]+ข้อสรุป[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ประเด็นหลัก[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+การตัดสินใจ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+สิ่งที่ต้องทำต่อ[ \\t]*(?:\\r?\\n|\\\\n)[\\s\\S]*?(?:\\r?\\n|\\\\n)##[ \\t]+ที่ยังค้าง[ \\t]*(?:(?:\\r?\\n|\\\\n)|$)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "skill-fired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 8,
+    "casesPassed": 8,
+    "overallScore": 1,
+    "overallPassRate": 1
+  }
+}
