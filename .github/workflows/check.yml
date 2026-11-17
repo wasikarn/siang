@@ -52,6 +52,9 @@ jobs:
       - name: voice_stats.py measures samples and drafts
         run: bash tests/test-voice.sh
 
+      - name: Held-out eval cases share no text with the skills
+        run: bash tests/test-leakage.sh
+
       - name: pua_fix.py maps Thai PUA glyphs
         run: bash tests/test-pua.sh
 
