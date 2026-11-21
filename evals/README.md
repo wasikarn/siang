@@ -159,7 +159,7 @@ that names `--dest`, `no-email-claim` fails any use of "hourly", one branch of `
 
 ### Before freezing a grader
 
-Run each case once with the arm you expect to pass, read the answer, and confirm the grader scores it as correct. Freeze only after that. In the 2026-11-21 gmem links trial (63 runs, `claude -p`), a gold-substring grader scored a brief as missing a fact when the agent had opened the right file and paraphrased it (`$1,906` against `$1906.53`); the frozen grader could not be fixed, so the result stayed unreadable. When the question is whether the agent found something, freeze two metrics together: the answer contains the fact, and the agent opened the file that holds it. Run one trial per arm through `claude-config/scripts/run_ab.py`, which checks that the arm's patch is present and that Bash stays locked.
+Run each case once with the arm you expect to pass, read the answer, and confirm the grader scores it as correct. Freeze only after that. In the 2026-11-21 gmem links trial (63 runs, `claude -p`), a gold-substring grader scored a brief as missing a fact when the agent had opened the right file and paraphrased it (`1,200` against `1200.50`); the frozen grader could not be fixed, so the result stayed unreadable. When the question is whether the agent found something, freeze two metrics together: the answer contains the fact, and the agent opened the file that holds it. Run one trial per arm through `claude-config/scripts/run_ab.py`, which checks that the arm's patch is present and that Bash stays locked.
 
 ## Result of the acceptance run (graders frozen at `d1cb35dbc7742f68`, commit 0de01c8)
 
