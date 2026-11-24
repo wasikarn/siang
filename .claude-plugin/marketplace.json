@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "siang",
+  "owner": {
+    "name": "wasikarn"
+  },
+  "description": "Marketplace for the siang plugin (Thai text and writing skills).",
+  "plugins": [
+    {
+      "name": "siang",
+      "source": "./",
+      "description": "Thai text skills: repair Thai PDF text, remove AI writing tells in English and Thai, write in your own voice, draft technical docs, summarize in Thai in one fixed shape.",
+      "author": {
+        "name": "KoBig"
+      },
+      "category": "productivity",
+      "homepage": "https://github.com/wasikarn/siang",
+      "keywords": [
+        "thai",
+        "pdf",
+        "writing"
+      ]
+    }
+  ]
+}
