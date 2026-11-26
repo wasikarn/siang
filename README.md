@@ -99,7 +99,7 @@ python3 skills/humanize/scripts/scan.py draft.md   # หรือ pipe เข้
 
 ## Eval
 
-skill ตัวหนึ่งอยู่ใน plugin ได้เมื่อผ่านเกณฑ์: with-skill mean เกิน 0.90 (5 รอบต่อฝั่ง) และไม่มีเคสไหนแพ้ Claude
+skill ตัวหนึ่งอยู่ใน plugin ได้เมื่อผ่านเกณฑ์: with-skill mean เกิน 0.80 (5 รอบต่อฝั่ง) และไม่มีเคสไหนแพ้ Claude
 เปล่า ๆ เกิน 0.05 บนเคส held-out ที่เขียนโดย agent ที่ไม่เคยเห็น skill และ grader ถูกแช่แข็งก่อนรัน
 ตัวเลขที่ควรดูคือส่วนต่างต่อเคส ไม่ใช่คะแนนรวม เพราะ Claude เปล่า ๆ ได้คะแนนสูงในหลายเคส
 

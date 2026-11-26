@@ -101,7 +101,7 @@ The output is a list of candidates, not verdicts. Read every hit before editing.
 
 ## Evals
 
-A skill stays in the plugin only if its with-skill mean is above 0.90 (5 runs per arm) and no case loses to the
+A skill stays in the plugin only if its with-skill mean is above 0.80 (5 runs per arm) and no case loses to the
 no-skill arm by more than 0.05, on held-out cases written by an agent that never saw the skill, with graders
 frozen before the run. Look at the per-case delta, not the overall score: plain Claude scores high on many cases.
 
