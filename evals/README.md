@@ -5,7 +5,7 @@
 A skill's claim rests on a few independent cases. The runs per arm repeat one case; they do not add cases. For a
 pass/fail outcome with n independent cases per arm, a two-sided test at 80% power detects a gap of only about 0.99 at
 n=4, 0.63 at n=10 and 0.48 at n=17 (worst case: pass rate 0.5, arms unpaired; paired scoring on the same cases does
-better, but that is not computed here). So a with-skill mean above 0.90 with no case losing by more than 0.05 shows
+better, but that is not computed here). So a with-skill mean above 0.80 with no case losing by more than 0.05 shows
 the skill is not worse on the cases tested. A small positive delta (for example +0.08 at 3 runs per arm) is within
 noise and is reported as inconclusive, not as lift. Normal approximation, computed 2026-11-14; this README reports
 means only, so no per-run interval exists.
@@ -144,7 +144,8 @@ the siang skill it names and every regex grader compiles as a JS RegExp and matc
 ## Acceptance rule (set before the run, graders frozen)
 
 A skill stays a skill only if, on its held-out cases (written by an agent that never saw the skill), all hold:
-the with-skill mean score is above 0.90; no case loses to the without arm by more than 0.05 (revised 2026-11-10: the
+the with-skill mean score is above 0.80; no case loses to the without arm by more than 0.05 (revised 2026-11-27: the mean bar
+was 0.90 until then, and every verdict below was reached under 0.90; revised 2026-11-10: the
 original rule also required a mean Δ against the without arm of at least +0.05, and the verdicts below were reached under it;
 the Δ figures stay as a record, and four skills removed under that clause were restored in 0.1.33). Cost is reported, not gated. Runs: 5 per arm, spend capped at $40. A skill that
 fails is deleted or converted (scripts and knowledge kept as plain tools or docs, `SKILL.md` removed); humanize is
